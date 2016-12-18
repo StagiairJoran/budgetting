@@ -15,7 +15,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * Created by Ghostwritertje
  * Date: 30-Sep-16.
  */
-public class PersonListPage extends BasePage<Void> implements UnAuthorizedAllowed {
+public class PersonListPage extends BasePage<Person>  {
     @SpringBean
     private PersonService personService;
 

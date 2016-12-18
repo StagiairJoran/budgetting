@@ -1,5 +1,6 @@
 package be.ghostwritertje.webapp;
 
+import be.ghostwritertje.webapp.person.pages.PersonListPage;
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
@@ -31,27 +32,27 @@ public class MyApplication extends WebApplication {
         super.getComponentInstantiationListeners().add(new SpringComponentInjector(this));
         this.configureBootstrap();
 
-        getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy() {
-            public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
-                    Class<T> componentClass) {
-                // Check if the new Page requires authentication (implements the marker interface)
-//                if (AuthorizationRequired.class.isAssignableFrom(componentClass) && !UnAuthorizedAllowed.class.isAssignableFrom(componentClass)) {
-//                    // Is user signed in?
-//                    if (((CustomSession) CustomSession.get()).isSignedIn()) {
-//                        // okay to proceed
-//                        return true;
-//                    }
+//        getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy() {
+//            public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
+//                    Class<T> componentClass) {
+//                // Check if the new Page requires authentication (implements the marker interface)
+////                if (AuthorizationRequired.class.isAssignableFrom(componentClass) && !UnAuthorizedAllowed.class.isAssignableFrom(componentClass)) {
+////                    // Is user signed in?
+////                    if (((CustomSession) CustomSession.get()).isSignedIn()) {
+////                        // okay to proceed
+////                        return true;
+////                    }
+////
+////                    // Intercept the request, but remember the target for later.
+////                    // Invoke Component.continueToOriginalDestination() after successful logon to
+////                    // continue with the target remembered.
+////                    throw new RestartResponseAtInterceptPageException(LoginPage.class);
+////                }
 //
-//                    // Intercept the request, but remember the target for later.
-//                    // Invoke Component.continueToOriginalDestination() after successful logon to
-//                    // continue with the target remembered.
-//                    throw new RestartResponseAtInterceptPageException(LoginPage.class);
-//                }
-
-                // okay to proceed
-                return true;
-            }
-        });
+//                // okay to proceed
+//                return true;
+//            }
+//        });
     }
 
     private void configureBootstrap() {
