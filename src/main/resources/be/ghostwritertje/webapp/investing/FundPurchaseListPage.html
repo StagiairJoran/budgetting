@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <h2>Investments</h2>
+    <div class="row">
+        <div class=" col-sm-4">
+            <div class="list-group">
+                <a href="#" class="list-group-item active">
+                    <h4 class="list-group-item-heading">Total money invested</h4>
+                    <p class="list-group-item-text"><label wicket:id="totalInvested"></label></p>
+                </a>
+                <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading">Current value</h4>
+                    <p class="list-group-item-text"><label wicket:id="totalSum"></label></p>
+                </a>
+                <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading">Added value</h4>
+                    <p class="list-group-item-text"><label wicket:id="addedValue"></label></p>
+                </a>
+                <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading">Number of shares</h4>
+                    <p class="list-group-item-text"><label wicket:id="totalCount"></label></p>
+                </a>
+                <wicket:enclosure child="annualPerformance">
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading">Annual Performance</h4>
+                        <p class="list-group-item-text"><label wicket:id="annualPerformance"></label></p>
+                    </a>
+                </wicket:enclosure>
+                <wicket:enclosure child="addedValuePercentage">
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading">Added Value</h4>
+                        <p class="list-group-item-text"><label wicket:id="addedValuePercentage"></label></p>
+                    </a>
+                </wicket:enclosure>
+            </div>
+        </div>
+        <div class=" col-sm-8">
+
+            <button type="button" class="btn btn-default" wicket:id="newPurchaseLink">new</button>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Quote</th>
+                    <th>Shareprice</th>
+                    <th>Count</th>
+                    <th>Transaction Cost</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr wicket:id="fundPurchases">
+                    <td wicket:id="date"></td>
+                    <td wicket:id="quote"></td>
+                    <td wicket:id="sharePrice"></td>
+                    <td wicket:id="count"></td>
+                    <td wicket:id="transactionCost"></td>
+                    <td>
+                        <a wicket:id="edit"><span class="glyphicon glyphicon-edit"></span></a>
+                        <a wicket:id="delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>

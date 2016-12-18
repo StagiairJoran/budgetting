@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <h2>Cars</h2>
+    <button type="button" class="btn btn-default" wicket:id="newCarLink">new</button>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Purchase Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr wicket:id="cars">
+            <td><a wicket:id="refuelingsLink"> <label wicket:id="brand"></label></a></td>
+            <td wicket:id="model"></td>
+            <td wicket:id="purchaseDate"></td>
+        </tr>
+        </tbody>
+    </table>
+</wicket:extend>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <h2>Basic Table</h2>
+    <p>The .table class adds basic styling (light padding and only horizontal dividers) destinationAccount a table:</p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Cars</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr wicket:id="users">
+            <td wicket:id="username">John</td>
+            <td><a wicket:id="carsList">Cars</a></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</wicket:extend>
+</body>
+</html>
