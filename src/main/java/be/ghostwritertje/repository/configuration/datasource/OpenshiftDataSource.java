@@ -26,7 +26,7 @@ public class OpenshiftDataSource {
     ) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://" + host + ":" + port + "/saving" + "?user=" + username + "&password=" + password);
+        dataSource.setUrl("jdbc:postgresql://" + host + ":" + port + "/jbosswildfly" + "?user=" + username + "&password=" + password);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
