@@ -23,12 +23,20 @@ public class Refueling extends DomainObject {
     private Double liters;
     private Double price;
     private Double kilometres;
+    private Double pricePerLiter;
 
     public Refueling() {
     }
 
     public Double getPricePerLiter() {
-        return this.price / this.liters;
+        if(this.pricePerLiter == null){
+            this.pricePerLiter = 0.000;
+        }
+        return pricePerLiter;
+    }
+
+    public void setPricePerLiter(Double pricePerLiter) {
+        this.pricePerLiter = pricePerLiter;
     }
 
     public LocalDate getDate() {
@@ -54,13 +62,13 @@ public class Refueling extends DomainObject {
     }
 
     public Double getPrice() {
+        if(this.price == null){
+            return 0.00;
+        }
         return price;
     }
 
     public void setPrice(Double price) {
-        if (this.price == null) {
-            this.price = 0.00;
-        }
         this.price = price;
     }
 
