@@ -13,5 +13,5 @@ import java.util.List;
  */
 @Repository
 public interface FundPurchaseDao extends CrudRepository<FundPurchase, Integer> {
-    List<FundPurchase> findByOwner(Person owner);
+    List<FundPurchase> findByOwnerOrderByDateAsc(Person owner);
 }

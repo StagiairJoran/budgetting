@@ -114,14 +114,5 @@ public class FundPurchaseListPage extends BasePage<Person> {
         });
     }
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        Future<Double> future = new AbstractFuture<Double>() {
-            @Override
-            public Double get(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException, ExecutionException {
-                return 5.3;
-            }
-        };
-        System.out.println("hello");
-        System.out.println("bye");
-    }
+
 }

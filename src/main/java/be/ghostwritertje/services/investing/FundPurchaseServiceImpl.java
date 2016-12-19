@@ -33,7 +33,7 @@ public class FundPurchaseServiceImpl extends DomainObjectCrudServiceSupport<Fund
 
     @Override
     public List<FundPurchase> findByOwner(Person owner) {
-        return this.dao.findByOwner(owner);
+        return this.dao.findByOwnerOrderByDateAsc(owner);
     }
 
     @Override
