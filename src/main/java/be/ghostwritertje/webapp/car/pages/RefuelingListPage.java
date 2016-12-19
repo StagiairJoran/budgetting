@@ -5,6 +5,8 @@ import be.ghostwritertje.domain.car.Refueling;
 import be.ghostwritertje.services.car.RefuelingService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
+import be.ghostwritertje.webapp.charts.DateCoordinate;
+import be.ghostwritertje.webapp.charts.HistoricChart;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -14,6 +16,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jorandeboever
@@ -70,5 +73,7 @@ public class RefuelingListPage extends BasePage<Car> {
                 this.setResponsePage(new RefuelingPage(new Model<Refueling>(refueling)));
             }
         });
+
+        this.add(new HistoricChart("chart", this.refuelingService.findByCar(this.getModelObject()).stream().map(refueling -> new DateCoordinate(refueling.getDate(), refueling.getKilometres())).collect(Collectors.toList())));
     }
 }

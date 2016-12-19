@@ -43,5 +43,7 @@ public class DashboardPage extends BasePage<Person> {
         });
 
         this.add(new BankAccountListInfoPanel("bankAccountView", this.getModel()));
+
+
     }
 }
