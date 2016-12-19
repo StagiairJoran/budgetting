@@ -13,9 +13,11 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -27,10 +29,12 @@ public class RefuelingListPage extends BasePage<Car> {
     @SpringBean
     private RefuelingService refuelingService;
 
+    private final IModel<List<Refueling>> refuelingListModel;
+
     public RefuelingListPage(IModel<Car> model) {
         super(model);
+        refuelingListModel = new ListModel<>(this.refuelingService.findByCar(this.getModelObject()));
     }
-
 
     @Override
     protected void onInitialize() {
@@ -38,7 +42,7 @@ public class RefuelingListPage extends BasePage<Car> {
 
         this.add(new CarInfoPanel("carInfo", this.getModel()));
 
-        this.add(new ListView<Refueling>("refuelings", this.refuelingService.findByCar(this.getModelObject())) {
+        this.add(new ListView<Refueling>("refuelings", this.refuelingListModel) {
 
             @Override
             protected void populateItem(ListItem<Refueling> item) {
@@ -47,7 +51,6 @@ public class RefuelingListPage extends BasePage<Car> {
                 item.add(new Label("liters", item.getModelObject().getLiters()));
                 item.add(new Label("price", item.getModelObject().getPrice()));
                 item.add(new Label("pricePerLiter", item.getModelObject().getPricePerLiter()));
-
                 item.add(new Link<Refueling>("edit", item.getModel()) {
                     @Override
                     public void onClick() {
@@ -74,6 +77,6 @@ public class RefuelingListPage extends BasePage<Car> {
             }
         });
 
-        this.add(new HistoricChart("chart", this.refuelingService.findByCar(this.getModelObject()).stream().map(refueling -> new DateCoordinate(refueling.getDate(), refueling.getKilometres())).collect(Collectors.toList())));
+        this.add(new HistoricChart("chart", this.refuelingService.findByCar(this.getModelObject()).stream().map(refueling -> new DateCoordinate(refueling.getDate(), refueling.getPricePerLiter())).collect(Collectors.toList())));
     }
 }

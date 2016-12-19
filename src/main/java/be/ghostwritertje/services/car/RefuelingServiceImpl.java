@@ -22,7 +22,7 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
 
     @Override
     public List<Refueling> findByCar(Car car) {
-        return this.dao.findByCar(car);
+        return this.dao.findByCarOrderByDateAsc(car);
     }
 
     @Override
