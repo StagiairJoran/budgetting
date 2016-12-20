@@ -5,6 +5,7 @@ import be.ghostwritertje.domain.car.Refueling;
 import be.ghostwritertje.services.car.RefuelingService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
+import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import be.ghostwritertje.webapp.charts.DateCoordinate;
 import be.ghostwritertje.webapp.charts.HistoricChart;
 import org.apache.wicket.markup.html.basic.Label;
@@ -77,6 +78,11 @@ public class RefuelingListPage extends BasePage<Car> {
             }
         });
 
-        this.add(new HistoricChart("chart", this.refuelingService.findByCar(this.getModelObject()).stream().map(refueling -> new DateCoordinate(refueling.getDate(), refueling.getPricePerLiter())).collect(Collectors.toList())));
+
+        ChartBuilderFactory.splineChart()
+                .usingDefaults()
+                .addLine("Verbruik",this.refuelingService.findByCar(this.getModelObject()).stream().map(refueling -> new DateCoordinate(refueling.getDate(), refueling.getPricePerLiter())).collect(Collectors.toList()))
+                .attach(this, "chart");
+
     }
 }
