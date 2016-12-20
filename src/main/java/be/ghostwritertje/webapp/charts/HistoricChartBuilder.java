@@ -24,31 +24,22 @@ public class HistoricChartBuilder {
 
     public HistoricChartBuilder() {
         setXAxis();
-        setYAxis();
+//        setYAxis();
     }
 
     private HistoricChartBuilder setXAxis() {
-        Axis xAxis = new Axis();
-        xAxis
-                .setType(AxisType.DATETIME);
-
-        DateTimeLabelFormat dateTimeLabelFormat = new DateTimeLabelFormat()
+        options.setxAxis(new Axis()
+                .setType(AxisType.DATETIME)
+                .setDateTimeLabelFormats( new DateTimeLabelFormat()
                 .setProperty(DateTimeLabelFormat.DateTimeProperties.MONTH, "%e. %b")
-                .setProperty(DateTimeLabelFormat.DateTimeProperties.YEAR, "%b");
-        xAxis
-                .setDateTimeLabelFormats(dateTimeLabelFormat);
-        options.setxAxis(xAxis);
+                .setProperty(DateTimeLabelFormat.DateTimeProperties.YEAR, "%b")));
         return this.self();
     }
 
-    private HistoricChartBuilder setYAxis() {
-        Axis yAxis = new Axis();
-        yAxis
-                .setTitle(new Title("Kilometres driven (m)"));
-        yAxis
-                .setMin(0);
-        options
-                .setyAxis(yAxis);
+    private HistoricChartBuilder setYAxis(String title, Number minimum) {
+        options.setyAxis(new Axis()
+                .setTitle(new Title(title))
+                .setMin(minimum));
         return this.self();
     }
 
