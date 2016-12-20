@@ -24,7 +24,6 @@ public class HistoricChartBuilder {
 
     public HistoricChartBuilder() {
         setXAxis();
-//        setYAxis();
     }
 
     private HistoricChartBuilder setXAxis() {
@@ -36,10 +35,9 @@ public class HistoricChartBuilder {
         return this.self();
     }
 
-    private HistoricChartBuilder setYAxis(String title, Number minimum) {
+    public HistoricChartBuilder setYAxis(String title) {
         options.setyAxis(new Axis()
-                .setTitle(new Title(title))
-                .setMin(minimum));
+                .setTitle(new Title(title)));
         return this.self();
     }
 
@@ -48,12 +46,11 @@ public class HistoricChartBuilder {
     }
 
     public HistoricChartBuilder addLine(String name, List<DateCoordinate> coordinates) {
-        CustomCoordinatesSeries<String, Float> series1 = new CustomCoordinatesSeries<String, Float>();
-        series1
-                .setName(name);
-        series1
-                .setData(coordinates.stream().map(dateCoordinate -> (Coordinate<String, Float>) dateCoordinate).collect(Collectors.toList()));
-        options.addSeries(series1);
+        options.addSeries( new CustomCoordinatesSeries<String, Float>()
+                .setName(name)
+                .setData(coordinates.stream()
+                        .map(dateCoordinate -> (Coordinate<String, Float>) dateCoordinate)
+                        .collect(Collectors.toList())));
         return this.self();
     }
 

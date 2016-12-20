@@ -81,7 +81,8 @@ public class RefuelingListPage extends BasePage<Car> {
 
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
-                .addLine("Verbruik",this.refuelingService.findByCar(this.getModelObject()).stream().map(refueling -> new DateCoordinate(refueling.getDate(), refueling.getPricePerLiter())).collect(Collectors.toList()))
+                .addLine("Kostprijs diesel",this.refuelingService.findByCar(this.getModelObject()).stream().map(refueling -> new DateCoordinate(refueling.getDate(), refueling.getPricePerLiter())).collect(Collectors.toList()))
+                .setYAxis("Price/liter")
                 .attach(this, "chart");
 
     }
