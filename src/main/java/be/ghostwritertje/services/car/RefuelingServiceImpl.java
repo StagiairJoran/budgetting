@@ -4,11 +4,15 @@ import be.ghostwritertje.domain.car.Car;
 import be.ghostwritertje.domain.car.Refueling;
 import be.ghostwritertje.repository.RefuelingDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
+import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import javax.naming.directory.SearchResult;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 /**
  * Created by Jorandeboever
@@ -23,6 +27,13 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
     @Override
     public List<Refueling> findByCar(Car car) {
         return this.dao.findByCarOrderByDateAsc(car);
+    }
+
+    @Override
+    public List<RefuelingSearchResult> mapRefuelingsToSearchResults(List<Refueling> refuelings) {
+        return StreamEx.of(refuelings.stream())
+                .pairMap((refueling, refueling2) -> new RefuelingSearchResult(refueling2).setVerbruik(refueling.getLiters() / (refueling2.getKilometres() - refueling.getKilometres())*100))
+                .collect(Collectors.toList());
     }
 
     @Override

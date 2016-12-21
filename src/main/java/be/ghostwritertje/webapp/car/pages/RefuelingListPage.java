@@ -8,6 +8,8 @@ import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import be.ghostwritertje.webapp.charts.DateCoordinate;
 import be.ghostwritertje.webapp.charts.HistoricChart;
+import com.googlecode.wickedcharts.highcharts.options.Options;
+import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -68,6 +70,7 @@ public class RefuelingListPage extends BasePage<Car> {
             }
         });
 
+
         this.add(new Link<Refueling>("newRefuelingLink") {
             @Override
             public void onClick() {
@@ -78,12 +81,18 @@ public class RefuelingListPage extends BasePage<Car> {
             }
         });
 
-
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
                 .addLine("Kostprijs diesel",this.refuelingService.findByCar(this.getModelObject()).stream().map(refueling -> new DateCoordinate(refueling.getDate(), refueling.getPricePerLiter())).collect(Collectors.toList()))
                 .setYAxis("Price/liter")
                 .attach(this, "chart");
+
+        ChartBuilderFactory.splineChart()
+                .usingDefaults()
+                .title("Verloop")
+                .addLine("Verbruik",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())).stream().map(refueling -> new DateCoordinate(refueling.getRefueling().getDate(), refueling.getVerbruik())).collect(Collectors.toList()))
+                .setYAxis("liter/100km")
+                .attach(this, "chart2");
 
     }
 }

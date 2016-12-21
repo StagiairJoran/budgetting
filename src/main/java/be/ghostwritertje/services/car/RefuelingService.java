@@ -14,6 +14,8 @@ public interface RefuelingService extends DomainObjectCrudService<Refueling> {
 
     List<Refueling> findByCar(Car car);
 
+    List<RefuelingSearchResult> mapRefuelingsToSearchResults(List<Refueling> refuelings);
+
     Refueling save(Refueling refueling);
 
     void delete(Refueling refueling);
