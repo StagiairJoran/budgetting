@@ -4,12 +4,16 @@ import be.ghostwritertje.domain.car.Car;
 import be.ghostwritertje.domain.car.Refueling;
 import be.ghostwritertje.repository.RefuelingDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
+import be.ghostwritertje.utilities.DateUtilities;
 import one.util.streamex.StreamEx;
+import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +24,12 @@ import java.util.stream.Collectors;
 @Service
 public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueling> implements RefuelingService {
 
+    private final RefuelingDao dao;
+
     @Autowired
-    private RefuelingDao dao;
+    public RefuelingServiceImpl(RefuelingDao dao) {
+        this.dao = dao;
+    }
 
     @Override
     public List<Refueling> findByCar(Car car) {
@@ -32,8 +40,8 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
     public List<RefuelingSearchResult> mapRefuelingsToSearchResults(List<Refueling> refuelings) {
         return StreamEx.of(refuelings.stream())
                 .pairMap((refueling, refueling2) -> new RefuelingSearchResult(refueling2)
-                        .setKilometresPerMonth(refueling2.getKilometres()-refueling.getKilometres()/ Period.between(refueling2.getDate(), refueling.getDate()).getDays()*30)
-                        .setConsumption(refueling.getLiters() / (refueling2.getKilometres() - refueling.getKilometres())*100))
+                        .setKilometresPerMonth((refueling2.getKilometres()-refueling.getKilometres())/ refueling.getDate().until(refueling2.getDate(), ChronoUnit.MONTHS))
+                        .setConsumption(refueling2.getLiters() / (refueling2.getKilometres() - refueling.getKilometres())*100))
                 .collect(Collectors.toList());
     }
 

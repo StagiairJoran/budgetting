@@ -63,7 +63,7 @@ public class Refueling extends DomainObject {
 
     public Double getPrice() {
         if(this.price == null){
-            return 0.00;
+            this.price = 0.00;
         }
         return price;
     }
@@ -81,6 +81,9 @@ public class Refueling extends DomainObject {
     }
 
     public Double getKilometres() {
+        if(this.kilometres == null){
+            this.kilometres = 0.00;
+        }
         return kilometres;
     }
 
