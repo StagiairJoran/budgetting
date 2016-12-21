@@ -24,7 +24,6 @@ public class Refueling extends DomainObject {
     private Double price;
     private Double kilometres;
     private Double pricePerLiter;
-    private boolean full = true;
 
     public Refueling() {
     }
@@ -67,14 +66,6 @@ public class Refueling extends DomainObject {
             return 0.00;
         }
         return price;
-    }
-
-    public boolean isFull() {
-        return full;
-    }
-
-    public void setFull(boolean full) {
-        this.full = full;
     }
 
     public void setPrice(Double price) {
