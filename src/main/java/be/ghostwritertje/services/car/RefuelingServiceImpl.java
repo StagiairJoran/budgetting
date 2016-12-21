@@ -40,7 +40,7 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
     public List<RefuelingSearchResult> mapRefuelingsToSearchResults(List<Refueling> refuelings) {
         return StreamEx.of(refuelings.stream())
                 .pairMap((refueling, refueling2) -> new RefuelingSearchResult(refueling2)
-                        .setKilometresPerMonth((refueling2.getKilometres()-refueling.getKilometres())/ refueling.getDate().until(refueling2.getDate(), ChronoUnit.MONTHS))
+                        .setKilometresPerMonth((refueling2.getKilometres()-refueling.getKilometres())/ refueling.getDate().until(refueling2.getDate(), ChronoUnit.DAYS)*30)
                         .setConsumption(refueling2.getLiters() / (refueling2.getKilometres() - refueling.getKilometres())*100))
                 .collect(Collectors.toList());
     }
