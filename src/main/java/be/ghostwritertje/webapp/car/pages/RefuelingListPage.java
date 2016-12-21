@@ -7,9 +7,6 @@ import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import be.ghostwritertje.webapp.charts.DateCoordinate;
-import be.ghostwritertje.webapp.charts.HistoricChart;
-import com.googlecode.wickedcharts.highcharts.options.Options;
-import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -90,9 +87,18 @@ public class RefuelingListPage extends BasePage<Car> {
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
                 .title("Verloop")
-                .addLine("Verbruik",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())).stream().map(refueling -> new DateCoordinate(refueling.getRefueling().getDate(), refueling.getVerbruik())).collect(Collectors.toList()))
+                .addLine("Verbruik",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())).stream().map(refueling -> new DateCoordinate(refueling.getRefueling().getDate(), refueling.getConsumption())).collect(Collectors.toList()))
                 .setYAxis("liter/100km")
                 .attach(this, "chart2");
+
+
+        ChartBuilderFactory.splineChart()
+                .usingDefaults()
+                .title("Driven per month")
+                .addLine("Kilometres",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())).stream().map(refueling -> new DateCoordinate(refueling.getRefueling().getDate(), refueling.getKilometresPerMonth())).collect(Collectors.toList()))
+                .setYAxis("kilometres/month")
+                .attach(this, "chart3");
+
 
     }
 }

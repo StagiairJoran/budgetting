@@ -8,7 +8,8 @@ import be.ghostwritertje.domain.car.Refueling;
  */
 public class RefuelingSearchResult {
     private Refueling refueling;
-    private Double verbruik;
+    private Double consumption;
+    private Double kilometresPerMonth;
 
     public RefuelingSearchResult(Refueling refueling) {
         this.refueling = refueling;
@@ -18,12 +19,21 @@ public class RefuelingSearchResult {
         return refueling;
     }
 
-    public Double getVerbruik() {
-        return verbruik;
+    public Double getConsumption() {
+        return consumption;
     }
 
-    public RefuelingSearchResult setVerbruik(Double verbruik) {
-        this.verbruik = verbruik;
+    public Double getKilometresPerMonth() {
+        return kilometresPerMonth;
+    }
+
+    public RefuelingSearchResult setKilometresPerMonth(Double kilometresPerMonth) {
+        this.kilometresPerMonth = kilometresPerMonth;
+        return this;
+    }
+
+    public RefuelingSearchResult setConsumption(Double consumption) {
+        this.consumption = consumption;
         return this;
     }
 }
