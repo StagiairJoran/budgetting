@@ -1,2 +1,2 @@
 ALTER TABLE t_refueling
-ADD full BIT ;
+ADD  fuelTankFull BIT;
