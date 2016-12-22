@@ -27,7 +27,7 @@ public class MySqlDataSource {
         dataSource.setUsername("root");
         dataSource.setPassword("root");
 
-        logger.info("Using openshift DataSource");
+        logger.info("Using mysql DataSource");
         return dataSource;
     }
 
@@ -39,7 +39,6 @@ public class MySqlDataSource {
         properties.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/saving");
         properties.setProperty("hibernate.current_session_context_class", "org.hibernate.context.internal.ThreadLocalSessionContext");
         properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
         logger.info("DataSource location : " + properties.getProperty("hibernate.connection.url"));
         return properties;
     }

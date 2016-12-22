@@ -1,5 +1,6 @@
 package be.ghostwritertje.repository.configuration;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -51,6 +52,15 @@ public class PersistenceConfig {
         entityManagerFactory.setJpaProperties(jpaProperties);
 
         return entityManagerFactory;
+    }
+
+    @Bean
+    public Flyway flyway (DataSource dataSource){
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(dataSource);
+//        flyway.setValidateOnMigrate(false);
+        flyway.setBaselineOnMigrate(true);
+        return flyway;
     }
 
 
