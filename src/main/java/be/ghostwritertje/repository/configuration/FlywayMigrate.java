@@ -11,14 +11,14 @@ import org.springframework.context.annotation.Import;
  * Created by Jorandeboever
  * Date: 22-Dec-16.
  */
-@Import({PersistenceConfig.class})
+@Import({Flyway.class})
 @Configuration
 public class FlywayMigrate {
     @Bean
     @Autowired
     public Flyway flywayMigrate(@Qualifier("flyway") Flyway flyway){
-
-        flyway.clean();
+        flyway.repair();
+        flyway.migrate();
         return flyway;
     }
 }
