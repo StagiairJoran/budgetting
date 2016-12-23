@@ -11,7 +11,10 @@ import com.googlecode.wickedcharts.highcharts.options.series.Coordinate;
 import com.googlecode.wickedcharts.highcharts.options.series.CustomCoordinatesSeries;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.lambda.WicketFunction;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,10 +49,30 @@ public class HistoricChartBuilder {
     }
 
     public HistoricChartBuilder addLine(String name, List<DateCoordinate> coordinates) {
-        options.addSeries( new CustomCoordinatesSeries<String, Float>()
+        options.addSeries( new CustomCoordinatesSeries<String, String>()
                 .setName(name)
                 .setData(coordinates.stream()
-                        .map(dateCoordinate -> (Coordinate<String, Float>) dateCoordinate)
+                        .map(dateCoordinate -> (Coordinate<String, String>) dateCoordinate)
+                        .collect(Collectors.toList())));
+        return this.self();
+    }
+
+    public <X> HistoricChartBuilder addLine(String name, List<X> coordinates, WicketFunction<X, LocalDate> dateFunction, WicketFunction<X, Number> numberFunction) {
+        options.addSeries(new CustomCoordinatesSeries<String, String>()
+                .setName(name)
+                .setData(coordinates.stream()
+                        .map(x -> new DateCoordinate(dateFunction.apply(x), numberFunction.apply(x)))
+                        .map(dateCoordinate -> (Coordinate<String, String>) dateCoordinate)
+                        .collect(Collectors.toList())));
+        return this.self();
+    }
+
+    public <X> HistoricChartBuilder addLine(String name, List<X> coordinates, WicketFunction<X, LocalDate> dateFunction, WicketFunction<X, Number> numberFunction, int rounding) {
+        options.addSeries(new CustomCoordinatesSeries<String, String>()
+                .setName(name)
+                .setData(coordinates.stream()
+                        .map(x -> new DateCoordinate(dateFunction.apply(x), numberFunction.apply(x), rounding))
+                        .map(dateCoordinate -> (Coordinate<String, String>) dateCoordinate)
                         .collect(Collectors.toList())));
         return this.self();
     }

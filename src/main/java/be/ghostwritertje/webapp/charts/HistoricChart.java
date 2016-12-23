@@ -69,11 +69,11 @@ public class HistoricChart extends Chart {
                 .setTooltip(tooltip);
 
 
-        CustomCoordinatesSeries<String, Float> series1 = new CustomCoordinatesSeries<String, Float>();
+        CustomCoordinatesSeries<String, String> series1 = new CustomCoordinatesSeries<String, String>();
         series1
                 .setName("Verbruik");
         series1
-                .setData(coordinates.stream().map(dateCoordinate -> (Coordinate<String, Float>) dateCoordinate).collect(Collectors.toList()));
+                .setData(coordinates.stream().map(dateCoordinate -> (Coordinate<String, String>) dateCoordinate).collect(Collectors.toList()));
         options.addSeries(series1);
 
         return options;

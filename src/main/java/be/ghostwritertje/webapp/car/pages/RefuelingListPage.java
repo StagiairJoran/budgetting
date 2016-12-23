@@ -2,6 +2,7 @@ package be.ghostwritertje.webapp.car.pages;
 
 import be.ghostwritertje.domain.car.Car;
 import be.ghostwritertje.domain.car.Refueling;
+import be.ghostwritertje.services.car.RefuelingSearchResult;
 import be.ghostwritertje.services.car.RefuelingService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
@@ -80,14 +81,15 @@ public class RefuelingListPage extends BasePage<Car> {
 
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
-                .addLine("Kostprijs diesel",this.refuelingService.findByCar(this.getModelObject()).stream().map(refueling -> new DateCoordinate(refueling.getDate(), refueling.getPricePerLiter())).collect(Collectors.toList()))
+                .title("Dieselprijs")
+                .addLine("Kostprijs diesel",this.refuelingService.findByCar(this.getModelObject()), Refueling::getDate, Refueling::getPricePerLiter, 3)
                 .setYAxis("Price/liter")
                 .attach(this, "chart");
 
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
-                .title("Verloop")
-                .addLine("Verbruik",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())).stream().map(refueling -> new DateCoordinate(refueling.getRefueling().getDate(), refueling.getConsumption())).collect(Collectors.toList()))
+                .title("Verloop van verbruik")
+                .addLine("Verbruik",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())), refuelingSearchResult -> refuelingSearchResult.getRefueling().getDate(), RefuelingSearchResult::getConsumption, 2)
                 .setYAxis("liter/100km")
                 .attach(this, "chart2");
 
@@ -95,10 +97,9 @@ public class RefuelingListPage extends BasePage<Car> {
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
                 .title("Driven per month")
-                .addLine("Kilometres",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())).stream().map(refueling -> new DateCoordinate(refueling.getRefueling().getDate(), refueling.getKilometresPerMonth())).collect(Collectors.toList()))
+                .addLine("Kilometres",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())), refueling -> refueling.getRefueling().getDate(), RefuelingSearchResult::getKilometresPerMonth, 0)
                 .setYAxis("kilometres/month")
                 .attach(this, "chart3");
-
 
     }
 }
