@@ -10,6 +10,7 @@ import be.ghostwritertje.webapp.car.model.CarModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.SubmitLink;
@@ -56,6 +57,9 @@ public class RefuelingPage extends BasePage<Refueling> {
         NumberTextField<Double> litersField = new NumberTextField<>(LITERS_ID, new LambdaModel<Double>(() -> this.getModelObject().getLiters(), liters -> this.getModelObject().setLiters(liters)), Double.class);
         litersField.add(new LambdaOnChangeBehavior(updateMissingField(this.getModel())));
         form.add(litersField);
+
+        CheckBox checkBox = new CheckBox("tankFull", new LambdaModel<>(() -> this.getModelObject().isFuelTankFull(), full -> this.getModelObject().setFuelTankFull(full)));
+        form.add(checkBox);
 
         NumberTextField<Double> priceField = new NumberTextField<>("price", new LambdaModel<Double>(() -> this.getModelObject().getPrice(), price -> this.getModelObject().setPrice(price)), Double.class);
         priceField.add(new LambdaOnChangeBehavior(updateMissingField(this.getModel())));

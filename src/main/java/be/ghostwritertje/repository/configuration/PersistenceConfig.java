@@ -60,7 +60,6 @@ public class PersistenceConfig {
     public Flyway flyway (DataSource dataSource){
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
-//        flyway.setValidateOnMigrate(false);
         flyway.setBaselineOnMigrate(true);
         return flyway;
     }

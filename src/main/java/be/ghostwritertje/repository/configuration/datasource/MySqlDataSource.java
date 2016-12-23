@@ -29,7 +29,7 @@ public class MySqlDataSource {
         dataSource.setUsername("root");
         dataSource.setPassword("root");
 
-        logger.info("Using mysql DataSource");
+        logger.info("Using mysql local DataSource");
         return dataSource;
     }
 

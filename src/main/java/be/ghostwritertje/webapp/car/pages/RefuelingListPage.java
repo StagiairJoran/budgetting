@@ -8,11 +8,15 @@ import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import be.ghostwritertje.webapp.charts.DateCoordinate;
+import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapCheckbox;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Check;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -52,6 +56,8 @@ public class RefuelingListPage extends BasePage<Car> {
                 item.add(new Label("liters", item.getModelObject().getLiters()));
                 item.add(new Label("price", item.getModelObject().getPrice()));
                 item.add(new Label("pricePerLiter", item.getModelObject().getPricePerLiter()));
+                item.add(new BootstrapCheckbox("fuelTankFull", new LambdaModel<Boolean>(() ->  item.getModelObject().isFuelTankFull(), full -> item.getModelObject().setFuelTankFull(full))).setEnabled(false));
+
                 item.add(new Link<Refueling>("edit", item.getModel()) {
                     @Override
                     public void onClick() {
