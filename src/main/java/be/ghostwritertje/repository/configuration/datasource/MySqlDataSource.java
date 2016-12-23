@@ -36,10 +36,10 @@ public class MySqlDataSource {
     @Bean
     @Profile("openshift")
     public DataSource openshiftDataSource(
-            @Value("${OPENSHIFT_POSTGRESQL_DB_HOST}") String host,
-            @Value("${OPENSHIFT_POSTGRESQL_DB_PORT}") String port,
-            @Value("${OPENSHIFT_POSTGRESQL_DB_USERNAME}") String username,
-            @Value("${OPENSHIFT_POSTGRESQL_DB_PASSWORD}") String password
+            @Value("${OPENSHIFT_MYSQL_DB_HOST}") String host,
+            @Value("${OPENSHIFT_MYSQL_DB_PORT}") String port,
+            @Value("${OPENSHIFT_MYSQL_DB_USERNAME}") String username,
+            @Value("${OPENSHIFT_MYSQL_DB_PASSWORD}") String password
     ) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
