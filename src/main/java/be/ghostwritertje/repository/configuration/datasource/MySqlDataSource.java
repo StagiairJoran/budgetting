@@ -40,7 +40,7 @@ public class MySqlDataSource {
             @Value("${OPENSHIFT_MYSQL_DB_PORT}") String port,
             @Value("${OPENSHIFT_MYSQL_DB_USERNAME}") String username,
             @Value("${OPENSHIFT_MYSQL_DB_PASSWORD}") String password,
-            @Value("${OPENSHIFT_MYSQL_DB_PASSWORD}") String appname
+            @Value("${OPENSHIFT_APP_NAME}") String appname
 
     ) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
