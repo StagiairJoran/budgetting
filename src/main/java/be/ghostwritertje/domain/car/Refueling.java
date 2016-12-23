@@ -24,7 +24,7 @@ public class Refueling extends DomainObject {
     private Double price;
     private Double kilometres;
     private Double pricePerLiter;
-    private boolean fuelTankFull;
+    private boolean fuelTankFull = true;
 
     public Refueling() {
     }

@@ -2,6 +2,7 @@ package be.ghostwritertje.repository.configuration.datasource;
 
 import org.apache.log4j.Logger;
 import org.hibernate.dialect.MySQLDialect;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -14,12 +15,13 @@ import java.util.Properties;
  * Created by Jorandeboever
  * Date: 08-Oct-16.
  */
-@Profile("local")
+
 @Configuration
 public class MySqlDataSource {
     private static final Logger logger = Logger.getLogger(H2DataSource.class);
 
     @Bean
+    @Profile("local")
     public DataSource localDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
@@ -30,6 +32,25 @@ public class MySqlDataSource {
         logger.info("Using mysql DataSource");
         return dataSource;
     }
+
+    @Bean
+    @Profile("openshift")
+    public DataSource openshiftDataSource(
+            @Value("${OPENSHIFT_POSTGRESQL_DB_HOST}") String host,
+            @Value("${OPENSHIFT_POSTGRESQL_DB_PORT}") String port,
+            @Value("${OPENSHIFT_POSTGRESQL_DB_USERNAME}") String username,
+            @Value("${OPENSHIFT_POSTGRESQL_DB_PASSWORD}") String password
+    ) {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/jbosswildfly" + "?user=" + username + "&password=" + password);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+
+        logger.info("Using mysql-openshift DataSource");
+        return dataSource;
+    }
+
 
     @Bean
     public Properties jpaProperties() {

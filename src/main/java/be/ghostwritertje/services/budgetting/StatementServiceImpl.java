@@ -33,7 +33,7 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
 
     @PostConstruct
     public void postConstruct() {
-        this.dao.save(new Statement());
+//        this.dao.save(new Statement());
     }
 
     @Override

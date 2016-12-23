@@ -13,7 +13,7 @@ import java.util.Properties;
  * Created by Jorandeboever
  * Date: 01-Oct-16.
  */
-@Profile("openshift")
+@Profile("openshift-postgres")
 @Configuration
 public class OpenshiftDataSource {
 

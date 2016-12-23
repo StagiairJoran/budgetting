@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -38,11 +39,29 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
 
     @Override
     public List<RefuelingSearchResult> mapRefuelingsToSearchResults(List<Refueling> refuelings) {
-        return StreamEx.of(refuelings.stream())
+        List<RefuelingSearchResult> searchResults = StreamEx.of(refuelings.stream())
                 .pairMap((refueling, refueling2) -> new RefuelingSearchResult(refueling2)
-                        .setKilometresPerMonth((refueling2.getKilometres()-refueling.getKilometres())/ refueling.getDate().until(refueling2.getDate(), ChronoUnit.DAYS)*30)
-                        .setConsumption(refueling2.getLiters() / (refueling2.getKilometres() - refueling.getKilometres())*100))
+                        .setKilometresPerMonth((refueling2.getKilometres() - refueling.getKilometres()) / refueling.getDate().until(refueling2.getDate(), ChronoUnit.DAYS) * 30)
+                        .setConsumption(refueling2.getLiters() / (refueling2.getKilometres() - refueling.getKilometres()) * 100))
                 .collect(Collectors.toList());
+        this.averageOutPartialRefuelings(searchResults);
+        return searchResults;
+    }
+
+    private void averageOutPartialRefuelings(List<RefuelingSearchResult> searchResults) {
+        RefuelingSearchResult previousSearchResult = null;
+        for(RefuelingSearchResult searchResult : searchResults){
+           Optional.ofNullable(previousSearchResult).ifPresent(previous -> {
+                if(!previous.getRefueling().isFuelTankFull()){
+                    double consumption1 = previous.getConsumption();
+                    double consumption2 = searchResult.getConsumption();
+                    double average =  (consumption1 + consumption2)/2;
+                    previous.setConsumption(average);
+                    searchResult.setConsumption(average);
+                }
+            });
+            previousSearchResult = searchResult;
+        }
     }
 
     @Override
