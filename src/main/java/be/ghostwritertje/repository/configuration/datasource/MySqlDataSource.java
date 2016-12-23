@@ -39,11 +39,13 @@ public class MySqlDataSource {
             @Value("${OPENSHIFT_MYSQL_DB_HOST}") String host,
             @Value("${OPENSHIFT_MYSQL_DB_PORT}") String port,
             @Value("${OPENSHIFT_MYSQL_DB_USERNAME}") String username,
-            @Value("${OPENSHIFT_MYSQL_DB_PASSWORD}") String password
+            @Value("${OPENSHIFT_MYSQL_DB_PASSWORD}") String password,
+            @Value("${OPENSHIFT_MYSQL_DB_PASSWORD}") String appname
+
     ) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/jbosswildfly" + "?user=" + username + "&password=" + password);
+        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + appname + "?user=" + username + "&password=" + password);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
