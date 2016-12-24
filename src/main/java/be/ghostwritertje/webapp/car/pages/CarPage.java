@@ -6,6 +6,7 @@ import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.LocalDateTextField;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
+import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.person.PersonModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -50,23 +51,12 @@ public class CarPage extends BasePage<Car> {
 
         form.add(new NumberTextField<Double>("price", new LambdaModel<>(() -> this.getModelObject().getPurchasePrice(), model -> this.getModelObject().setPurchasePrice(model)), Double.class));
         form.add(new LocalDateTextField("date", new LambdaModel<LocalDate>(() -> this.getModelObject().getPurchaseDate(), date -> this.getModelObject().setPurchaseDate(date))));
-        form.add(new SubmitLink("save") {
-            @Override
-            public void onSubmit() {
-                super.onSubmit();
-                Car savedCar = CarPage.this.carService.save(CarPage.this.getModelObject());
-                this.setResponsePage(new CarListPage(new PersonModel(new Model<Integer>(savedCar.getOwner().getId()))));
-            }
-        });
-        form.add(new AjaxSubmitLink("save2") {
-            @Override
-            public void onSubmit(AjaxRequestTarget target) {
-                super.onSubmit();
-                Car savedCar = CarPage.this.carService.save(CarPage.this.getModelObject());
-                form.getFormModeModel().setObject(BaseForm.FormMode.READ);
-                target.add(form);
-            }
-        });
+
+        LinkBuilderFactory.submitLink()
+                .usingDefaults()
+                .attach(form, "save", (target, o) -> CarPage.this.carService.save(CarPage.this.getModelObject()));
+
+
         form.add(new AjaxLink<String>("edit") {
             @Override
             public void onClick(AjaxRequestTarget target) {
