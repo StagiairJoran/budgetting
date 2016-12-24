@@ -6,6 +6,8 @@ import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.CustomSession;
 import be.ghostwritertje.webapp.DashboardPage;
 import be.ghostwritertje.webapp.UnAuthorizedAllowed;
+import be.ghostwritertje.webapp.form.BaseForm;
+import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.person.PersonModel;
 import org.apache.log4j.Logger;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
@@ -19,6 +21,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Optional;
@@ -46,7 +49,7 @@ public class LoginPage extends BasePage<Person> implements UnAuthorizedAllowed {
     }
 
 
-    class LoginForm extends Form<Person> {
+    class LoginForm extends BaseForm<Person> {
 
         private final IModel<Boolean> rememberMe;
 
@@ -64,7 +67,12 @@ public class LoginPage extends BasePage<Person> implements UnAuthorizedAllowed {
         @Override
         protected void onInitialize() {
             super.onInitialize();
-            this.add(new TextField<String>("username", new LambdaModel<>(() -> this.getModel().getObject().getUsername(), username -> this.getModel().getObject().setUsername(username))).setRequired(true));
+
+            FormComponentBuilderFactory.textField()
+                    .usingDefaults()
+                    .body(new ResourceModel("username"))
+                    .attach(this, "username", new LambdaModel<>(() -> this.getModel().getObject().getUsername(), username -> this.getModel().getObject().setUsername(username)));
+//            this.add(new TextField<String>("username", new LambdaModel<>(() -> this.getModel().getObject().getUsername(), username -> this.getModel().getObject().setUsername(username))).setRequired(true));
             this.add(new PasswordTextField("password", new LambdaModel<>(() -> this.getModelObject().getPassword(), password -> this.getModelObject().setPassword(password))).setRequired(true));
 
             WebMarkupContainer rememberMeContainer = new WebMarkupContainer("rememberMeContainer");

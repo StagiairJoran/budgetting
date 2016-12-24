@@ -3,10 +3,12 @@ package be.ghostwritertje.webapp.car.pages;
 import be.ghostwritertje.domain.car.Refueling;
 import be.ghostwritertje.services.car.RefuelingService;
 import be.ghostwritertje.utilities.NumberUtilities;
+import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.LambdaOnChangeBehavior;
 import be.ghostwritertje.webapp.LocalDateTextField;
 import be.ghostwritertje.webapp.car.model.CarModel;
+import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.lambda.WicketBiConsumer;
@@ -40,7 +42,7 @@ public class RefuelingPage extends BasePage<Refueling> {
     protected void onInitialize() {
         super.onInitialize();
 
-        Form<Refueling> form = new Form<Refueling>("form", this.getModel()) {
+        Form<Refueling> form = new BaseForm<Refueling>("form", this.getModel()) {
             @Override
             public void onSubmit() {
                 super.onSubmit();
