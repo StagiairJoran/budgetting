@@ -4,7 +4,12 @@ import be.ghostwritertje.domain.car.Car;
 import be.ghostwritertje.services.car.CarService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.LocalDateTextField;
+import be.ghostwritertje.webapp.form.BaseForm;
+import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.person.PersonModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.SubmitLink;
@@ -12,6 +17,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.LocalDate;
@@ -33,10 +39,15 @@ public class CarPage extends BasePage<Car> {
     protected void onInitialize() {
         super.onInitialize();
 
-        Form<Car> form = new Form<Car>("form", this.getModel());
+        BaseForm<Car> form = new BaseForm<>("form", this.getModel());
 
-        form.add(new TextField<String>("brand", new LambdaModel<String>(() -> this.getModelObject().getBrand(), brand -> this.getModelObject().setBrand(brand))));
-        form.add(new TextField<String>("model", new LambdaModel<String>(() -> this.getModelObject().getModel(), model -> this.getModelObject().setModel(model))));
+        FormComponentBuilderFactory.textField()
+                .usingDefaults()
+                .body(new ResourceModel("brand"))
+                .attach(form, "brand", new LambdaModel<String>(() -> this.getModelObject().getBrand(), brand -> this.getModelObject().setBrand(brand)))
+                .body(new ResourceModel("model"))
+                .attach(form, "model", new LambdaModel<String>(() -> this.getModelObject().getModel(), model -> this.getModelObject().setModel(model)));
+
         form.add(new NumberTextField<Double>("price", new LambdaModel<>(() -> this.getModelObject().getPurchasePrice(), model -> this.getModelObject().setPurchasePrice(model)), Double.class));
         form.add(new LocalDateTextField("date", new LambdaModel<LocalDate>(() -> this.getModelObject().getPurchaseDate(), date -> this.getModelObject().setPurchaseDate(date))));
         form.add(new SubmitLink("save") {
@@ -46,6 +57,23 @@ public class CarPage extends BasePage<Car> {
                 Car savedCar = CarPage.this.carService.save(CarPage.this.getModelObject());
                 this.setResponsePage(new CarListPage(new PersonModel(new Model<Integer>(savedCar.getOwner().getId()))));
             }
+        });
+        form.add(new AjaxSubmitLink("save2") {
+            @Override
+            public void onSubmit(AjaxRequestTarget target) {
+                super.onSubmit();
+                Car savedCar = CarPage.this.carService.save(CarPage.this.getModelObject());
+                form.getFormModeModel().setObject(BaseForm.FormMode.READ);
+                target.add(form);
+            }
+        });
+        form.add(new AjaxLink<String>("edit") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                form.getFormModeModel().setObject(BaseForm.FormMode.EDIT);
+                target.add(form);
+            }
+
         });
 
         this.add(form);

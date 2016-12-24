@@ -4,12 +4,15 @@ import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.services.person.PersonService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.UnAuthorizedAllowed;
+import be.ghostwritertje.webapp.form.BaseForm;
+import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
@@ -29,7 +32,7 @@ public class RegisterPage extends BasePage<Person> implements UnAuthorizedAllowe
     protected void onInitialize() {
         super.onInitialize();
 
-        Form<Person> form = new Form<Person>("form", this.getModel()) {
+        Form<Person> form = new BaseForm<Person>("form", this.getModel()) {
             @Override
             public void onSubmit() {
                 super.onSubmit();
@@ -38,8 +41,17 @@ public class RegisterPage extends BasePage<Person> implements UnAuthorizedAllowe
             }
         };
 
-        form.add(new TextField<String>("username", new LambdaModel<>(() -> this.getModel().getObject().getUsername(), username -> this.getModel().getObject().setUsername(username))).setRequired(true));
-        form.add(new PasswordTextField("password", new LambdaModel<>(() -> this.getModelObject().getPassword(), password -> this.getModelObject().setPassword(password))).setRequired(true));
+        FormComponentBuilderFactory.textField()
+                .usingDefaults()
+                .required()
+                .body(new ResourceModel("username"))
+                .attach(form, "username", new LambdaModel<>(() -> this.getModel().getObject().getUsername(), username -> this.getModel().getObject().setUsername(username)));
+
+        FormComponentBuilderFactory.password()
+                .usingDefaults()
+                .required()
+                .body(new ResourceModel("password"))
+                .attach(form, "password", new LambdaModel<>(() -> this.getModelObject().getPassword(), password -> this.getModelObject().setPassword(password)));
 
         form.add(new SubmitLink("save"));
 

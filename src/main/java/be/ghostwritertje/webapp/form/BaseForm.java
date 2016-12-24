@@ -30,6 +30,12 @@ public class BaseForm<T extends Serializable> extends Form<T> {
         this.formModeModel.setObject(FormMode.READ);
     }
 
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        this.setOutputMarkupId(true);
+    }
+
     public enum  FormMode {
         READ, EDIT
     }

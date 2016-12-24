@@ -70,15 +70,16 @@ public class LoginPage extends BasePage<Person> implements UnAuthorizedAllowed {
 
             FormComponentBuilderFactory.textField()
                     .usingDefaults()
+                    .required()
                     .body(new ResourceModel("username"))
                     .attach(this, "username", new LambdaModel<>(() -> this.getModel().getObject().getUsername(), username -> this.getModel().getObject().setUsername(username)));
 
             FormComponentBuilderFactory.password()
                     .usingDefaults()
                     .switchable(false)
+                    .required()
                     .body(new ResourceModel("password"))
                     .attach(this, "password", new LambdaModel<>(() -> this.getModelObject().getPassword(), password -> this.getModelObject().setPassword(password)));
-
 
             WebMarkupContainer rememberMeContainer = new WebMarkupContainer("rememberMeContainer");
             this.add(rememberMeContainer);

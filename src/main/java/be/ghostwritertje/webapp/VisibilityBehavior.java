@@ -8,7 +8,7 @@ import org.apache.wicket.lambda.WicketFunction;
  * Created by Jorandeboever
  * Date: 01-Oct-16.
  */
-public class VisibilityBehavior<X extends Component> extends Behavior {
+public class VisibilityBehavior<X extends Component> extends VisibilityBehaviorSupport {
 
     private final WicketFunction<? super X, Boolean> visibilityLogic;
 

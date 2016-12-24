@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  * Created by Jorandeboever
  * Date: 01-Oct-16.
  */
-public class IModelBasedVisibilityBehavior<T> extends Behavior {
+public class IModelBasedVisibilityBehavior<T> extends VisibilityBehaviorSupport {
 
     private final IModel<T> entityModel;
     private final Predicate<T> visibilityLogic;

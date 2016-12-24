@@ -26,6 +26,7 @@ public abstract class FormComponentBuilder<X extends FormComponent<T>, T extends
     private WicketBiFunction<String, IModel<String>, Component> labelSupplier = Label::new;
     private boolean switchable = true;
     private WicketSupplier<IModel<String>> labelModel = Model::new;
+    private boolean required = false;
 
     public F usingDefaults() {
         this.switchable = true;
@@ -34,6 +35,16 @@ public abstract class FormComponentBuilder<X extends FormComponent<T>, T extends
 
     public F switchable(boolean switchable){
         this.switchable = switchable;
+        return this.self();
+    }
+
+    public F notRequired(){
+        this.required = false;
+        return this.self();
+    }
+
+    public F required(){
+        this.required = true;
         return this.self();
     }
 
@@ -48,14 +59,16 @@ public abstract class FormComponentBuilder<X extends FormComponent<T>, T extends
         Component label = this.labelSupplier.apply(id + "-label", labelModel.get());
         X formComponent = this.buildFormComponent(id, model);
 
+        formComponent.setRequired(required);
+
         if (switchable) {
             Component readLabel = new Label(id + "-read", model);
-            initialParent.add(readLabel);
+            initialParent.add(readLabel.setOutputMarkupPlaceholderTag(true));
             formComponent.add(new VisibilityBehavior<>(component -> component.findParent(BaseForm.class).getFormModeModel().getObject().equals(BaseForm.FormMode.EDIT)));
             readLabel.add(new VisibilityBehavior<>(component -> component.findParent(BaseForm.class).getFormModeModel().getObject().equals(BaseForm.FormMode.READ)));
         }
-        initialParent.add(label);
-        initialParent.add(formComponent);
+        initialParent.add(label.setOutputMarkupPlaceholderTag(true));
+        initialParent.add(formComponent.setOutputMarkupPlaceholderTag(true));
         return this.self();
     }
 
