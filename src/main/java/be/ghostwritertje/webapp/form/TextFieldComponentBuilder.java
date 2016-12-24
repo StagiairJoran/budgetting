@@ -9,7 +9,7 @@ import org.apache.wicket.model.IModel;
  * Created by Jorandeboever
  * Date: 23-Dec-16.
  */
-public class TextFieldComponentBuilder extends FormComponentBuilder<TextField<String>, String> {
+public class TextFieldComponentBuilder extends FormComponentBuilder<TextField<String>, String, TextFieldComponentBuilder> {
     TextFieldComponentBuilder() {
     }
 

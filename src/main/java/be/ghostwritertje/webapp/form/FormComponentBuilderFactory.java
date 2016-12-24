@@ -8,4 +8,8 @@ public class FormComponentBuilderFactory {
     public static TextFieldComponentBuilder textField(){
         return new TextFieldComponentBuilder();
     }
+
+    public static PasswordTextFieldComponentBuilder password(){
+        return new PasswordTextFieldComponentBuilder();
+    }
 }

@@ -21,39 +21,45 @@ import java.util.Optional;
  * Created by Jorandeboever
  * Date: 23-Dec-16.
  */
-public abstract class FormComponentBuilder<X extends FormComponent<T>, T extends Serializable> {
+public abstract class FormComponentBuilder<X extends FormComponent<T>, T extends Serializable, F extends FormComponentBuilder> {
 
     private WicketBiFunction<String, IModel<String>, Component> labelSupplier = Label::new;
-    private boolean switchable = false;
+    private boolean switchable = true;
     private WicketSupplier<IModel<String>> labelModel = Model::new;
 
-    public FormComponentBuilder usingDefaults() {
+    public F usingDefaults() {
         this.switchable = true;
         return this.self();
     }
 
-    private FormComponentBuilder self() {
-        return this;
+    public F switchable(boolean switchable){
+        this.switchable = switchable;
+        return this.self();
+    }
+
+    @SuppressWarnings("unchecked")
+    private F self() {
+        return (F) this;
     }
 
     abstract X buildFormComponent(String id, IModel<T> model);
 
-    public FormComponentBuilder attach(MarkupContainer initialParent, String id, IModel<T> model) {
+    public F attach(MarkupContainer initialParent, String id, IModel<T> model) {
         Component label = this.labelSupplier.apply(id + "-label", labelModel.get());
-        Component readLabel = new Label(id + "-read", model);
         X formComponent = this.buildFormComponent(id, model);
 
         if (switchable) {
+            Component readLabel = new Label(id + "-read", model);
+            initialParent.add(readLabel);
             formComponent.add(new VisibilityBehavior<>(component -> component.findParent(BaseForm.class).getFormModeModel().getObject().equals(BaseForm.FormMode.EDIT)));
             readLabel.add(new VisibilityBehavior<>(component -> component.findParent(BaseForm.class).getFormModeModel().getObject().equals(BaseForm.FormMode.READ)));
         }
-        initialParent.add(readLabel);
         initialParent.add(label);
         initialParent.add(formComponent);
         return this.self();
     }
 
-    public FormComponentBuilder body(ResourceModel labelModel) {
+    public F body(ResourceModel labelModel) {
         this.labelModel = () -> labelModel;
         return this.self();
     }
