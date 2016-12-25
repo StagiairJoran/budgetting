@@ -32,6 +32,7 @@ public abstract class BasePage<T> extends GenericWebPage<T>  implements Authoriz
     protected void onInitialize() {
         super.onInitialize();
 
+        this.add(new BookmarkablePageLink("homeLink", DashboardPage.class));
         this.add(new BookmarkablePageLink("usersLink", PersonListPage.class));
         this.add(new BookmarkablePageLink("registerLink", RegisterPage.class)
                 .add(new VisibilityBehavior<>(component -> CustomSession.get().getLoggedInPerson() == null)));
