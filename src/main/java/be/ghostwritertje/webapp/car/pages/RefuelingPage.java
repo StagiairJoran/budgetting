@@ -11,8 +11,10 @@ import be.ghostwritertje.webapp.car.model.CarModel;
 import be.ghostwritertje.webapp.form.FormComponentBuilder;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.form.NumberTextFieldComponentBuilder;
+import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -49,8 +51,6 @@ public class RefuelingPage extends BasePage<Refueling> {
             @Override
             public void onSubmit() {
                 super.onSubmit();
-                Refueling savedRefueling = RefuelingPage.this.refuelingService.save(RefuelingPage.this.getModelObject());
-                this.setResponsePage(new RefuelingListPage(new CarModel(new Model<Integer>(savedRefueling.getCar().getId()))));
             }
         };
 
@@ -76,9 +76,18 @@ public class RefuelingPage extends BasePage<Refueling> {
         CheckBox checkBox = new CheckBox("tankFull", new LambdaModel<>(() -> this.getModelObject().isFuelTankFull(), full -> this.getModelObject().setFuelTankFull(full)));
         form.add(checkBox);
 
-        form.add(new SubmitLink("save"));
+        LinkBuilderFactory.submitLink()
+                .usingDefaults()
+                .attach(form, "save", save());
 
         this.add(form);
+    }
+
+    private static WicketBiConsumer<AjaxRequestTarget, AjaxSubmitLink> save() {
+        return (target, components) -> {
+            RefuelingPage parent = components.findParent(RefuelingPage.class);
+            parent.refuelingService.save(parent.getModelObject());
+        };
     }
 
     private Component getLiters() {
