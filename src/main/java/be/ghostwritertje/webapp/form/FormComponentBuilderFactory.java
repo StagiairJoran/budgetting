@@ -12,4 +12,12 @@ public class FormComponentBuilderFactory {
     public static PasswordTextFieldComponentBuilder password(){
         return new PasswordTextFieldComponentBuilder();
     }
+
+    public static NumberTextFieldComponentBuilder number(){
+        return new NumberTextFieldComponentBuilder();
+    }
+
+    public static LocalDateTextFieldComponentBuilder date(){
+        return new LocalDateTextFieldComponentBuilder();
+    }
 }

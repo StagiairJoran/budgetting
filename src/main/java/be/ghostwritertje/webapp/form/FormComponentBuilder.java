@@ -4,6 +4,7 @@ import be.ghostwritertje.webapp.VisibilityBehavior;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.lambda.WicketBiFunction;
 import org.apache.wicket.lambda.WicketFunction;
 import org.apache.wicket.lambda.WicketSupplier;
@@ -15,18 +16,21 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
  * Created by Jorandeboever
  * Date: 23-Dec-16.
  */
-public abstract class FormComponentBuilder<X extends FormComponent<T>, T extends Serializable, F extends FormComponentBuilder> {
+public abstract class FormComponentBuilder<X extends FormComponent<?>, T extends Serializable, F extends FormComponentBuilder<X, T, F>> {
 
     private WicketBiFunction<String, IModel<String>, Component> labelSupplier = Label::new;
     private boolean switchable = true;
     private WicketSupplier<IModel<String>> labelModel = Model::new;
     private boolean required = false;
+    private final Collection<WicketSupplier<? extends Behavior>> behaviors = new ArrayList<>();
 
     public F usingDefaults() {
         this.switchable = true;
@@ -53,6 +57,11 @@ public abstract class FormComponentBuilder<X extends FormComponent<T>, T extends
         return (F) this;
     }
 
+    public F behave(WicketSupplier<? extends Behavior> behaviorFunction){
+        this.behaviors.add(behaviorFunction);
+        return this.self();
+    }
+
     abstract X buildFormComponent(String id, IModel<T> model);
 
     public F attach(MarkupContainer initialParent, String id, IModel<T> model) {
@@ -60,6 +69,8 @@ public abstract class FormComponentBuilder<X extends FormComponent<T>, T extends
         X formComponent = this.buildFormComponent(id, model);
 
         formComponent.setRequired(required);
+
+        this.behaviors.forEach(wicketFunction -> formComponent.add(wicketFunction.get()));
 
         if (switchable) {
             Component readLabel = new Label(id + "-read", model);

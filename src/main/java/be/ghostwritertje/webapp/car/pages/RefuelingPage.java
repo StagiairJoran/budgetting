@@ -8,7 +8,9 @@ import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.LambdaOnChangeBehavior;
 import be.ghostwritertje.webapp.LocalDateTextField;
 import be.ghostwritertje.webapp.car.model.CarModel;
+import be.ghostwritertje.webapp.form.FormComponentBuilder;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
+import be.ghostwritertje.webapp.form.NumberTextFieldComponentBuilder;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.lambda.WicketBiConsumer;
@@ -19,6 +21,7 @@ import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.LocalDate;
@@ -52,34 +55,33 @@ public class RefuelingPage extends BasePage<Refueling> {
         };
 
         IModel<LocalDate> localDateLambdaModel = new LambdaModel<>(() -> this.getModel().getObject().getDate(), localDate -> this.getModel().getObject().setDate(localDate));
-        form.add(new LocalDateTextField("date", localDateLambdaModel));
-        form.add(new NumberTextField<Double>("kilometres", new LambdaModel<Double>(() -> this.getModelObject().getKilometres(), kilometres -> this.getModelObject().setKilometres(kilometres)), Double.class));
 
+        FormComponentBuilderFactory.date()
+                .usingDefaults()
+                .body(new ResourceModel("date"))
+                .attach(form, "date", localDateLambdaModel);
 
-        NumberTextField<Double> litersField = new NumberTextField<>(LITERS_ID, new LambdaModel<Double>(() -> this.getModelObject().getLiters(), liters -> this.getModelObject().setLiters(liters)), Double.class);
-        litersField.add(new LambdaOnChangeBehavior(updateMissingField(this.getModel())));
-        form.add(litersField);
+        FormComponentBuilderFactory.number()
+                .usingDefaults()
+                .body(new ResourceModel("kilometres"))
+                .attach(form, "kilometres", new LambdaModel<>(() -> this.getModelObject().getKilometres(), kilometres -> this.getModelObject().setKilometres(kilometres)))
+                .body(new ResourceModel("liters"))
+                .attach(form, LITERS_ID, new LambdaModel<Double>(() -> this.getModelObject().getLiters(), liters -> this.getModelObject().setLiters(liters)))
+                .behave(() -> new LambdaOnChangeBehavior(updateMissingField(this.getModel())))
+                .body(new ResourceModel("price"))
+                .attach(form, "price", new LambdaModel<Double>(() -> this.getModelObject().getPrice(), price -> this.getModelObject().setPrice(price)))
+                .body(new ResourceModel("liter.price"))
+                .attach(form, "literPrice", new LambdaModel<Double>(() -> this.getModelObject().getPricePerLiter(), kilometres -> this.getModelObject().setPricePerLiter(kilometres)));
 
         CheckBox checkBox = new CheckBox("tankFull", new LambdaModel<>(() -> this.getModelObject().isFuelTankFull(), full -> this.getModelObject().setFuelTankFull(full)));
         form.add(checkBox);
-
-        NumberTextField<Double> priceField = new NumberTextField<>("price", new LambdaModel<Double>(() -> this.getModelObject().getPrice(), price -> this.getModelObject().setPrice(price)), Double.class);
-        priceField.add(new LambdaOnChangeBehavior(updateMissingField(this.getModel())));
-
-        form.add(priceField);
-
-
-        NumberTextField<Double> literPriceField = new NumberTextField<>("literPrice", new LambdaModel<Double>(() -> this.getModelObject().getPricePerLiter(), kilometres -> this.getModelObject().setPricePerLiter(kilometres)), Double.class);
-        literPriceField.add(new LambdaOnChangeBehavior(updateMissingField(this.getModel())));
-
-        form.add(literPriceField);
 
         form.add(new SubmitLink("save"));
 
         this.add(form);
     }
 
-    private Component getLiters(){
+    private Component getLiters() {
         return this.get("form").get(LITERS_ID);
     }
 
@@ -91,7 +93,7 @@ public class RefuelingPage extends BasePage<Refueling> {
             Double price = refueling.getPrice();
 
             if (pricePerLiter != 0 && price != 0) {
-                refueling.setLiters(NumberUtilities.round(price / pricePerLiter,2));
+                refueling.setLiters(NumberUtilities.round(price / pricePerLiter, 2));
                 ajaxRequestTarget.add(parent.getLiters());
             }
 
