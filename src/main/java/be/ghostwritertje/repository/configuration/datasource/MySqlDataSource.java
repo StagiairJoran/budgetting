@@ -34,7 +34,7 @@ public class MySqlDataSource {
     }
 
     @Bean
-    @Profile("oldOpenshift")
+    @Profile("openshift")
     public DataSource oldOpenshiftDataSource(
             @Value("${OPENSHIFT_MYSQL_DB_HOST}") String host,
             @Value("${OPENSHIFT_MYSQL_DB_PORT}") String port,
@@ -54,7 +54,7 @@ public class MySqlDataSource {
     }
 
     @Bean
-    @Profile("openshift")
+    @Profile("openshiftv2")
     public DataSource openshiftDataSource(
             @Value("${MYSQL_SERVICE_HOST}") String host,
             @Value("${MYSQL_SERVICE_PORT}") String port,
