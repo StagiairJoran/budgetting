@@ -2,6 +2,7 @@ package be.ghostwritertje.webapp;
 
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.webapp.budgetting.StatementListPage;
+import be.ghostwritertje.webapp.investing.FinancialInstrumentListPage;
 import be.ghostwritertje.webapp.investing.FundPurchaseListPage;
 import be.ghostwritertje.webapp.person.pages.LoginPage;
 import be.ghostwritertje.webapp.person.pages.LogoutPage;
@@ -34,6 +35,8 @@ public abstract class BasePage<T> extends GenericWebPage<T>  implements Authoriz
 
         this.add(new BookmarkablePageLink("homeLink", DashboardPage.class));
         this.add(new BookmarkablePageLink("usersLink", PersonListPage.class));
+        this.add(new BookmarkablePageLink("funds", FinancialInstrumentListPage.class));
+
         this.add(new BookmarkablePageLink("registerLink", RegisterPage.class)
                 .add(new VisibilityBehavior<>(component -> CustomSession.get().getLoggedInPerson() == null)));
         this.add(new BookmarkablePageLink("loginLink", LoginPage.class)

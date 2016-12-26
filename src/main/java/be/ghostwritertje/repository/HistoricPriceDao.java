@@ -1,8 +1,11 @@
 package be.ghostwritertje.repository;
 
+import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.domain.investing.HistoricPrice;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by Jorandeboever
@@ -10,5 +13,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface HistoricPriceDao extends CrudRepository<HistoricPrice, Integer> {
-
+    List<HistoricPrice> findByFinancialInstrument(FinancialInstrument financialInstrument);
 }

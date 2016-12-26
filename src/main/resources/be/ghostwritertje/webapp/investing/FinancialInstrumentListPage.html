@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <h2>Funds</h2>
+
+        <div class=" col-sm-8">
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>quote</th>
+                    <th>yearToDateReturn</th>
+                    <th>fiveYearReturn</th>
+                    <th>currentPrice</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr wicket:id="financialInstruments">
+                    <td wicket:id="quote"></td>
+                    <td wicket:id="yearToDateReturn"></td>
+                    <td wicket:id="fiveYearReturn"></td>
+                    <td wicket:id="currentPrice"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+</wicket:extend>
+</body>
+</html>
