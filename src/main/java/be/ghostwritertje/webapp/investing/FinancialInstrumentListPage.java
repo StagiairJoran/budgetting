@@ -6,6 +6,7 @@ import be.ghostwritertje.domain.investing.FundPurchase;
 import be.ghostwritertje.services.investing.FinancialInstrumentService;
 import be.ghostwritertje.webapp.BasePage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -46,7 +47,12 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
                 item.add(new Label("yearToDateReturn", item.getModelObject().getYearToDateReturn()));
                 item.add(new Label("fiveYearReturn", item.getModelObject().get5yearReturn()));
                 item.add(new Label("currentPrice", item.getModelObject().getCurrentPrice()));
-
+                item.add(new Link<FinancialInstrument>("link", item.getModel()) {
+                    @Override
+                    public void onClick() {
+                        setResponsePage(new FinancialInstrumentPage(item.getModel()));
+                    }
+                });
             }
         });
     }
