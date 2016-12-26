@@ -20,11 +20,14 @@ import java.util.List;
  */
 @Service
 public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Statement> implements StatementService {
-    @Autowired
-    private StatementDao dao;
+    private final StatementDao dao;
+    private final BankAccountService bankAccountService;
 
     @Autowired
-    private BankAccountService bankAccountService;
+    public StatementServiceImpl(StatementDao dao, BankAccountService bankAccountService) {
+        this.dao = dao;
+        this.bankAccountService = bankAccountService;
+    }
 
     @Override
     protected CrudRepository<Statement, Integer> getDao() {

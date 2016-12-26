@@ -17,11 +17,14 @@ import java.util.List;
  */
 @Service
 public class CarServiceImpl extends DomainObjectCrudServiceSupport<Car> implements CarService {
-    @Autowired
-    private CarDao dao;
+    private final CarDao dao;
+    private final PersonService personService;
 
     @Autowired
-    private PersonService personService;
+    public CarServiceImpl(CarDao dao, PersonService personService) {
+        this.dao = dao;
+        this.personService = personService;
+    }
 
     @Override
     public List<Car> findAll(Person owner) {

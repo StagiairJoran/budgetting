@@ -3,12 +3,16 @@ package be.ghostwritertje.services.person;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.repository.PersonDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
+import be.ghostwritertje.webapp.person.pages.LoginPage;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Ghostwritertje
@@ -16,8 +20,13 @@ import java.util.List;
  */
 @Service
 public class PersonServiceImpl extends DomainObjectCrudServiceSupport<Person> implements PersonService {
+    private final PersonDao dao;
+    private static final Logger logger = Logger.getLogger(PersonServiceImpl.class);
+
     @Autowired
-    private PersonDao dao;
+    public PersonServiceImpl(PersonDao dao) {
+        this.dao = dao;
+    }
 
     @Override
     public String getLoggedInUser() {
@@ -26,6 +35,7 @@ public class PersonServiceImpl extends DomainObjectCrudServiceSupport<Person> im
 
     @Override
     public List<Person> findAll() {
+        logger.info("Getting all users");
         Iterable<Person> userIterable = this.dao.findAll();
 
         List<Person> personList = new ArrayList<>();

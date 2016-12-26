@@ -16,11 +16,14 @@ import java.util.List;
 @Service
 public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSupport<FinancialInstrument> implements FinancialInstrumentService {
 
-    @Autowired
-    private FinancialInstrumentDao financialInstrumentDao;
+    private final FinancialInstrumentDao financialInstrumentDao;
+    private final FinanceService financeService;
 
     @Autowired
-    private FinanceService financeService;
+    public FinancialInstrumentServiceImpl(FinancialInstrumentDao financialInstrumentDao, FinanceService financeService) {
+        this.financialInstrumentDao = financialInstrumentDao;
+        this.financeService = financeService;
+    }
 
     @Override
     protected CrudRepository<FinancialInstrument, Integer> getDao() {

@@ -16,8 +16,12 @@ import java.util.List;
  */
 @Service
 public class BankAccountServiceImpl extends DomainObjectCrudServiceSupport<BankAccount> implements BankAccountService {
+    private final BankAccountDao dao;
+
     @Autowired
-    private BankAccountDao dao;
+    public BankAccountServiceImpl(BankAccountDao dao) {
+        this.dao = dao;
+    }
 
     @Override
     protected CrudRepository<BankAccount, Integer> getDao() {
