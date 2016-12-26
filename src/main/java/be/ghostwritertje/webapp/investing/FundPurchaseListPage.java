@@ -37,7 +37,6 @@ public class FundPurchaseListPage extends BasePage<Person> {
     private static final Logger logger = Logger.getLogger(H2DataSource.class);
     @SpringBean
     private FundPurchaseService fundPurchaseService;
-
     @SpringBean
     private FinanceService financeService;
 

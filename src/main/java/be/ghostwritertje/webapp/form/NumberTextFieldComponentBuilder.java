@@ -10,13 +10,12 @@ import org.apache.wicket.model.ResourceModel;
  * Created by Jorandeboever
  * Date: 25-Dec-16.
  */
-public class NumberTextFieldComponentBuilder extends FormComponentBuilder<NumberTextField<?>, Double, NumberTextFieldComponentBuilder>  {
+public class NumberTextFieldComponentBuilder<N extends Number & Comparable<N>> extends FormComponentBuilder<NumberTextField<N>, N, NumberTextFieldComponentBuilder<N>> {
     NumberTextFieldComponentBuilder() {
     }
 
-
     @Override
-    NumberTextField<?> buildFormComponent(String id, IModel<Double> model) {
+    NumberTextField<N> buildFormComponent(String id, IModel<N> model) {
         return new NumberTextField<>(id, model);
     }
 }
