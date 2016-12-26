@@ -27,7 +27,7 @@ public class InvestmentSummary implements Serializable {
 
     public BigDecimal getAnnualPerfomanceInPercentage() {
         LocalDate portfolioDate = this.getDatePortfolio();
-        if (portfolioDate.isBefore(LocalDate.now().minusYears(1))) {
+        if (portfolioDate != null && portfolioDate.isBefore(LocalDate.now().minusYears(1))) {
             return BigDecimalMath.pow(
                     this.getCurrentValue().divide(getTotalInvested(), 100, RoundingMode.HALF_EVEN),
                     new BigDecimal("365.25").divide(BigDecimal.valueOf(LocalDate.now().toEpochDay()).subtract(BigDecimal.valueOf(portfolioDate.toEpochDay())), 100, BigDecimal.ROUND_HALF_EVEN))
@@ -35,10 +35,17 @@ public class InvestmentSummary implements Serializable {
         } else {
             return null;
         }
+
     }
 
     public BigDecimal getAddedValueInPercentage() {
-        return this.getAddedValue().divide(getTotalInvested().abs(), 100, BigDecimal.ROUND_HALF_EVEN);
+        BigDecimal zero;
+        if (this.getTotalInvested().equals(BigDecimal.ZERO)) {
+            zero = BigDecimal.ZERO;
+        } else {
+            zero = this.getAddedValue().divide(getTotalInvested().abs(), 100, BigDecimal.ROUND_HALF_EVEN);
+        }
+        return zero;
     }
 
     public BigDecimal getTotalInvested() {
@@ -51,10 +58,14 @@ public class InvestmentSummary implements Serializable {
 
     private LocalDate getDatePortfolio() {
         //TODO not accounting for sales yet (only purchases)
-        return LocalDate.ofEpochDay(fundPurchaseList.stream().map(f -> {
-            BigDecimal weight = BigDecimal.valueOf(f.getTotalCost()).divide(this.getTotalInvested(), 100, RoundingMode.HALF_DOWN);
-            return BigDecimal.valueOf(f.getDate().toEpochDay()).multiply(weight);
-        }).reduce(BigDecimal.ZERO, BigDecimal::add).longValue());
+        if (fundPurchaseList.isEmpty()) {
+            return null;
+        } else {
+            return LocalDate.ofEpochDay(fundPurchaseList.stream().map(f -> {
+                BigDecimal weight = BigDecimal.valueOf(f.getTotalCost()).divide(this.getTotalInvested(), 100, RoundingMode.HALF_DOWN);
+                return BigDecimal.valueOf(f.getDate().toEpochDay()).multiply(weight);
+            }).reduce(BigDecimal.ZERO, BigDecimal::add).longValue());
+        }
     }
 
     void setCurrentValue(BigDecimal currentValue) {
