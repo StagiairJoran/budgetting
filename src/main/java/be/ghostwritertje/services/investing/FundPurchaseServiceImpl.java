@@ -19,13 +19,11 @@ import java.util.List;
 public class FundPurchaseServiceImpl extends DomainObjectCrudServiceSupport<FundPurchase> implements FundPurchaseService {
     private final FundPurchaseDao dao;
     private final FinancialInstrumentService financialInstrumentService;
-    private final HistoricPriceService historicPriceService;
 
     @Autowired
     public FundPurchaseServiceImpl(FundPurchaseDao dao, FinancialInstrumentService financialInstrumentService, HistoricPriceService historicPriceService) {
         this.dao = dao;
         this.financialInstrumentService = financialInstrumentService;
-        this.historicPriceService = historicPriceService;
     }
 
     @Override
@@ -41,7 +39,6 @@ public class FundPurchaseServiceImpl extends DomainObjectCrudServiceSupport<Fund
     @Override
     public FundPurchase save(FundPurchase object) {
         financialInstrumentService.save(new FinancialInstrument(object.getQuote()));
-        this.historicPriceService.initMissingHistoricPrices();
         return super.save(object);
     }
 }

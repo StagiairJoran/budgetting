@@ -3,9 +3,15 @@
 <body>
 <wicket:extend>
     <h2>Funds</h2>
-
+        <div class="col-sm-8">
+            <form wicket:id="form">
+                <label wicket:id="quote-label"></label>
+                <input type="text" wicket:id="quote"/>
+                <label wicket:id="quote-read"></label>
+                <button wicket:id="save">Save</button>
+            </form>
+        </div>
         <div class=" col-sm-8">
-
             <table class="table">
                 <thead>
                 <tr>

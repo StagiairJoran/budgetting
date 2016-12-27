@@ -8,6 +8,8 @@ import be.ghostwritertje.webapp.person.pages.LoginPage;
 import be.ghostwritertje.webapp.person.pages.LogoutPage;
 import be.ghostwritertje.webapp.person.pages.PersonListPage;
 import be.ghostwritertje.webapp.person.pages.RegisterPage;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import org.apache.wicket.markup.html.GenericWebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;

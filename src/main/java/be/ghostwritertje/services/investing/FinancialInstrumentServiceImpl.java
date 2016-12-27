@@ -5,6 +5,7 @@ import be.ghostwritertje.repository.FinancialInstrumentDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +19,13 @@ public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSuppo
 
     private final FinancialInstrumentDao financialInstrumentDao;
     private final FinanceService financeService;
+    private final HistoricPriceService historicPriceService;
 
     @Autowired
-    public FinancialInstrumentServiceImpl(FinancialInstrumentDao financialInstrumentDao, FinanceService financeService) {
+    public FinancialInstrumentServiceImpl(FinancialInstrumentDao financialInstrumentDao, FinanceService financeService, HistoricPriceService historicPriceService) {
         this.financialInstrumentDao = financialInstrumentDao;
         this.financeService = financeService;
+        this.historicPriceService = historicPriceService;
     }
 
     @Override
@@ -34,7 +37,9 @@ public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSuppo
     public FinancialInstrument save(FinancialInstrument object) {
         if(this.financeService.exists(object.getQuote())) {
             if(this.financialInstrumentDao.findByQuote(object.getQuote()) == null){
-                return super.save(object);
+                FinancialInstrument save = super.save(object);
+                this.createHistoricPrices(save);
+                return save;
             }
         }
         return null;
@@ -44,4 +49,12 @@ public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSuppo
         return this.financialInstrumentDao.findFinancialInstrumentsWithoutHistory();
     }
 
+    public void createHistoricPrices(FinancialInstrument financialInstrument) {
+        this.historicPriceService.createHistoricPrices(financialInstrument);
+    }
+
+    @Scheduled(cron = "0 0 5 ? * TUE-SAT")
+    public void updateHistoricPrices(){
+        this.findAll().forEach(this.historicPriceService::updateHistoricPrices);
+    }
 }

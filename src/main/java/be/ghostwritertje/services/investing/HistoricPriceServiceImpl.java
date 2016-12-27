@@ -23,13 +23,11 @@ public class HistoricPriceServiceImpl extends DomainObjectCrudServiceSupport<His
 
     private final HistoricPriceDao historicPriceDao;
     private final FinanceService financeService;
-    private final FinancialInstrumentService financialInstrumentService;
 
     @Autowired
-    public HistoricPriceServiceImpl(HistoricPriceDao historicPriceDao, FinanceService financeService, FinancialInstrumentService financialInstrumentService) {
+    public HistoricPriceServiceImpl(HistoricPriceDao historicPriceDao, FinanceService financeService) {
         this.historicPriceDao = historicPriceDao;
         this.financeService = financeService;
-        this.financialInstrumentService = financialInstrumentService;
     }
 
     @Override
@@ -37,18 +35,16 @@ public class HistoricPriceServiceImpl extends DomainObjectCrudServiceSupport<His
         return this.historicPriceDao;
     }
 
-    public void initHistoricPricesForStock(FinancialInstrument financialInstrument) {
+    @Override
+    public void updateHistoricPrices(FinancialInstrument financialInstrument) {
+        logger.debug("Updating historic prices for " + financialInstrument.getQuote());
+        this.save(this.financeService.createHistoricPrices(financialInstrument, LocalDate.now().minusDays(1)));
+    }
+
+    @Override
+    public void createHistoricPrices(FinancialInstrument financialInstrument){
+        logger.debug("Creating historic prices for " + financialInstrument.getQuote());
         this.save(this.financeService.createHistoricPrices(financialInstrument));
-    }
-
-    public void initMissingHistoricPrices(){
-        this.financialInstrumentService.findFinancialInstrumentsWithoutHistory().forEach(this::initHistoricPricesForStock);
-    }
-
-    @Scheduled(cron = "0 0 5 ? * TUE-SAT")
-    public void updateHistoricPrices(){
-        logger.debug("Updating historic prices");
-        this.financialInstrumentService.findAll().forEach(financialInstrument ->  this.save(this.financeService.createHistoricPrices(financialInstrument, LocalDate.now().minusDays(1))));
     }
 
 }
