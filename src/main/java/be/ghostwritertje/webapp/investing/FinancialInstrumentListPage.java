@@ -2,8 +2,11 @@ package be.ghostwritertje.webapp.investing;
 
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.investing.FinancialInstrument;
+import be.ghostwritertje.domain.investing.HistoricPrice;
 import be.ghostwritertje.services.investing.FinancialInstrumentService;
+import be.ghostwritertje.utilities.Pair;
 import be.ghostwritertje.webapp.BasePage;
+import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
@@ -21,7 +24,11 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jorandeboever
@@ -74,6 +81,59 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
                 });
             }
         });
+        Map<String,List<Pair<LocalDate, Double>>> coordinatesMap1 = this.financialInstrumentListModel.getObject()
+                .stream()
+                .collect(Collectors.toMap(FinancialInstrument::getQuote, (financialInstrument) -> financialInstrument.getValuesFromStartDate(LocalDate.now().minusYears(1))));
+
+        Map<String,List<Pair<LocalDate, Double>>> coordinatesMap3 = this.financialInstrumentListModel.getObject()
+                .stream()
+                .collect(Collectors.toMap(FinancialInstrument::getQuote, (financialInstrument) -> financialInstrument.getValuesFromStartDate(LocalDate.now().minusYears(3))));
+
+        Map<String,List<Pair<LocalDate, Double>>> coordinatesMap5 = this.financialInstrumentListModel.getObject()
+                .stream()
+                .collect(Collectors.toMap(FinancialInstrument::getQuote, (financialInstrument) -> financialInstrument.getValuesFromStartDate(LocalDate.now().minusYears(5))));
+
+        Map<String,List<Pair<LocalDate, Double>>> coordinatesMap7 = this.financialInstrumentListModel.getObject()
+                .stream()
+                .collect(Collectors.toMap(FinancialInstrument::getQuote, (financialInstrument) -> financialInstrument.getValuesFromStartDate(LocalDate.now().minusYears(7))));
+
+        Map<String,List<Pair<LocalDate, Double>>> coordinatesMap10 = this.financialInstrumentListModel.getObject()
+                .stream()
+                .collect(Collectors.toMap(FinancialInstrument::getQuote, (financialInstrument) -> financialInstrument.getValuesFromStartDate(LocalDate.now().minusYears(10))));
+
+
+        ChartBuilderFactory.splineChart()
+                .usingDefaults()
+                .title("1 year return")
+                .addLines(coordinatesMap3, Pair::getK, Pair::getV, 2)
+                .attach(this, "chart1");
+
+
+        ChartBuilderFactory.splineChart()
+                .usingDefaults()
+                .title("3 year return")
+                .addLines(coordinatesMap3, Pair::getK, Pair::getV, 2)
+                .attach(this, "chart3");
+
+        ChartBuilderFactory.splineChart()
+                .usingDefaults()
+                .title("5 year return")
+                .addLines(coordinatesMap5, Pair::getK, Pair::getV, 2)
+                .attach(this, "chart5");
+
+        ChartBuilderFactory.splineChart()
+                .usingDefaults()
+                .title("7 year return")
+                .addLines(coordinatesMap7, Pair::getK, Pair::getV, 2)
+                .attach(this, "chart7");
+
+
+        ChartBuilderFactory.splineChart()
+                .usingDefaults()
+                .title("10 year return")
+                .addLines(coordinatesMap10, Pair::getK, Pair::getV, 2)
+                .attach(this, "chart10");
+
     }
 
     @SuppressWarnings("unchecked")

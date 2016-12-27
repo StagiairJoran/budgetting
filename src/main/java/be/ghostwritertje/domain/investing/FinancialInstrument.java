@@ -2,6 +2,7 @@ package be.ghostwritertje.domain.investing;
 
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.utilities.CalculatorUtilities;
+import be.ghostwritertje.utilities.Pair;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +13,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jorandeboever
@@ -47,7 +51,7 @@ public class FinancialInstrument extends DomainObject {
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
 //                        .map(currentPrice -> currentPrice / historicPrice.getPrice())
-                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()),BigDecimal.valueOf(currentPrice), 1).doubleValue())
+                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), 1).doubleValue())
                         .orElse(null))
                 .orElse(null);
     }
@@ -60,7 +64,7 @@ public class FinancialInstrument extends DomainObject {
                 //TODO price may not be exactly a year ago
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
-                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()),BigDecimal.valueOf(currentPrice), yearsToSubtract).doubleValue())
+                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), yearsToSubtract).doubleValue())
                         .orElse(null))
                 .orElse(null);
     }
@@ -79,5 +83,19 @@ public class FinancialInstrument extends DomainObject {
 
     public List<HistoricPrice> getHistoricPriceList() {
         return historicPriceList;
+    }
+
+    public List<Pair<LocalDate, Double>> getValuesFromStartDate(LocalDate date) {
+        return this.historicPriceList.stream()
+                .filter(historicPrice -> historicPrice.getDate().isBefore(date))
+                .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
+                .findFirst()
+                .map(historicPrice -> {
+                    double value = 10000 / historicPrice.getPrice();
+                    return this.historicPriceList.stream()
+                            .filter(h -> h.getDate().isAfter(date))
+                            .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), historicPrice1.getPrice() * value))
+                            .collect(Collectors.toList());
+                }).orElse(new ArrayList<>());
     }
 }

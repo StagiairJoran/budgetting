@@ -16,6 +16,7 @@ import org.apache.wicket.lambda.WicketFunction;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -74,6 +75,11 @@ public class HistoricChartBuilder {
                         .map(x -> new DateCoordinate(dateFunction.apply(x), numberFunction.apply(x), rounding))
                         .map(dateCoordinate -> (Coordinate<String, String>) dateCoordinate)
                         .collect(Collectors.toList())));
+        return this.self();
+    }
+
+    public <X> HistoricChartBuilder addLines(Map<String,List<X>> coordinatesMap, WicketFunction<X, LocalDate> dateFunction, WicketFunction<X, Number> numberFunction, int rounding) {
+       coordinatesMap.forEach((s, xes) -> this.addLine(s, xes, dateFunction, numberFunction, rounding));
         return this.self();
     }
 
