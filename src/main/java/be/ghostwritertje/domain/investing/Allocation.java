@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name = "T_ALLOCATION")
 public class Allocation extends DomainObject{
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
     @JoinColumn(name = "FINANCIAL_INSTRUMENT_ID")
     private FinancialInstrument financialInstrument;
 
