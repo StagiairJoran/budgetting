@@ -29,7 +29,7 @@ public class FinancialInstrument extends DomainObject {
     @Column(unique = true)
     private String quote;
 
-    @OneToMany(mappedBy = "financialInstrument", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "financialInstrument", fetch = FetchType.EAGER) //TODO should not be eager
     private final List<HistoricPrice> historicPriceList = new ArrayList<>();
 
     public FinancialInstrument() {

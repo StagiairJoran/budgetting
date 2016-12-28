@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div class=" col-sm-8">
+
+        <button type="button" class="btn btn-default" wicket:id="newPortfolio">new</button>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Link</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr wicket:id="portfolios">
+                <td wicket:id="name"></td>
+
+                <td>
+                    <a wicket:id="link"><span>Link</span></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</wicket:extend>
+</body>
+</html>

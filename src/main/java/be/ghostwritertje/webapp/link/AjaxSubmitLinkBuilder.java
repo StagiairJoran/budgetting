@@ -28,8 +28,8 @@ public class AjaxSubmitLinkBuilder extends LinkBuilder<AjaxSubmitLinkBuilder, Aj
         }
 
         @Override
-        protected void onSubmit(AjaxRequestTarget target) {
-            super.onSubmit(target);
+        protected void onAfterSubmit(AjaxRequestTarget target) {
+            super.onAfterSubmit(target);
             BaseForm parent = this.findParent(BaseForm.class);
             IModel<BaseForm.FormMode> formModeModel = parent.getFormModeModel();
             formModeModel.setObject(BaseForm.FormMode.READ);

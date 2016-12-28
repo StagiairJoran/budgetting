@@ -27,7 +27,6 @@ public class BaseForm<T extends Serializable> extends Form<T> {
     @Override
     public void process(IFormSubmitter submittingComponent) {
         super.process(submittingComponent);
-        this.formModeModel.setObject(FormMode.READ);
     }
 
     @Override

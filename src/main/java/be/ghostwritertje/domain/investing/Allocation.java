@@ -2,6 +2,7 @@ package be.ghostwritertje.domain.investing;
 
 import be.ghostwritertje.domain.DomainObject;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -16,7 +17,7 @@ import javax.persistence.Table;
 @Table(name = "T_ALLOCATION")
 public class Allocation extends DomainObject{
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "FINANCIAL_INSTRUMENT_ID")
     private FinancialInstrument financialInstrument;
 
@@ -25,7 +26,15 @@ public class Allocation extends DomainObject{
     public Allocation() {
     }
 
+    public Allocation(FinancialInstrument financialInstrument, Double allocation) {
+        this.financialInstrument = financialInstrument;
+        this.allocation = allocation;
+    }
+
     public FinancialInstrument getFinancialInstrument() {
+        if(this.financialInstrument == null){
+            this.financialInstrument = new FinancialInstrument();
+        }
         return financialInstrument;
     }
 

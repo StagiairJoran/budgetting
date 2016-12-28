@@ -12,4 +12,5 @@ import java.util.List;
 public interface FinancialInstrumentService extends DomainObjectCrudService<FinancialInstrument> {
     List<FinancialInstrument> findFinancialInstrumentsWithoutHistory();
 
+    FinancialInstrument findByQuote(String quote);
 }

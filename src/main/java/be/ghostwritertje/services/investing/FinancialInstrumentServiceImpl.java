@@ -29,7 +29,7 @@ public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSuppo
     }
 
     @Override
-    protected CrudRepository<FinancialInstrument, Integer> getDao() {
+    protected FinancialInstrumentDao getDao() {
         return this.financialInstrumentDao;
     }
 
@@ -47,6 +47,11 @@ public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSuppo
 
     public List<FinancialInstrument> findFinancialInstrumentsWithoutHistory(){
         return this.financialInstrumentDao.findFinancialInstrumentsWithoutHistory();
+    }
+
+    @Override
+    public FinancialInstrument findByQuote(String quote) {
+        return this.getDao().findByQuote(quote);
     }
 
     public void createHistoricPrices(FinancialInstrument financialInstrument) {
