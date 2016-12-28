@@ -5,8 +5,10 @@ import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.domain.investing.Portfolio;
 import be.ghostwritertje.services.investing.FinancialInstrumentService;
 import be.ghostwritertje.services.investing.PortfolioService;
+import be.ghostwritertje.utilities.Pair;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.CustomSession;
+import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
@@ -21,7 +23,10 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jorandeboever
@@ -105,6 +110,18 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
                 });
 
         this.add(form);
+
+        Map<String, List<Pair<LocalDate, Double>>> coordinatesMap10 = this.getModelObject().getAllocationList()
+                .stream()
+                .map(Allocation::getFinancialInstrument)
+                .collect(Collectors.toMap(FinancialInstrument::getQuote, (financialInstrument) -> financialInstrument.getValuesFromStartDate(LocalDate.now().minusYears(5))));
+
+        ChartBuilderFactory.splineChart()
+                .usingDefaults()
+                .title("1 year return")
+                .addLine(this.getModelObject().getName(), this.getModelObject().getValuesFromStartDate(LocalDate.now().minusYears(5)), Pair::getK, Pair::getV, 2)
+                .addLines(coordinatesMap10, Pair::getK, Pair::getV, 2)
+                .attach(this, "chart1");
     }
 
     private static class CustomAllocation implements Serializable {
@@ -115,7 +132,7 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
         }
 
         public String getQuote() {
-            if(this.quote == null){
+            if (this.quote == null) {
                 this.quote = "";
             }
             return quote;
@@ -126,7 +143,7 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
         }
 
         public Double getAllocation() {
-            if(this.allocation == null){
+            if (this.allocation == null) {
                 this.allocation = 0.0;
             }
             return allocation;

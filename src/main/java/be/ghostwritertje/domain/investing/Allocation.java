@@ -1,6 +1,8 @@
 package be.ghostwritertje.domain.investing;
 
 import be.ghostwritertje.domain.DomainObject;
+import be.ghostwritertje.utilities.CalculatorUtilities;
+import be.ghostwritertje.utilities.Pair;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,6 +10,13 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jorandeboever
@@ -48,5 +57,19 @@ public class Allocation extends DomainObject{
 
     public void setAllocation(Double allocation) {
         this.allocation = allocation;
+    }
+
+    public List<Pair<LocalDate, Double>> getAllocationAdjustedValuesFromStartDate(LocalDate date) {
+        return this.financialInstrument.getHistoricPriceList().stream()
+                .filter(historicPrice -> historicPrice.getDate().isBefore(date))
+                .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
+                .findFirst()
+                .map(historicPrice -> {
+                    double value = 10000 / historicPrice.getPrice();
+                    return this.financialInstrument.getHistoricPriceList().stream()
+                            .filter(h -> h.getDate().isAfter(date))
+                            .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), historicPrice1.getPrice() * value * allocation))
+                            .collect(Collectors.toList());
+                }).orElse(new ArrayList<>());
     }
 }
