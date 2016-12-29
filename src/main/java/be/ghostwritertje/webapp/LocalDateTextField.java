@@ -1,8 +1,9 @@
 package be.ghostwritertje.webapp;
 
 import be.ghostwritertje.utilities.DateUtilities;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import org.apache.log4j.Logger;
-import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.util.convert.IConverter;
@@ -37,7 +38,9 @@ public class LocalDateTextField extends DateTextField {
                     LocalDate localDate = DateUtilities.toLocalDate(date);
                     logger.debug(String.format("Date in localDate format: %s", localDate.toString()));
                     model.setObject(localDate);
-                }), "dd-MM-yyyy");
+                }), new DateTextFieldConfig()
+                    .withFormat("dd-MM-yyyy")
+        );//"dd-MM-yyyy"
 
     }
 
@@ -56,7 +59,7 @@ public class LocalDateTextField extends DateTextField {
                     if (locale == null) {
                         locale = Locale.getDefault();
                     }
-                    return new SimpleDateFormat("yyyy-MM-dd", locale);
+                    return new SimpleDateFormat("dd-MM-yyyy", locale);
                 }
             };
         } else return super.getConverter(type);
