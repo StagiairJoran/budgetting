@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +33,6 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
         return this.dao;
     }
 
-    @PostConstruct
-    public void postConstruct() {
-//        this.dao.save(new Statement());
-    }
 
     @Override
     public Iterable<Statement> save(Iterable<Statement> statements) {
