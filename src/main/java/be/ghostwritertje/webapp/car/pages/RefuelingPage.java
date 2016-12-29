@@ -3,26 +3,20 @@ package be.ghostwritertje.webapp.car.pages;
 import be.ghostwritertje.domain.car.Refueling;
 import be.ghostwritertje.services.car.RefuelingService;
 import be.ghostwritertje.utilities.NumberUtilities;
-import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.LambdaOnChangeBehavior;
-import be.ghostwritertje.webapp.LocalDateTextField;
-import be.ghostwritertje.webapp.car.model.CarModel;
-import be.ghostwritertje.webapp.form.FormComponentBuilder;
+import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
-import be.ghostwritertje.webapp.form.NumberTextFieldComponentBuilder;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstrapcheckbox.BootstrapCheckBoxPicker;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -73,7 +67,7 @@ public class RefuelingPage extends BasePage<Refueling> {
                 .body(new ResourceModel("liter.price"))
                 .attach(form, "literPrice", new LambdaModel<Double>(() -> this.getModelObject().getPricePerLiter(), kilometres -> this.getModelObject().setPricePerLiter(kilometres)));
 
-        CheckBox checkBox = new CheckBox("tankFull", new LambdaModel<>(() -> this.getModelObject().isFuelTankFull(), full -> this.getModelObject().setFuelTankFull(full)));
+        CheckBox checkBox = new BootstrapCheckBoxPicker("tankFull", new LambdaModel<>(() -> this.getModelObject().isFuelTankFull(), full -> this.getModelObject().setFuelTankFull(full)));
         form.add(checkBox);
 
         LinkBuilderFactory.submitLink()

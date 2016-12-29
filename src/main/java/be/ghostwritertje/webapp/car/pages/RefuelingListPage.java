@@ -8,15 +8,11 @@ import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import be.ghostwritertje.webapp.datatable.CheckBoxColumn;
+import be.ghostwritertje.webapp.datatable.ColumnBuilderFactory;
 import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
-import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapCheckbox;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
@@ -54,35 +50,14 @@ public class RefuelingListPage extends BasePage<Car> {
                 .addColumn(new LambdaColumn<>(new ResourceModel("price"), Refueling::getPrice))
                 .addColumn(new LambdaColumn<>(new ResourceModel("price.per.liter"), Refueling::getPricePerLiter))
                 .addColumn(new CheckBoxColumn<>(new ResourceModel("fuel.tank.full"), Refueling::isFuelTankFull))
+                .addColumn(ColumnBuilderFactory.acties(new ResourceModel("actions"),
+                        refuelingIModel -> this.setResponsePage(new RefuelingPage(refuelingIModel)),
+                        refuelingIModel -> {
+                            RefuelingListPage.this.refuelingService.delete(refuelingIModel.getObject());
+                            this.setResponsePage(new RefuelingListPage(this.getModel()));
+                        })
+                )
                 .build("dataTable", refuelingListModel));
-
-        this.add(new ListView<Refueling>("refuelings", this.refuelingListModel) {
-
-            @Override
-            protected void populateItem(ListItem<Refueling> item) {
-                item.add(new Label("date", item.getModelObject().getDate()));
-                item.add(new Label("kilometres", item.getModelObject().getKilometres()));
-                item.add(new Label("liters", item.getModelObject().getLiters()));
-                item.add(new Label("price", item.getModelObject().getPrice()));
-                item.add(new Label("pricePerLiter", item.getModelObject().getPricePerLiter()));
-                item.add(new BootstrapCheckbox("fuelTankFull", new LambdaModel<Boolean>(() ->  item.getModelObject().isFuelTankFull(), full -> item.getModelObject().setFuelTankFull(full))).setEnabled(false));
-
-                item.add(new Link<Refueling>("edit", item.getModel()) {
-                    @Override
-                    public void onClick() {
-                        this.setResponsePage(new RefuelingPage(this.getModel()));
-                    }
-                });
-                item.add(new Link<Car>("delete", RefuelingListPage.this.getModel()) {
-                    @Override
-                    public void onClick() {
-                        RefuelingListPage.this.refuelingService.delete(item.getModelObject());
-                        this.setResponsePage(new RefuelingListPage(this.getModel()));
-                    }
-                });
-            }
-        });
-
 
         this.add(new Link<Refueling>("newRefuelingLink") {
             @Override
@@ -97,14 +72,14 @@ public class RefuelingListPage extends BasePage<Car> {
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
                 .title("Dieselprijs")
-                .addLine("Kostprijs diesel",this.refuelingService.findByCar(this.getModelObject()), Refueling::getDate, Refueling::getPricePerLiter, 3)
+                .addLine("Kostprijs diesel", this.refuelingService.findByCar(this.getModelObject()), Refueling::getDate, Refueling::getPricePerLiter, 3)
                 .setYAxis("Price/liter")
                 .attach(this, "chart");
 
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
                 .title("Verloop van verbruik")
-                .addLine("Verbruik",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())), refuelingSearchResult -> refuelingSearchResult.getRefueling().getDate(), RefuelingSearchResult::getConsumption, 2)
+                .addLine("Verbruik", this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())), refuelingSearchResult -> refuelingSearchResult.getRefueling().getDate(), RefuelingSearchResult::getConsumption, 2)
                 .setYAxis("liter/100km")
                 .attach(this, "chart2");
 
@@ -112,7 +87,7 @@ public class RefuelingListPage extends BasePage<Car> {
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
                 .title("Driven per month")
-                .addLine("Kilometres",this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())), refueling -> refueling.getRefueling().getDate(), RefuelingSearchResult::getKilometresPerMonth, 0)
+                .addLine("Kilometres", this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())), refueling -> refueling.getRefueling().getDate(), RefuelingSearchResult::getKilometresPerMonth, 0)
                 .setYAxis("kilometres/month")
                 .attach(this, "chart3");
 
