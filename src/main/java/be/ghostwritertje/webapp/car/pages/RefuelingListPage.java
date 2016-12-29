@@ -7,11 +7,10 @@ import be.ghostwritertje.services.car.RefuelingService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
-import be.ghostwritertje.webapp.charts.DateCoordinate;
+import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapCheckbox;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Check;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -23,7 +22,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Jorandeboever
@@ -46,6 +44,15 @@ public class RefuelingListPage extends BasePage<Car> {
         super.onInitialize();
 
         this.add(new CarInfoPanel("carInfo", this.getModel()));
+
+        this.add(DataTableBuilderFactory.<Refueling, String>simple()
+                .addColumn(new LambdaColumn<>(new Model<String>("brand"),"date" , Refueling::getDate))
+                .addColumn(new LambdaColumn<>(new Model<String>("brand"), "kilometres", Refueling::getKilometres))
+                .addColumn(new LambdaColumn<>(new Model<String>("brand"), Refueling::getLiters))
+                .addColumn(new LambdaColumn<>(new Model<String>("brand"), Refueling::getPrice))
+                .addColumn(new LambdaColumn<>(new Model<String>("brand"), Refueling::getPricePerLiter))
+                .addColumn(new LambdaColumn<>(new Model<String>("brand"), Refueling::isFuelTankFull))
+                .build("dataTable", refuelingListModel));
 
         this.add(new ListView<Refueling>("refuelings", this.refuelingListModel) {
 
