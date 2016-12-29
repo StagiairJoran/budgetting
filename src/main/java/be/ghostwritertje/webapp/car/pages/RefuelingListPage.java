@@ -7,6 +7,7 @@ import be.ghostwritertje.services.car.RefuelingService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
+import be.ghostwritertje.webapp.datatable.CheckBoxColumn;
 import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapCheckbox;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
@@ -17,6 +18,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -46,12 +48,12 @@ public class RefuelingListPage extends BasePage<Car> {
         this.add(new CarInfoPanel("carInfo", this.getModel()));
 
         this.add(DataTableBuilderFactory.<Refueling, String>simple()
-                .addColumn(new LambdaColumn<>(new Model<String>("brand"),"date" , Refueling::getDate))
-                .addColumn(new LambdaColumn<>(new Model<String>("brand"), "kilometres", Refueling::getKilometres))
-                .addColumn(new LambdaColumn<>(new Model<String>("brand"), Refueling::getLiters))
-                .addColumn(new LambdaColumn<>(new Model<String>("brand"), Refueling::getPrice))
-                .addColumn(new LambdaColumn<>(new Model<String>("brand"), Refueling::getPricePerLiter))
-                .addColumn(new LambdaColumn<>(new Model<String>("brand"), Refueling::isFuelTankFull))
+                .addColumn(new LambdaColumn<>(new ResourceModel("date"), Refueling::getDate))
+                .addColumn(new LambdaColumn<>(new ResourceModel("kilometres"), Refueling::getKilometres))
+                .addColumn(new LambdaColumn<>(new ResourceModel("liters"), Refueling::getLiters))
+                .addColumn(new LambdaColumn<>(new ResourceModel("price"), Refueling::getPrice))
+                .addColumn(new LambdaColumn<>(new ResourceModel("price.per.liter"), Refueling::getPricePerLiter))
+                .addColumn(new CheckBoxColumn<>(new ResourceModel("fuel.tank.full"), Refueling::isFuelTankFull))
                 .build("dataTable", refuelingListModel));
 
         this.add(new ListView<Refueling>("refuelings", this.refuelingListModel) {

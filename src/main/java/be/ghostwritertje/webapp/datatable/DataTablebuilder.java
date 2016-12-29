@@ -27,13 +27,11 @@ public class DataTablebuilder<T extends Serializable, S> {
 
     public DataTable<T, S> build(String id, IModel<List<T>> data) {
         MySortableDataProvicer<T, S> dataProvicer = new MySortableDataProvicer<>(data);
-
         return new BootstrapDefaultDataTable<>(id, columns, dataProvicer, 20);
     }
 
     public static class MySortableDataProvicer<T extends Serializable, S> extends SortableDataProvider<T, S> {
         private final IModel<List<T>> data;
-//        private WicketFunction<T, Boolean> filterPredicate = t -> true;
 
         MySortableDataProvicer(IModel<List<T>> data) {
             this.data = data;
@@ -54,29 +52,5 @@ public class DataTablebuilder<T extends Serializable, S> {
         public IModel<T> model(T object) {
             return new Model<>(object);
         }
-
-//        private List<T> getFilteredData(){
-//            return this.data.getObject().stream()
-//                    .filter(this.filterPredicate::apply)
-//                    .collect(Collectors.toList());
-//        }
-//
-//        public void setFilterPredicate(WicketFunction<T, Boolean> filterPredicate) {
-//            this.filterPredicate = filterPredicate;
-//        }
     }
-
-//    @FunctionalInterface
-//    public interface SerializableComparator<T> extends Comparator<T>, Serializable {
-//
-//        public static <T, U extends Comparable<? super U>> SerializableComparator<T> comparing(Function<? super T, ? extends U> keyExtractor){
-//            return (c1, c2) -> keyExtractor.apply(c1).compareTo(keyExtractor.apply(c2));
-//        }
-//
-//        public static <T, U> SerializableComparator<T> comparing(Function<? super T, ? extends U> keyExtractor, Comparator<? super U> keyComparator){
-//            Objects.requireNonNull(keyExtractor);
-//            Objects.requireNonNull(keyComparator);
-//            return (c1, c2) -> keyComparator.compare(keyExtractor.apply(c1), keyExtractor.apply(c2));
-//        }
-//    }
 }
