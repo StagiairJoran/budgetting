@@ -2,16 +2,47 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <ul class="list-group">
-        <li class="list-group-item list-group-item-success"><a wicket:id="carLink">
-            <label wicket:id="brand"></label>
-            <label wicket:id="model"></label>
-        </a>
-        </li>
-        <li class="list-group-item">
-            <label>Price: </label> <span class="badge" wicket:id="price"></span>
-        </li>
-    </ul>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a wicket:id="carLink">
+                <i class="fa fa-car" aria-hidden="true"></i>
+                <label wicket:id="brand">Audi</label>
+                <label wicket:id="model">A3</label>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row" >
+                <dl class="dl-horizontal col-lg-12">
+                    <dt>
+                        <label>Price: </label>
+                    </dt>
+                    <dd>
+                        <span wicket:id="price">10.000</span><span>EUR</span>
+                    </dd>
+                </dl>
+            </div>
+            <div class="row" >
+                <dl class="dl-horizontal col-lg-12">
+                    <dt>
+                        <label>Kilometers driven: </label>
+                    </dt>
+                    <dd>
+                        <span>129149</span><span>km</span>
+                    </dd>
+                </dl>
+            </div>
+            <div class="row" >
+                <dl class="dl-horizontal col-lg-12">
+                    <dt>
+                        <label>Gemiddeld verbruik: </label>
+                    </dt>
+                    <dd>
+                        <span>5.2 </span><span>l/100km</span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
 </wicket:panel>
 </body>
 </html>
