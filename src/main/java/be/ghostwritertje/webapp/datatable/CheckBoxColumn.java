@@ -23,8 +23,8 @@ public class CheckBoxColumn<T, S> extends AbstractColumn<T, S> {
         })));
     }
 
-    protected CheckBox newCheckBox(String id, IModel<Boolean> checkModel) {
-        BootstrapCheckBoxPicker check = new BootstrapCheckBoxPicker("check", checkModel);
+    private CheckBox newCheckBox(String id, IModel<Boolean> checkModel) {
+        BootstrapCheckBoxPicker check = new BootstrapCheckBoxPicker(id, checkModel);
         check.setEnabled(false);
         return check;
     }
