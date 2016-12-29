@@ -51,9 +51,9 @@ public class RefuelingListPage extends BasePage<Car> {
                 .addColumn(new LambdaColumn<>(new ResourceModel("price.per.liter"), Refueling::getPricePerLiter))
                 .addColumn(new CheckBoxColumn<>(new ResourceModel("fuel.tank.full"), Refueling::isFuelTankFull))
                 .addColumn(ColumnBuilderFactory.acties(new ResourceModel("actions"),
-                        refuelingIModel -> this.setResponsePage(new RefuelingPage(refuelingIModel)),
-                        refuelingIModel -> {
-                            RefuelingListPage.this.refuelingService.delete(refuelingIModel.getObject());
+                        (target, link) -> this.setResponsePage(new RefuelingPage(link.getModel())),
+                        (target, link) -> {
+                            RefuelingListPage.this.refuelingService.delete(link.getModelObject());
                             this.setResponsePage(new RefuelingListPage(this.getModel()));
                         })
                 )

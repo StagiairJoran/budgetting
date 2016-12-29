@@ -1,7 +1,9 @@
 package be.ghostwritertje.webapp.datatable;
 
-import org.apache.wicket.lambda.WicketConsumer;
-import org.apache.wicket.markup.html.link.Link;
+import be.ghostwritertje.webapp.link.LinkBuilderFactory;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 
@@ -10,10 +12,10 @@ import org.apache.wicket.model.IModel;
  * Date: 29-Dec-16.
  */
 class EditDeleteCell<T> extends GenericPanel<T> {
-    private final WicketConsumer<IModel<T>> editConsumer;
-    private final WicketConsumer<IModel<T>> deleteConsumer;
+    private final WicketBiConsumer<AjaxRequestTarget, AjaxLink<T>> editConsumer;
+    private final WicketBiConsumer<AjaxRequestTarget, AjaxLink<T>> deleteConsumer;
 
-    EditDeleteCell(String id, IModel<T> model, WicketConsumer<IModel<T>> editConsumer, WicketConsumer<IModel<T>> deleteConsumer) {
+    EditDeleteCell(String id, IModel<T> model, WicketBiConsumer<AjaxRequestTarget, AjaxLink<T>> editConsumer, WicketBiConsumer<AjaxRequestTarget, AjaxLink<T>> deleteConsumer) {
         super(id, model);
         this.editConsumer = editConsumer;
         this.deleteConsumer = deleteConsumer;
@@ -22,18 +24,14 @@ class EditDeleteCell<T> extends GenericPanel<T> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        this.add(new Link<T>("edit", this.getModel()) {
-            @Override
-            public void onClick() {
-                editConsumer.accept(this.getModel());
-            }
-        });
 
-        this.add(new Link<T>("delete", this.getModel()) {
-            @Override
-            public void onClick() {
-                deleteConsumer.accept(this.getModel());
-            }
-        });
+        LinkBuilderFactory.editLink(editConsumer)
+                .usingDefaults()
+                .attach(this, "edit", this.getModel());
+
+        LinkBuilderFactory.deleteLink(deleteConsumer)
+                .usingDefaults()
+                .attach(this, "delete");
+
     }
 }

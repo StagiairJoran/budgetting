@@ -70,9 +70,9 @@ public class RefuelingPage extends BasePage<Refueling> {
         CheckBox checkBox = new BootstrapCheckBoxPicker("tankFull", new LambdaModel<>(() -> this.getModelObject().isFuelTankFull(), full -> this.getModelObject().setFuelTankFull(full)));
         form.add(checkBox);
 
-        LinkBuilderFactory.submitLink()
+        LinkBuilderFactory.submitLink(save())
                 .usingDefaults()
-                .attach(form, "save", save());
+                .attach(form, "save");
 
         this.add(form);
     }

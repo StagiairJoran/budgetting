@@ -2,7 +2,6 @@ package be.ghostwritertje.webapp.investing;
 
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.investing.FinancialInstrument;
-import be.ghostwritertje.domain.investing.HistoricPrice;
 import be.ghostwritertje.services.investing.FinancialInstrumentService;
 import be.ghostwritertje.utilities.Pair;
 import be.ghostwritertje.webapp.BasePage;
@@ -25,7 +24,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,9 +51,9 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
                 .usingDefaults()
                 .attach(form, "quote", new LambdaModel<>(() -> form.getModelObject().getQuote(), s -> form.getModelObject().setQuote(s)));
 
-        LinkBuilderFactory.submitLink()
+        LinkBuilderFactory.submitLink( save(form.getModel()))
                 .usingDefaults()
-                .attach(form, "save", save(form.getModel()));
+                .attach(form, "save");
 
 
         this.add(form);

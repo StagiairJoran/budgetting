@@ -4,17 +4,12 @@ import be.ghostwritertje.domain.investing.FundPurchase;
 import be.ghostwritertje.services.investing.FinanceService;
 import be.ghostwritertje.services.investing.FundPurchaseService;
 import be.ghostwritertje.webapp.BasePage;
-import be.ghostwritertje.webapp.LocalDateTextField;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.markup.html.form.SubmitLink;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
@@ -58,9 +53,9 @@ public class FundPurchasePage extends BasePage<FundPurchase> {
                 .body(new ResourceModel("count"))
                 .attach(form, "count", new LambdaModel<Integer>(() -> this.getModelObject().getNumberOfShares(), count -> this.getModelObject().setNumberOfShares(count)));
 
-        LinkBuilderFactory.submitLink()
+        LinkBuilderFactory.submitLink( save())
                 .usingDefaults()
-                .attach(form, "save", save());
+                .attach(form, "save");
 
         this.add(form);
     }

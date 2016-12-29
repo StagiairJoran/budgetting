@@ -7,17 +7,11 @@ import be.ghostwritertje.webapp.LocalDateTextField;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
-import be.ghostwritertje.webapp.person.PersonModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.markup.html.form.SubmitLink;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -52,9 +46,9 @@ public class CarPage extends BasePage<Car> {
         form.add(new NumberTextField<Double>("price", new LambdaModel<>(() -> this.getModelObject().getPurchasePrice(), model -> this.getModelObject().setPurchasePrice(model)), Double.class));
         form.add(new LocalDateTextField("date", new LambdaModel<LocalDate>(() -> this.getModelObject().getPurchaseDate(), date -> this.getModelObject().setPurchaseDate(date))));
 
-        LinkBuilderFactory.submitLink()
+        LinkBuilderFactory.submitLink((target, o) -> CarPage.this.carService.save(CarPage.this.getModelObject()))
                 .usingDefaults()
-                .attach(form, "save", (target, o) -> CarPage.this.carService.save(CarPage.this.getModelObject()));
+                .attach(form, "save");
 
 
         form.add(new AjaxLink<String>("edit") {

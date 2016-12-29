@@ -9,9 +9,8 @@ import be.ghostwritertje.webapp.person.pages.LoginPage;
 import be.ghostwritertje.webapp.person.pages.LogoutPage;
 import be.ghostwritertje.webapp.person.pages.PersonListPage;
 import be.ghostwritertje.webapp.person.pages.RegisterPage;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
+import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.GenericWebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -90,5 +89,12 @@ public abstract class BasePage<T> extends GenericWebPage<T>  implements Authoriz
                 this.add(new VisibilityBehavior<>(component -> CustomSession.get().getLoggedInPerson() != null));
             }
         });
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+
+        response.render(new CssReferenceHeaderItem(FontAwesomeCssReference.instance(), null, null, null));
     }
 }

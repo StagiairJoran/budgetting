@@ -1,8 +1,10 @@
 package be.ghostwritertje.webapp.datatable;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.lambda.WicketBiFunction;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -11,7 +13,7 @@ import org.apache.wicket.model.IModel;
  */
 public class ColumnBuilderFactory {
 
-    public static <T, S> ActiesColumn<T, S> acties(IModel<String> displayModel, WicketConsumer<IModel<T>> editConsumer, WicketConsumer<IModel<T>> deleteConsumer) {
+    public static <T, S> ActiesColumn<T, S> acties(IModel<String> displayModel, WicketBiConsumer<AjaxRequestTarget, AjaxLink<T>> editConsumer,WicketBiConsumer<AjaxRequestTarget, AjaxLink<T>> deleteConsumer) {
         return new ActiesColumn<>(displayModel, editConsumer, deleteConsumer);
     }
 

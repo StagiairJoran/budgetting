@@ -1,6 +1,8 @@
 package be.ghostwritertje.webapp.datatable;
 
-import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -9,7 +11,7 @@ import org.apache.wicket.model.IModel;
  */
 class ActiesColumn<T, S> extends CustomColumn<T, S> {
 
-    ActiesColumn(IModel<String> displayModel, WicketConsumer<IModel<T>> editConsumer, WicketConsumer<IModel<T>> deleteConsumer ) {
+    ActiesColumn(IModel<String> displayModel, WicketBiConsumer<AjaxRequestTarget, AjaxLink<T>> editConsumer, WicketBiConsumer<AjaxRequestTarget, AjaxLink<T>> deleteConsumer ) {
         super(displayModel,  (s, model) -> new EditDeleteCell<T>(s, model, editConsumer, deleteConsumer));
     }
 }

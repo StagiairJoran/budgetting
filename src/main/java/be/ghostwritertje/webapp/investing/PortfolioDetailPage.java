@@ -13,7 +13,6 @@ import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -87,27 +86,27 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
                         () -> allocationBaseForm.getModelObject().getAllocation(),
                         s -> allocationBaseForm.getModelObject().setAllocation(s)));
 
-        LinkBuilderFactory.submitLink()
+        LinkBuilderFactory.submitLink((target, components) -> {
+            CustomAllocation customAllocation = allocationBaseForm.getModelObject();
+            FinancialInstrument financialInstrument = this.financialInstrumentService.findByQuote(customAllocation.getQuote());
+            Allocation allocation = new Allocation(financialInstrument, customAllocation.getAllocation());
+            form.getModelObject().getAllocationList().add(allocation);
+            allocationBaseForm.setModelObject(new CustomAllocation());
+            allocationBaseForm.getFormModeModel().setObject(BaseForm.FormMode.EDIT);
+            target.add(this);
+        })
                 .usingDefaults()
-                .attach(allocationBaseForm, "save", (target, components) -> {
-                    CustomAllocation customAllocation = allocationBaseForm.getModelObject();
-                    FinancialInstrument financialInstrument = this.financialInstrumentService.findByQuote(customAllocation.getQuote());
-                    Allocation allocation = new Allocation(financialInstrument, customAllocation.getAllocation());
-                    form.getModelObject().getAllocationList().add(allocation);
-                    allocationBaseForm.setModelObject(new CustomAllocation());
-                    allocationBaseForm.getFormModeModel().setObject(BaseForm.FormMode.EDIT);
-                    target.add(this);
-                });
+                .attach(allocationBaseForm, "save");
 
         form.add(allocationBaseForm);
 
-        LinkBuilderFactory.submitLink()
+        LinkBuilderFactory.submitLink((target, components) -> {
+            Portfolio portfolio = form.getModelObject();
+            portfolio.setPerson(CustomSession.get().getLoggedInPerson());
+            this.portfolioService.save(portfolio);
+        })
                 .usingDefaults()
-                .attach(form, "save", (target, components) -> {
-                    Portfolio portfolio = form.getModelObject();
-                    portfolio.setPerson(CustomSession.get().getLoggedInPerson());
-                    this.portfolioService.save(portfolio);
-                });
+                .attach(form, "save");
 
         this.add(form);
 
