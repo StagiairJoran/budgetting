@@ -3,16 +3,14 @@ package be.ghostwritertje.services.person;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.repository.PersonDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
-import be.ghostwritertje.webapp.person.pages.LoginPage;
+import be.ghostwritertje.utilities.PasswordUtility;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Ghostwritertje
@@ -51,12 +49,13 @@ public class PersonServiceImpl extends DomainObjectCrudServiceSupport<Person> im
 
     @Override
     public Person save(Person person) {
+        person.setPassword(PasswordUtility.hashPassword(person.getPassword()));
         return this.dao.save(person);
     }
 
     @Override
     public Person logIn(Person person) {
-        return this.dao.findByUsernameAndPassword(person.getUsername(), person.getPassword());
+        return this.dao.findByUsernameAndPassword(person.getUsername(), PasswordUtility.hashPassword(person.getPassword()));
     }
 
     @Override

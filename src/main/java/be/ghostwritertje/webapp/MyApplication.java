@@ -1,7 +1,6 @@
 package be.ghostwritertje.webapp;
 
 import be.ghostwritertje.webapp.person.pages.LoginPage;
-import be.ghostwritertje.webapp.person.pages.PersonListPage;
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
