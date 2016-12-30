@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class Refueling extends DomainObject {
 
     @ManyToOne
-    @JoinColumn(name = "car_id")
+    @JoinColumn(name = "car_UUID")
     private Car car;
     private LocalDate date;
     private Double liters;

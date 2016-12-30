@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class Car extends DomainObject {
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_UUID")
     private Person owner;
     private String brand;
     private String model;

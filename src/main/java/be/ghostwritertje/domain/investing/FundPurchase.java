@@ -32,7 +32,7 @@ public class FundPurchase extends DomainObject {
     private Double transactionCost;
 
     @ManyToOne
-    @JoinColumn(name = "person_id")
+    @JoinColumn(name = "person_UUID")
     private Person owner;
 
     public String getQuote() {

@@ -16,22 +16,22 @@ import javax.persistence.UniqueConstraint;
  */
 @Table(name = "T_BANKACCOUNT", uniqueConstraints = {
         @UniqueConstraint(
-                columnNames = {"number", "administrator_id"}
+                columnNames = {"number", "administrator_UUID"}
         )
 })
 @Entity
 public class BankAccount extends DomainObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "administrator_id")
+    @JoinColumn(name = "administrator_UUID")
     private Person administrator;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_UUID")
     private Person owner;
 
     @ManyToOne
-    @JoinColumn(name = "bank_id")
+    @JoinColumn(name = "bank_UUID")
     private Bank bank;
 
     @Column(nullable = false)

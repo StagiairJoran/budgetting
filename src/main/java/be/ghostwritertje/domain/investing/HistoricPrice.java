@@ -18,11 +18,11 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "T_HISTORIC_PRICE", uniqueConstraints = {
-        @UniqueConstraint(name = "un_historic_price_01", columnNames = {"financial_instrument_id", "date"})
+        @UniqueConstraint(name = "un_historic_price_01", columnNames = {"financial_instrument_UUID", "date"})
 })
 public class HistoricPrice extends DomainObject {
     @ManyToOne
-    @JoinColumn(name = "financial_instrument_id", nullable = false)
+    @JoinColumn(name = "financial_instrument_UUID", nullable = false)
     private FinancialInstrument financialInstrument;
     private LocalDate date;
 

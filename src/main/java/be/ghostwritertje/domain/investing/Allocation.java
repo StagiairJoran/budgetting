@@ -1,21 +1,17 @@
 package be.ghostwritertje.domain.investing;
 
 import be.ghostwritertje.domain.DomainObject;
-import be.ghostwritertje.utilities.CalculatorUtilities;
 import be.ghostwritertje.utilities.Pair;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +23,7 @@ import java.util.stream.Collectors;
 public class Allocation extends DomainObject{
 
     @ManyToOne(optional = false, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "FINANCIAL_INSTRUMENT_ID")
+    @JoinColumn(name = "FINANCIAL_INSTRUMENT_UUID")
     private FinancialInstrument financialInstrument;
 
     private Double allocation;

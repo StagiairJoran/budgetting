@@ -12,7 +12,7 @@ public class Amount {
     private Double value;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "AMOUNT_TYPE_ID")
+    @JoinColumn(name = "AMOUNT_TYPE_UUID")
     private AmountType amountType;
 
     public Amount() {

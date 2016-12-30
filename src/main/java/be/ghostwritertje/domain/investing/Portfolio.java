@@ -30,13 +30,13 @@ import java.util.stream.Collectors;
 public class Portfolio extends DomainObject {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "PORTFOLIO_ID")
+    @JoinColumn(name = "PORTFOLIO_UUID")
     private final List<Allocation> allocationList = new ArrayList<>();
 
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "PERSON_ID")
+    @JoinColumn(name = "PERSON_UUID")
     private Person person;
 
     public Portfolio() {
