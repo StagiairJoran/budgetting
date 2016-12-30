@@ -1,5 +1,6 @@
 package be.ghostwritertje.services.investing;
 
+import be.ghostwritertje.domain.Currency;
 import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.domain.investing.FundPurchase;
 import be.ghostwritertje.domain.investing.HistoricPrice;
@@ -77,7 +78,7 @@ public class FinanceServiceImpl implements FinanceService {
         }
     }
 
-    public boolean exists(String quote){
+    public boolean exists(String quote) {
         boolean exists = false;
         try {
             Stock stock = YahooFinance.get(quote);
@@ -88,9 +89,20 @@ public class FinanceServiceImpl implements FinanceService {
         return exists;
     }
 
+    @Override
+    public Stock find(String quote) {
+        Stock stock = null;
+        try {
+           stock = YahooFinance.get(quote);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stock;
+    }
+
     public List<HistoricPrice> createHistoricPrices(FinancialInstrument financialInstrument) {
         Calendar from = new GregorianCalendar(1950, 1, 1);
-        return this.createHistoricPrices(financialInstrument, LocalDate.of(1950, 1,1));
+        return this.createHistoricPrices(financialInstrument, LocalDate.of(1950, 1, 1));
     }
 
     public List<HistoricPrice> createHistoricPrices(FinancialInstrument financialInstrument, LocalDate date) {
@@ -99,7 +111,8 @@ public class FinanceServiceImpl implements FinanceService {
         Calendar to = new GregorianCalendar(today.getYear(), today.getMonthValue(), today.getDayOfMonth());
 
         try {
-            return YahooFinance.get(financialInstrument.getQuote(), from, to, Interval.DAILY).getHistory().stream().map(historicalQuote -> convertToHistoricPrice(historicalQuote, financialInstrument)).collect(Collectors.toList());
+            Stock stock = YahooFinance.get(financialInstrument.getQuote(), from, to, Interval.DAILY);
+            return stock.getHistory().stream().map(historicalQuote -> convertToHistoricPrice(historicalQuote, financialInstrument, stock.getCurrency())).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,12 +120,28 @@ public class FinanceServiceImpl implements FinanceService {
         return new ArrayList<>();
     }
 
-    private HistoricPrice convertToHistoricPrice(HistoricalQuote historicalQuote, FinancialInstrument financialInstrument){
+    private HistoricPrice convertToHistoricPrice(HistoricalQuote historicalQuote, FinancialInstrument financialInstrument, String currency) {
         HistoricPrice historicPrice = new HistoricPrice();
         historicPrice.setDate(DateUtilities.toLocalDate(historicalQuote.getDate().getTime()));
+        historicPrice.setCurrency(mapToCurrency(currency));
         historicPrice.setPrice(historicalQuote.getAdjClose().doubleValue());
         historicPrice.setFinancialInstrument(financialInstrument);
         return historicPrice;
+    }
+
+    private Currency mapToCurrency(String currency) {
+        Currency curr = Currency.EUR;
+        switch (currency.toUpperCase()) {
+            case "EUR":
+                curr = Currency.EUR;
+                break;
+            case "USD":
+                curr = Currency.USD;
+                break;
+            default:
+                    logger.warn("No currency matched!");
+        }
+        return curr;
     }
 
 }

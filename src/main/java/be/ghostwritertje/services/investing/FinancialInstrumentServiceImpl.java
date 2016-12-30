@@ -4,11 +4,11 @@ import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.repository.FinancialInstrumentDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Jorandeboever
@@ -35,17 +35,19 @@ public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSuppo
 
     @Override
     public FinancialInstrument save(FinancialInstrument object) {
-        if(this.financeService.exists(object.getQuote())) {
-            if(this.financialInstrumentDao.findByQuote(object.getQuote()) == null){
+        return Optional.ofNullable(this.financeService.find(object.getQuote())).map(stock -> {
+            if (this.financialInstrumentDao.findByQuote(object.getQuote()) == null) {
+                object.setName(stock.getName());
                 FinancialInstrument save = super.save(object);
                 this.createHistoricPrices(save);
                 return save;
+            } else {
+                return null;
             }
-        }
-        return null;
+        }).orElse(null);
     }
 
-    public List<FinancialInstrument> findFinancialInstrumentsWithoutHistory(){
+    public List<FinancialInstrument> findFinancialInstrumentsWithoutHistory() {
         return this.financialInstrumentDao.findFinancialInstrumentsWithoutHistory();
     }
 
@@ -59,7 +61,7 @@ public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSuppo
     }
 
     @Scheduled(cron = "0 0 5 ? * TUE-SAT")
-    public void updateHistoricPrices(){
+    public void updateHistoricPrices() {
         this.findAll().forEach(this.historicPriceService::updateHistoricPrices);
     }
 }

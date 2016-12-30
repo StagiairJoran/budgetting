@@ -3,6 +3,7 @@ package be.ghostwritertje.services.investing;
 import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.domain.investing.FundPurchase;
 import be.ghostwritertje.domain.investing.HistoricPrice;
+import yahoofinance.Stock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +21,8 @@ public interface FinanceService {
     BigDecimal getPriceAtDate(FundPurchase fundPurchase);
 
     InvestmentSummary calculateInvestmentSummary(List<FundPurchase> fundPurchaseList);
+
+    Stock find(String quote);
 
     boolean exists(String quote);
 

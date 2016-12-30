@@ -39,15 +39,18 @@ public class HistoricPrice extends DomainObject {
         this.date = date;
     }
 
-    public void setBedrag(Bedrag bedrag) {
-        this.bedrag = bedrag;
-    }
-
-    public Bedrag getBedrag() {
+    private Bedrag getBedrag() {
         if(this.bedrag == null){
             this.bedrag = new Bedrag(Currency.EUR);
         }
         return this.bedrag;
+    }
+    public void setCurrency(Currency currency) {
+        this.getBedrag().setCurrency(currency);
+    }
+
+    public Currency getCurrency(){
+        return this.getBedrag().getCurrency();
     }
 
     public Double getPrice() {
