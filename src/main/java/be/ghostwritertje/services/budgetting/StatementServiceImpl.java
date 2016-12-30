@@ -29,7 +29,7 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
     }
 
     @Override
-    protected CrudRepository<Statement, Integer> getDao() {
+    protected CrudRepository<Statement, String> getDao() {
         return this.dao;
     }
 

@@ -1,6 +1,5 @@
 package be.ghostwritertje.services.investing;
 
-import be.ghostwritertje.domain.investing.HistoricPrice;
 import be.ghostwritertje.domain.investing.Portfolio;
 import be.ghostwritertje.repository.PortfolioDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
@@ -23,7 +22,7 @@ public class PortfolioServiceImpl extends DomainObjectCrudServiceSupport<Portfol
     }
 
     @Override
-    protected CrudRepository<Portfolio, Integer> getDao() {
+    protected CrudRepository<Portfolio, String> getDao() {
         return this.dao;
     }
 }

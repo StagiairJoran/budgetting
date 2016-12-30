@@ -24,7 +24,7 @@ public class BankAccountServiceImpl extends DomainObjectCrudServiceSupport<BankA
     }
 
     @Override
-    protected CrudRepository<BankAccount, Integer> getDao() {
+    protected CrudRepository<BankAccount, String> getDao() {
         return this.dao;
     }
 

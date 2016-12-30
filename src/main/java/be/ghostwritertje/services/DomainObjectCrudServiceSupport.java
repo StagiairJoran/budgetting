@@ -13,9 +13,9 @@ import java.util.List;
 
 public abstract class DomainObjectCrudServiceSupport<T extends DomainObject> implements DomainObjectCrudService<T> {
 
-    protected abstract CrudRepository<T, Integer> getDao();
+    protected abstract CrudRepository<T, String> getDao();
 
-    public T findOne(Integer id) {
+    public T findOne(String id) {
         return this.getDao().findOne(id);
     }
 

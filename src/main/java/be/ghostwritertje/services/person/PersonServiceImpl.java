@@ -59,7 +59,7 @@ public class PersonServiceImpl extends DomainObjectCrudServiceSupport<Person> im
     }
 
     @Override
-    protected CrudRepository<Person, Integer> getDao() {
+    protected CrudRepository<Person, String> getDao() {
         return this.dao;
     }
 }

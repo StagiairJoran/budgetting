@@ -15,15 +15,14 @@ public class CarModel extends LoadableModel<Car> {
     @SpringBean
     private CarService carService;
 
-    private final IModel<Integer> idModel;
+    private final IModel<String> uuidModel;
 
-    public CarModel(IModel<Integer> idModel) {
-        super();
-        this.idModel = idModel;
+    public CarModel(IModel<String> uuidModel) {
+        this.uuidModel = uuidModel;
     }
 
     @Override
     protected Car load() {
-        return this.carService.findOne(this.idModel.getObject());
+        return this.carService.findOne(this.uuidModel.getObject());
     }
 }

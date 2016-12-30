@@ -4,15 +4,11 @@ import be.ghostwritertje.domain.car.Car;
 import be.ghostwritertje.domain.car.Refueling;
 import be.ghostwritertje.repository.RefuelingDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
-import be.ghostwritertje.utilities.DateUtilities;
 import one.util.streamex.StreamEx;
-import org.apache.commons.lang3.time.DateUtils;
-import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +72,7 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
     }
 
     @Override
-    protected CrudRepository<Refueling, Integer> getDao() {
+    protected CrudRepository<Refueling, String> getDao() {
         return this.dao;
     }
 }

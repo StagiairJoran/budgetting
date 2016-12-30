@@ -9,7 +9,7 @@ import java.util.List;
  * Date: 01-Oct-16.
  */
 public interface DomainObjectCrudService<T extends DomainObject> {
-    T findOne(Integer id);
+    T findOne(String id);
 
     void delete(T object);
 

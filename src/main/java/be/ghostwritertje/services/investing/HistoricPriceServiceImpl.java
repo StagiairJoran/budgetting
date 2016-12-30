@@ -8,7 +8,6 @@ import be.ghostwritertje.webapp.person.pages.LoginPage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,7 +30,7 @@ public class HistoricPriceServiceImpl extends DomainObjectCrudServiceSupport<His
     }
 
     @Override
-    protected CrudRepository<HistoricPrice, Integer> getDao() {
+    protected CrudRepository<HistoricPrice, String> getDao() {
         return this.historicPriceDao;
     }
 

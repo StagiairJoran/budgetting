@@ -15,15 +15,14 @@ public class RefuelingModel extends LoadableModel<Refueling> {
     @SpringBean
     private RefuelingService refuelingService;
 
-    private final IModel<Integer> idModel;
+    private final IModel<String> uuidModel;
 
-    public RefuelingModel(IModel<Integer> idModel) {
-        super();
-        this.idModel = idModel;
+    public RefuelingModel(IModel<String> uuidModel) {
+        this.uuidModel = uuidModel;
     }
 
     @Override
     protected Refueling load() {
-        return this.refuelingService.findOne(this.idModel.getObject());
+        return this.refuelingService.findOne(this.uuidModel.getObject());
     }
 }

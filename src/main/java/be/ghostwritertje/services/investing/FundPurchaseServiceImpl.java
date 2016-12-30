@@ -27,7 +27,7 @@ public class FundPurchaseServiceImpl extends DomainObjectCrudServiceSupport<Fund
     }
 
     @Override
-    protected CrudRepository<FundPurchase, Integer> getDao() {
+    protected CrudRepository<FundPurchase, String> getDao() {
         return this.dao;
     }
 

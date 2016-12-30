@@ -37,7 +37,7 @@ public class CarServiceImpl extends DomainObjectCrudServiceSupport<Car> implemen
     }
 
     @Override
-    protected CrudRepository<Car, Integer> getDao() {
+    protected CrudRepository<Car, String> getDao() {
         return this.dao;
     }
 }
