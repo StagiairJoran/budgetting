@@ -7,7 +7,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "T_AMOUNT_TYPE")
 @DiscriminatorColumn(name = "AMOUNT_NAME")
-public class AmountType {
+public class AmountType extends DomainObject {
+    private static final long serialVersionUID = -2979061875257223800L;
+
     private String name;
 
     public String getName() {
@@ -18,7 +20,7 @@ public class AmountType {
         this.name = name;
     }
 
-    public <T extends AmountType, E extends AmountTypeEnum<T>> AmountType(E codeEnum) {
+    <T extends AmountType, E extends AmountTypeEnum<T>> AmountType(E codeEnum) {
         this.name = codeEnum.toString();
     }
 }
