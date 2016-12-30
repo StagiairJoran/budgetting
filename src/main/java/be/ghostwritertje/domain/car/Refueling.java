@@ -1,7 +1,13 @@
 package be.ghostwritertje.domain.car;
 
+import be.ghostwritertje.domain.Bedrag;
+import be.ghostwritertje.domain.Currency;
 import be.ghostwritertje.domain.DomainObject;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,9 +27,14 @@ public class Refueling extends DomainObject {
     private Car car;
     private LocalDate date;
     private Double liters;
-    private Double price;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(column = @Column(name = "price"), name = "value")
+    })
+    private Bedrag bedrag;
     private Double kilometres;
     private Double pricePerLiter;
+
     private boolean fuelTankFull = true;
 
     public Refueling() {
@@ -70,15 +81,26 @@ public class Refueling extends DomainObject {
         this.liters = liters;
     }
 
-    public Double getPrice() {
-        if(this.price == null){
-            this.price = 0.00;
+    private Bedrag getBedrag() {
+        if(this.bedrag == null){
+            this.bedrag = new Bedrag(Currency.EUR);
         }
-        return price;
+        return this.bedrag;
+    }
+    public void setCurrency(Currency currency) {
+        this.getBedrag().setCurrency(currency);
+    }
+
+    public Currency getCurrency(){
+        return this.getBedrag().getCurrency();
+    }
+
+    public Double getPrice() {
+        return this.getBedrag().getValue();
     }
 
     public void setPrice(Double price) {
-        this.price = price;
+        this.getBedrag().setValue(price);
     }
 
     public Car getCar() {

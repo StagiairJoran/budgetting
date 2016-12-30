@@ -1,5 +1,7 @@
 package be.ghostwritertje.domain;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -15,6 +17,7 @@ public class Bedrag implements Serializable {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Access(AccessType.PROPERTY)
     private Currency currency;
 
     public Bedrag() {
@@ -25,6 +28,9 @@ public class Bedrag implements Serializable {
     }
 
     public Double getValue() {
+        if(this.value == null){
+            this.value = 0.0;
+        }
         return this.value;
     }
 
