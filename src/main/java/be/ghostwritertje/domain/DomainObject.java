@@ -12,7 +12,7 @@ import java.io.Serializable;
  * Date: 01-Oct-16.
  */
 @MappedSuperclass
-public abstract class DomainObject implements Serializable {
+public abstract class DomainObject implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -25,5 +25,12 @@ public abstract class DomainObject implements Serializable {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        DomainObject clone = (DomainObject) super.clone();
+        clone.uuid = this.uuid;
+        return clone;
     }
 }
