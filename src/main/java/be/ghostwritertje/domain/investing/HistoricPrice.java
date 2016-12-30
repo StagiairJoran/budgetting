@@ -1,6 +1,6 @@
 package be.ghostwritertje.domain.investing;
 
-import be.ghostwritertje.domain.Amount;
+import be.ghostwritertje.domain.Bedrag;
 import be.ghostwritertje.domain.Currency;
 import be.ghostwritertje.domain.DomainObject;
 
@@ -21,13 +21,15 @@ import java.time.LocalDate;
         @UniqueConstraint(name = "un_historic_price_01", columnNames = {"financial_instrument_UUID", "date"})
 })
 public class HistoricPrice extends DomainObject {
+    private static final long serialVersionUID = -239280770697690352L;
+
     @ManyToOne
     @JoinColumn(name = "financial_instrument_UUID", nullable = false)
     private FinancialInstrument financialInstrument;
     private LocalDate date;
 
     @Embedded
-    private Amount amount;
+    private Bedrag bedrag;
 
     public LocalDate getDate() {
         return this.date;
@@ -37,23 +39,23 @@ public class HistoricPrice extends DomainObject {
         this.date = date;
     }
 
-    public void setAmount(Amount amount) {
-        this.amount = amount;
+    public void setBedrag(Bedrag bedrag) {
+        this.bedrag = bedrag;
     }
 
-    public Amount getAmount() {
-        if(this.amount == null){
-            this.amount = new Amount(Currency.Enum.EUR);
+    public Bedrag getBedrag() {
+        if(this.bedrag == null){
+            this.bedrag = new Bedrag(Currency.EUR);
         }
-        return this.amount;
+        return this.bedrag;
     }
 
     public Double getPrice() {
-        return this.getAmount().getValue();
+        return this.getBedrag().getValue();
     }
 
     public void setPrice(Double price) {
-        this.getAmount().setValue(price);
+        this.getBedrag().setValue(price);
     }
 
     public FinancialInstrument getFinancialInstrument() {
