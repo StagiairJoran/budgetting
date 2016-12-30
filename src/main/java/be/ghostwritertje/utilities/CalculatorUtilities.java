@@ -12,7 +12,7 @@ import java.math.RoundingMode;
 public class CalculatorUtilities {
 
     public static BigDecimal calculateAnnualizedReturn(BigDecimal originalPrice, BigDecimal currentPrice, int numberOfYears){
-        return BigDecimalMath.pow(currentPrice.divide(originalPrice,100, RoundingMode.HALF_DOWN), BigDecimal.ONE.divide(BigDecimal.valueOf(numberOfYears),100, RoundingMode.HALF_DOWN))
+        return BigDecimalMath.pow(currentPrice.divide(originalPrice,100, RoundingMode.HALF_EVEN), BigDecimal.ONE.divide(BigDecimal.valueOf(numberOfYears), RoundingMode.HALF_EVEN))
                 .subtract(BigDecimal.ONE)
                 .multiply(new BigDecimal("100"));
     }

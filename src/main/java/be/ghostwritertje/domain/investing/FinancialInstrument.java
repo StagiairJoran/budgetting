@@ -10,12 +10,11 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -91,10 +90,10 @@ public class FinancialInstrument extends DomainObject {
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 .findFirst()
                 .map(historicPrice -> {
-                    double value = 10000 / historicPrice.getPrice();
+                    BigDecimal value = new BigDecimal("10000").divide(BigDecimal.valueOf(historicPrice.getPrice()), RoundingMode.HALF_EVEN);
                     return this.historicPriceList.stream()
                             .filter(h -> h.getDate().isAfter(date))
-                            .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), historicPrice1.getPrice() * value))
+                            .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), BigDecimal.valueOf(historicPrice1.getPrice()).multiply(value).doubleValue()))
                             .collect(Collectors.toList());
                 }).orElse(new ArrayList<>());
     }

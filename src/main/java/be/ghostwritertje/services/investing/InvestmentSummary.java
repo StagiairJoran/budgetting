@@ -18,19 +18,19 @@ public class InvestmentSummary implements Serializable {
     private List<FundPurchase> fundPurchaseList;
 
     public List<FundPurchase> getFundPurchaseList() {
-        return fundPurchaseList;
+        return this.fundPurchaseList;
     }
 
     public BigDecimal getAddedValue() {
-        return currentValue.subtract(getTotalInvested());
+        return this.currentValue.subtract(this.getTotalInvested());
     }
 
     public BigDecimal getAnnualPerfomanceInPercentage() {
         LocalDate portfolioDate = this.getDatePortfolio();
         if (portfolioDate != null && portfolioDate.isBefore(LocalDate.now().minusYears(1))) {
             return BigDecimalMath.pow(
-                    this.getCurrentValue().divide(getTotalInvested(), 100, RoundingMode.HALF_EVEN),
-                    new BigDecimal("365.25").divide(BigDecimal.valueOf(LocalDate.now().toEpochDay()).subtract(BigDecimal.valueOf(portfolioDate.toEpochDay())), 100, BigDecimal.ROUND_HALF_EVEN))
+                    this.getCurrentValue().divide(this.getTotalInvested(), 100, RoundingMode.HALF_EVEN),
+                    new BigDecimal("365.25").divide(BigDecimal.valueOf(LocalDate.now().toEpochDay()).subtract(BigDecimal.valueOf(portfolioDate.toEpochDay())), RoundingMode.HALF_EVEN))
                     .subtract(new BigDecimal("1"));
         } else {
             return null;
@@ -43,26 +43,26 @@ public class InvestmentSummary implements Serializable {
         if (this.getTotalInvested().equals(BigDecimal.ZERO)) {
             zero = BigDecimal.ZERO;
         } else {
-            zero = this.getAddedValue().divide(getTotalInvested().abs(), 100, BigDecimal.ROUND_HALF_EVEN);
+            zero = this.getAddedValue().divide(this.getTotalInvested().abs(), RoundingMode.HALF_EVEN);
         }
         return zero;
     }
 
     public BigDecimal getTotalInvested() {
-        return fundPurchaseList.stream().map(FundPurchase::getTotalCost).map(BigDecimal::valueOf).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return this.fundPurchaseList.stream().map(FundPurchase::getTotalCost).map(BigDecimal::valueOf).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getCurrentValue() {
-        return currentValue;
+        return this.currentValue;
     }
 
     private LocalDate getDatePortfolio() {
         //TODO not accounting for sales yet (only purchases)
-        if (fundPurchaseList.isEmpty()) {
+        if (this.fundPurchaseList.isEmpty()) {
             return null;
         } else {
-            return LocalDate.ofEpochDay(fundPurchaseList.stream().map(f -> {
-                BigDecimal weight = BigDecimal.valueOf(f.getTotalCost()).divide(this.getTotalInvested(), 100, RoundingMode.HALF_DOWN);
+            return LocalDate.ofEpochDay(this.fundPurchaseList.stream().map(f -> {
+                BigDecimal weight = BigDecimal.valueOf(f.getTotalCost()).divide(this.getTotalInvested(), 100, RoundingMode.HALF_EVEN);
                 return BigDecimal.valueOf(f.getDate().toEpochDay()).multiply(weight);
             }).reduce(BigDecimal.ZERO, BigDecimal::add).longValue());
         }
