@@ -6,21 +6,20 @@ import be.ghostwritertje.services.investing.FinancialInstrumentService;
 import be.ghostwritertje.utilities.Pair;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
+import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.model.DomainObjectListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.LocalDate;
@@ -58,27 +57,13 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
 
         this.add(form);
 
-        this.add(new ListView<FinancialInstrument>("financialInstruments", this.financialInstrumentListModel) {
-            @Override
-            protected void onInitialize() {
-                super.onInitialize();
-                this.setViewSize(25);
-            }
+       this.add(DataTableBuilderFactory.<FinancialInstrument, String>simple()
+                .addColumn(new LambdaColumn<>(new ResourceModel("name"), FinancialInstrument::getName))
+               .addColumn(new LambdaColumn<>(new ResourceModel("ytd"), FinancialInstrument::getYearToDateReturn))
+               .addColumn(new LambdaColumn<>(new ResourceModel("five.year.return"), FinancialInstrument::get5yearReturn))
 
-            @Override
-            protected void populateItem(ListItem<FinancialInstrument> item) {
-                item.add(new Label("quote", item.getModelObject().getQuote()));
-                item.add(new Label("yearToDateReturn", item.getModelObject().getYearToDateReturn()));
-                item.add(new Label("fiveYearReturn", item.getModelObject().get5yearReturn()));
-                item.add(new Label("currentPrice", item.getModelObject().getCurrentPrice()));
-                item.add(new Link<FinancialInstrument>("link", item.getModel()) {
-                    @Override
-                    public void onClick() {
-                        setResponsePage(new FinancialInstrumentPage(item.getModel()));
-                    }
-                });
-            }
-        });
+               .build("financialInstruments", this.financialInstrumentListModel));
+
         Map<String,List<Pair<LocalDate, Double>>> coordinatesMap1 = this.financialInstrumentListModel.getObject()
                 .stream()
                 .collect(Collectors.toMap(FinancialInstrument::getQuote, (financialInstrument) -> financialInstrument.getValuesFromStartDate(LocalDate.now().minusYears(1))));

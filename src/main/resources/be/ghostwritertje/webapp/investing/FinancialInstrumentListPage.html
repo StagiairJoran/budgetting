@@ -11,29 +11,11 @@
                 <button wicket:id="save">Save</button>
             </form>
         </div>
-        <div class=" col-sm-8">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>quote</th>
-                    <th>yearToDateReturn</th>
-                    <th>fiveYearReturn</th>
-                    <th>currentPrice</th>
-                    <th>link</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr wicket:id="financialInstruments">
-                    <td wicket:id="quote"></td>
-                    <td wicket:id="yearToDateReturn"></td>
-                    <td wicket:id="fiveYearReturn"></td>
-                    <td wicket:id="currentPrice"></td>
-                    <td><a wicket:id="link">Link</a></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    <div class="col-sm-8">
+
+    <div class="col-sm-12" >
+        <table wicket:id="financialInstruments"></table>
+    </div>
+    <div class="col-sm-12">
         <div wicket:id="chart1"></div>
 
         <div wicket:id="chart3"></div>

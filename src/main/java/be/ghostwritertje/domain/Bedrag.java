@@ -48,4 +48,9 @@ public class Bedrag implements Serializable {
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%.2s %s", this.value, this.currency);
+    }
 }

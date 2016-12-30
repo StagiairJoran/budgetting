@@ -48,16 +48,17 @@ public class FinancialInstrument extends DomainObject {
                 .orElse(null);
     }
 
-    public Double getYearToDateReturn() {
+    public String getYearToDateReturn() {
         StopWatch sw = new StopWatch();
         sw.start();
-        Double yearToDateReturn = this.historicPriceList.stream()
+        String yearToDateReturn = this.historicPriceList.stream()
                 .filter(historicPrice -> historicPrice.getDate().isBefore(LocalDate.now().minusYears(1)))
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 //TODO price may not be exactly a year ago
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
-                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), 1).doubleValue())
+                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), 1))
+                        .map(b-> String.format("%s %%", b.setScale(2, BigDecimal.ROUND_HALF_DOWN)))
                         .orElse(null))
                 .orElse(null);
         sw.stop();
@@ -65,18 +66,18 @@ public class FinancialInstrument extends DomainObject {
         return yearToDateReturn;
     }
 
-    public Double get5yearReturn() {
+    public String get5yearReturn() {
         StopWatch sw = new StopWatch();
         sw.start();
         int yearsToSubtract = 5;
-        Double fiveYearReturn = this.historicPriceList.stream()
+        String fiveYearReturn = this.historicPriceList.stream()
                 .filter(historicPrice -> historicPrice.getDate().isBefore(LocalDate.now().minusYears(yearsToSubtract)))
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 //TODO price may not be exactly a year ago
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
-                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), yearsToSubtract)
-                                .doubleValue())
+                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), yearsToSubtract))
+                        .map(b-> String.format("%s %%", b.setScale(2, BigDecimal.ROUND_HALF_DOWN)))
                         .orElse(null))
                 .orElse(null);
         sw.stop();

@@ -21,7 +21,7 @@ public class CalculatorUtilities {
                 .subtract(BigDecimal.ONE)
                 .multiply(new BigDecimal("100"));
         LOG.debug(String.format("Annualized return for original price (%f) and current price (%f) over (%d) years is %f", originalPrice, currentPrice, numberOfYears, annualizedReturn.doubleValue()));
-        return annualizedReturn;
+        return annualizedReturn.setScale(2, BigDecimal.ROUND_HALF_DOWN);
     }
 
     public static void main(String[] args) {
