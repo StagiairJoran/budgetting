@@ -1,7 +1,9 @@
 package be.ghostwritertje.domain.investing;
 
+import be.ghostwritertje.domain.Amount;
 import be.ghostwritertje.domain.DomainObject;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,7 +24,9 @@ public class HistoricPrice extends DomainObject {
     @JoinColumn(name = "financial_instrument_id", nullable = false)
     private FinancialInstrument financialInstrument;
     private LocalDate date;
-    private Double price;
+
+    @Embedded
+    private Amount price;
 
     public LocalDate getDate() {
         return date;
@@ -32,13 +36,20 @@ public class HistoricPrice extends DomainObject {
         this.date = date;
     }
 
+    public void setAmount(Amount price) {
+        this.price = price;
+    }
+
+    public void getAmount(Amount price) {
+        this.price = price;
+    }
 
     public Double getPrice() {
-        return price;
+        return this.price.getAmount();
     }
 
     public void setPrice(Double price) {
-        this.price = price;
+        this.price.setAmount(price);
     }
 
     public FinancialInstrument getFinancialInstrument() {
