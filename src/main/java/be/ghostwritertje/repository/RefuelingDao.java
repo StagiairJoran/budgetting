@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 01-Oct-16.
  */
 @Repository
-public interface RefuelingDao extends CrudRepository<Refueling, Integer> {
+public interface RefuelingDao extends CrudRepository<Refueling, String> {
 
     List<Refueling> findByCarOrderByDateAsc(Car car);
 

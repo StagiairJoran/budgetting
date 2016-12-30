@@ -15,9 +15,7 @@ import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.SubmitLink;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
@@ -100,7 +98,7 @@ public class LoginPage extends BasePage<Person> implements UnAuthorizedAllowed {
                     strategy.remove();
                 }
                 logger.info(String.format("User %s has logged in", person.getUsername()));
-                this.setResponsePage(new DashboardPage(new PersonModel(new Model<Integer>(person.getId()))));
+                this.setResponsePage(new DashboardPage(new PersonModel(new Model<String>(person.getUuid()))));
             } else {
                 error(getLocalizer().getString("signInFailed", this, "Sign in failed"));
             }

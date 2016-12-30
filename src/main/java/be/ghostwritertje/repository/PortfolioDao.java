@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Jorandeboever
  * Date: 28-Dec-16.
  */
-public interface PortfolioDao extends CrudRepository<Portfolio, Integer> {
+public interface PortfolioDao extends CrudRepository<Portfolio, String> {
 
     List<BankAccount> findByPerson(Person owner);
 

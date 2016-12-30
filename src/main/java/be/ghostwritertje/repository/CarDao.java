@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 01-Oct-16.
  */
 @Repository
-public interface CarDao extends CrudRepository<Car, Integer> {
+public interface CarDao extends CrudRepository<Car, String> {
 
     List<Car> findByOwner(Person owner);
 }

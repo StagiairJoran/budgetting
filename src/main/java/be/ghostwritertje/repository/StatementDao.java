@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 01-Oct-16.
  */
 @Repository
-public interface StatementDao extends CrudRepository<Statement, Integer> {
+public interface StatementDao extends CrudRepository<Statement, String> {
 
     List<Statement> findByOriginatingAccount(BankAccount from);
 }

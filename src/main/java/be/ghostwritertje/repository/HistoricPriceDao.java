@@ -12,6 +12,6 @@ import java.util.List;
  * Date: 15-Oct-16.
  */
 @Repository
-public interface HistoricPriceDao extends CrudRepository<HistoricPrice, Integer> {
+public interface HistoricPriceDao extends CrudRepository<HistoricPrice, String> {
     List<HistoricPrice> findByFinancialInstrument(FinancialInstrument financialInstrument);
 }

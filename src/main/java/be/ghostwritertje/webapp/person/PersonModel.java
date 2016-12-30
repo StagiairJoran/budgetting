@@ -15,9 +15,9 @@ public class PersonModel extends LoadableModel<Person> {
     @SpringBean
     private PersonService personService;
 
-    private final IModel<Integer> idModel;
+    private final IModel<String> idModel;
 
-    public PersonModel(IModel<Integer> idModel) {
+    public PersonModel(IModel<String> idModel) {
         super();
         this.idModel = idModel;
     }

@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 15-Oct-16.
  */
 @Repository
-public interface FinancialInstrumentDao extends CrudRepository<FinancialInstrument, Integer> {
+public interface FinancialInstrumentDao extends CrudRepository<FinancialInstrument, String> {
     FinancialInstrument findByQuote(String quote);
 
     @Query(value = "SELECT * FROM T_FINANCIAL_INSTRUMENT a LEFT JOIN t_historic_price b ON b.financial_instrument_id = a.id WHERE b.id is NULL", nativeQuery = true)

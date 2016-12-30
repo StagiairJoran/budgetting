@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * Date: 29-Sep-16.
  */
 @Repository
-public interface PersonDao extends CrudRepository<Person, Integer> {
+public interface PersonDao extends CrudRepository<Person, String> {
 
     Person findByUsername(String username);
 

@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Jorandeboever
  * Date: 01-Oct-16.
  */
-public interface BankAccountDao extends CrudRepository<BankAccount, Integer> {
+public interface BankAccountDao extends CrudRepository<BankAccount, String> {
 
     List<BankAccount> findByAdministrator(Person administrator);
 
