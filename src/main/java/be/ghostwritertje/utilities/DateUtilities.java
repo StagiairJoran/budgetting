@@ -2,7 +2,6 @@ package be.ghostwritertje.utilities;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.ZoneOffset;
 import java.util.Date;
 
@@ -11,6 +10,8 @@ import java.util.Date;
  * Date: 01-Oct-16.
  */
 public class DateUtilities {
+    private DateUtilities() {
+    }
 
     public static LocalDate toLocalDate(Date date) {
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneOffset.systemDefault()).toLocalDate();
