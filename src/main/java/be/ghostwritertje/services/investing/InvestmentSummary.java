@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Jorandeboever
@@ -30,7 +31,7 @@ public class InvestmentSummary implements Serializable {
         if (portfolioDate != null && portfolioDate.isBefore(LocalDate.now().minusYears(1))) {
             return BigDecimalMath.pow(
                     this.getCurrentValue().divide(this.getTotalInvested(), 100, RoundingMode.HALF_EVEN),
-                    new BigDecimal("365.25").divide(BigDecimal.valueOf(LocalDate.now().toEpochDay()).subtract(BigDecimal.valueOf(portfolioDate.toEpochDay())), RoundingMode.HALF_EVEN))
+                    new BigDecimal("365.25").divide(BigDecimal.valueOf(LocalDate.now().toEpochDay()).subtract(BigDecimal.valueOf(portfolioDate.toEpochDay())),100, RoundingMode.HALF_EVEN))
                     .subtract(new BigDecimal("1"));
         } else {
             return null;
@@ -40,10 +41,10 @@ public class InvestmentSummary implements Serializable {
 
     public BigDecimal getAddedValueInPercentage() {
         BigDecimal zero;
-        if (this.getTotalInvested().equals(BigDecimal.ZERO)) {
+        if (Objects.equals(this.getTotalInvested(), BigDecimal.ZERO)) {
             zero = BigDecimal.ZERO;
         } else {
-            zero = this.getAddedValue().divide(this.getTotalInvested().abs(), RoundingMode.HALF_EVEN);
+            zero = this.getAddedValue().divide(this.getTotalInvested().abs(),100, RoundingMode.HALF_EVEN);
         }
         return zero;
     }

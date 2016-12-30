@@ -106,7 +106,7 @@ public class FinancialInstrument extends DomainObject {
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 .findFirst()
                 .map(historicPrice -> {
-                    BigDecimal value = new BigDecimal("10000").divide(BigDecimal.valueOf(historicPrice.getPrice()), RoundingMode.HALF_EVEN);
+                    BigDecimal value = new BigDecimal("10000").divide(BigDecimal.valueOf(historicPrice.getPrice()),100, RoundingMode.HALF_EVEN);
                     return this.historicPriceList.stream()
                             .filter(h -> h.getDate().isAfter(date))
                             .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), BigDecimal.valueOf(historicPrice1.getPrice()).multiply(value).doubleValue()))
