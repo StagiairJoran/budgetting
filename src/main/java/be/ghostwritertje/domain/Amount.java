@@ -1,5 +1,6 @@
 package be.ghostwritertje.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -8,9 +9,16 @@ import javax.persistence.ManyToOne;
 public class Amount {
     private Double amount;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "AMOUNT_TYPE_ID")
     private AmountType amountType;
+
+    public Amount() {
+    }
+
+    public <T extends AmountType, E extends AmountTypeEnum<T>> Amount(E amountTypeEnum) {
+        this.amountType = new AmountType(amountTypeEnum);
+    }
 
     public boolean isCurrencyType(){
         return this.amountType instanceof Currency;

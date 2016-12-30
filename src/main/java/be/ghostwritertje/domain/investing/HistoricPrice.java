@@ -1,6 +1,7 @@
 package be.ghostwritertje.domain.investing;
 
 import be.ghostwritertje.domain.Amount;
+import be.ghostwritertje.domain.Currency;
 import be.ghostwritertje.domain.DomainObject;
 
 import javax.persistence.Embedded;
@@ -41,6 +42,9 @@ public class HistoricPrice extends DomainObject {
     }
 
     public void getAmount(Amount price) {
+        if(this.price == null){
+            this.price = new Amount(Currency.Enum.EUR);
+        }
         this.price = price;
     }
 
