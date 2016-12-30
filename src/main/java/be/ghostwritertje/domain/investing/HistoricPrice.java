@@ -27,37 +27,37 @@ public class HistoricPrice extends DomainObject {
     private LocalDate date;
 
     @Embedded
-    private Amount price;
+    private Amount amount;
 
     public LocalDate getDate() {
-        return date;
+        return this.date;
     }
 
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public void setAmount(Amount price) {
-        this.price = price;
+    public void setAmount(Amount amount) {
+        this.amount = amount;
     }
 
-    public void getAmount(Amount price) {
-        if(this.price == null){
-            this.price = new Amount(Currency.Enum.EUR);
+    public Amount getAmount() {
+        if(this.amount == null){
+            this.amount = new Amount(Currency.Enum.EUR);
         }
-        this.price = price;
+        return this.amount;
     }
 
     public Double getPrice() {
-        return this.price.getAmount();
+        return this.getAmount().getValue();
     }
 
     public void setPrice(Double price) {
-        this.price.setAmount(price);
+        this.getAmount().setValue(price);
     }
 
     public FinancialInstrument getFinancialInstrument() {
-        return financialInstrument;
+        return this.financialInstrument;
     }
 
     public void setFinancialInstrument(FinancialInstrument financialInstrument) {

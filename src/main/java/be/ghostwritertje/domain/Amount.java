@@ -1,13 +1,15 @@
 package be.ghostwritertje.domain;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Embeddable
 public class Amount {
-    private Double amount;
+    @Column(name = "AMOUNT")
+    private Double value;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "AMOUNT_TYPE_ID")
@@ -24,12 +26,12 @@ public class Amount {
         return this.amountType instanceof Currency;
     }
 
-    public Double getAmount() {
-        return this.amount;
+    public Double getValue() {
+        return this.value;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setValue(Double amount) {
+        this.value = amount;
     }
 
     public AmountType getAmountType() {
