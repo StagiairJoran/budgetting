@@ -43,7 +43,7 @@ public class FinanceServiceImpl implements FinanceService {
             Calendar calendar = new GregorianCalendar(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
             try {
                 Stock stock = YahooFinance.get("SWDA.MI", calendar, calendar, Interval.DAILY);
-                return Optional.ofNullable(stock.getHistory().get(0)).map(HistoricalQuote::getClose).orElse(BigDecimal.ZERO);
+                return Optional.ofNullable(stock.getHistory().get(0)).map(HistoricalQuote::getAdjClose).orElse(BigDecimal.ZERO);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -110,7 +110,7 @@ public class FinanceServiceImpl implements FinanceService {
     private HistoricPrice convertToHistoricPrice(HistoricalQuote historicalQuote, FinancialInstrument financialInstrument){
         HistoricPrice historicPrice = new HistoricPrice();
         historicPrice.setDate(DateUtilities.toLocalDate(historicalQuote.getDate().getTime()));
-        historicPrice.setPrice(historicalQuote.getClose().doubleValue());
+        historicPrice.setPrice(historicalQuote.getAdjClose().doubleValue());
         historicPrice.setFinancialInstrument(financialInstrument);
         return historicPrice;
     }
