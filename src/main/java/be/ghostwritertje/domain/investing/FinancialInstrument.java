@@ -3,6 +3,8 @@ package be.ghostwritertje.domain.investing;
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.utilities.CalculatorUtilities;
 import be.ghostwritertje.utilities.Pair;
+import org.apache.log4j.Logger;
+import org.springframework.util.StopWatch;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "T_FINANCIAL_INSTRUMENT")
 public class FinancialInstrument extends DomainObject {
+    private static final Logger LOG = Logger.getLogger(FinancialInstrument.class);
+
     @Column(unique = true)
     private String quote;
 
@@ -43,29 +47,39 @@ public class FinancialInstrument extends DomainObject {
     }
 
     public Double getYearToDateReturn() {
-        return this.historicPriceList.stream()
+        StopWatch sw = new StopWatch();
+        sw.start();
+        Double yearToDateReturn = this.historicPriceList.stream()
                 .filter(historicPrice -> historicPrice.getDate().isBefore(LocalDate.now().minusYears(1)))
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 //TODO price may not be exactly a year ago
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
-//                        .map(currentPrice -> currentPrice / historicPrice.getPrice())
                         .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), 1).doubleValue())
                         .orElse(null))
                 .orElse(null);
+        sw.stop();
+        LOG.debug(String.format("Calculating YTD return took %.2f seconds (historicpricelist size = %d) ", sw.getTotalTimeSeconds(), this.historicPriceList.size()));
+        return yearToDateReturn;
     }
 
     public Double get5yearReturn() {
+        StopWatch sw = new StopWatch();
+        sw.start();
         int yearsToSubtract = 5;
-        return this.historicPriceList.stream()
+        Double fiveYearReturn = this.historicPriceList.stream()
                 .filter(historicPrice -> historicPrice.getDate().isBefore(LocalDate.now().minusYears(yearsToSubtract)))
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 //TODO price may not be exactly a year ago
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
-                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), yearsToSubtract).doubleValue())
+                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), yearsToSubtract)
+                                .doubleValue())
                         .orElse(null))
                 .orElse(null);
+        sw.stop();
+        LOG.debug(String.format("Calculating 5 year return took %.2f seconds (historicpricelist size = %d) ", sw.getTotalTimeSeconds(), this.historicPriceList.size()));
+        return fiveYearReturn;
     }
 
     public FinancialInstrument(String quote) {
@@ -85,7 +99,9 @@ public class FinancialInstrument extends DomainObject {
     }
 
     public List<Pair<LocalDate, Double>> getValuesFromStartDate(LocalDate date) {
-        return this.historicPriceList.stream()
+        StopWatch sw = new StopWatch();
+        sw.start();
+        List<Pair<LocalDate, Double>> result = this.historicPriceList.stream()
                 .filter(historicPrice -> historicPrice.getDate().isBefore(date))
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 .findFirst()
@@ -96,5 +112,9 @@ public class FinancialInstrument extends DomainObject {
                             .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), BigDecimal.valueOf(historicPrice1.getPrice()).multiply(value).doubleValue()))
                             .collect(Collectors.toList());
                 }).orElse(new ArrayList<>());
+
+        sw.stop();
+        LOG.debug(String.format("Calculating values from %s took %.2f seconds (historicpricelist size = %d) ", date.toString(), sw.getTotalTimeSeconds(), this.historicPriceList.size()));
+        return result;
     }
 }
