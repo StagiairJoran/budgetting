@@ -11,7 +11,7 @@ import org.apache.wicket.model.IModel;
  * Created by Jorandeboever
  * Date: 29-Dec-16.
  */
-public class AjaxLinkBuilder <X> extends LinkBuilderSupport<AjaxLinkBuilder<X>, AjaxLink<X>> {
+public class AjaxLinkBuilder <X> extends AjaxLinkBuilderSupport<AjaxLinkBuilder<X>, AjaxLink<X>> {
 
     AjaxLinkBuilder(WicketBiConsumer<AjaxRequestTarget, AjaxLink<X>> onClickConsumer) {
         super(onClickConsumer);

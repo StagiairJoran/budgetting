@@ -41,6 +41,11 @@ public class RefuelingPage extends BasePage<Refueling> {
     protected void onInitialize() {
         super.onInitialize();
 
+
+        LinkBuilderFactory.pageLink(() -> LambdaModel.of(this.getModel(), Refueling::getCar), RefuelingListPage::new)
+                .usingDefaults()
+                .attach(this, "back");
+
         Form<Refueling> form = new BaseForm<Refueling>("form", this.getModel()) {
             @Override
             public void onSubmit() {

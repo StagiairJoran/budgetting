@@ -10,7 +10,7 @@ import org.apache.wicket.model.IModel;
  * Created by Jorandeboever
  * Date: 24-Dec-16.
  */
-public class AjaxSubmitLinkBuilder extends LinkBuilderSupport<AjaxSubmitLinkBuilder, AjaxSubmitLink> {
+public class AjaxSubmitLinkBuilder extends AjaxLinkBuilderSupport<AjaxSubmitLinkBuilder, AjaxSubmitLink> {
      AjaxSubmitLinkBuilder(WicketBiConsumer<AjaxRequestTarget, AjaxSubmitLink> onClickConsumer) {
         super(onClickConsumer);
     }
