@@ -55,12 +55,19 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
                     incompleteRefuelings.add(searchResult);
                 } else {
                     incompleteRefuelings.add(searchResult);
-                    BigDecimal average =  BigDecimal.valueOf(incompleteRefuelings.stream()
+                    BigDecimal averageConsumption =  BigDecimal.valueOf(incompleteRefuelings.stream()
                             .map(RefuelingSearchResult::getConsumption)
                             .mapToDouble(Double::doubleValue)
                             .sum())
                             .divide(BigDecimal.valueOf(incompleteRefuelings.size()), RoundingMode.HALF_DOWN);
-                    incompleteRefuelings.forEach((sr) -> sr.setConsumption(average.doubleValue()));
+                    incompleteRefuelings.forEach((sr) -> sr.setConsumption(averageConsumption.doubleValue()));
+
+                    BigDecimal averageKilometres =  BigDecimal.valueOf(incompleteRefuelings.stream()
+                            .map(RefuelingSearchResult::getKilometresPerMonth)
+                            .mapToDouble(Double::doubleValue)
+                            .sum())
+                            .divide(BigDecimal.valueOf(incompleteRefuelings.size()), RoundingMode.HALF_DOWN);
+                    incompleteRefuelings.forEach((sr) -> sr.setKilometresPerMonth(averageKilometres.doubleValue()));
                     incompleteRefuelings.clear();
                 }
             }
