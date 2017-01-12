@@ -44,13 +44,13 @@ public class RefuelingListPage extends BasePage<Car> {
         this.add(new CarInfoPanel("carInfo", this.getModel()));
 
         this.add(DataTableBuilderFactory.<Refueling, String>simple()
-                .addColumn(new LambdaColumn<>(new ResourceModel("date"), Refueling::getDate))
+                .addColumn(ColumnBuilderFactory.<Refueling, String>simple( Refueling::getDate).hideOnMobile().build(new ResourceModel("date")))
                 .addColumn(new LambdaColumn<>(new ResourceModel("kilometres"), Refueling::getKilometres))
                 .addColumn(new LambdaColumn<>(new ResourceModel("liters"), Refueling::getLiters))
                 .addColumn(new LambdaColumn<>(new ResourceModel("price"), Refueling::getPrice))
                 .addColumn(new LambdaColumn<>(new ResourceModel("price.per.liter"), Refueling::getPricePerLiter))
                 .addColumn(new CheckBoxColumn<>(new ResourceModel("fuel.tank.full"), Refueling::isFuelTankFull))
-                .addColumn(ColumnBuilderFactory.acties(new ResourceModel("actions"),
+                .addColumn(ColumnBuilderFactory.actions(new ResourceModel("actions"),
                         (target, link) -> this.setResponsePage(new RefuelingPage(link.getModel())),
                         (target, link) -> {
                             RefuelingListPage.this.refuelingService.delete(link.getModelObject());
