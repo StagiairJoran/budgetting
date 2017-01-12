@@ -10,7 +10,6 @@ import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import be.ghostwritertje.webapp.datatable.CheckBoxColumn;
 import be.ghostwritertje.webapp.datatable.ColumnBuilderFactory;
 import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -44,11 +43,11 @@ public class RefuelingListPage extends BasePage<Car> {
         this.add(new CarInfoPanel("carInfo", this.getModel()));
 
         this.add(DataTableBuilderFactory.<Refueling, String>simple()
-                .addColumn(ColumnBuilderFactory.<Refueling, String>simple( Refueling::getDate).hideOnMobile().build(new ResourceModel("date")))
-                .addColumn(new LambdaColumn<>(new ResourceModel("kilometres"), Refueling::getKilometres))
-                .addColumn(new LambdaColumn<>(new ResourceModel("liters"), Refueling::getLiters))
-                .addColumn(new LambdaColumn<>(new ResourceModel("price"), Refueling::getPrice))
-                .addColumn(new LambdaColumn<>(new ResourceModel("price.per.liter"), Refueling::getPricePerLiter))
+                .addColumn(ColumnBuilderFactory.<Refueling, String>simple( Refueling::getDate).build(new ResourceModel("date")))
+                .addColumn(ColumnBuilderFactory.<Refueling, String>simple( Refueling::getKilometres).build(new ResourceModel("kilometres")))
+                .addColumn(ColumnBuilderFactory.<Refueling, String>simple( Refueling::getLiters).hideOnMobile().build(new ResourceModel("liters")))
+                .addColumn(ColumnBuilderFactory.<Refueling, String>simple( Refueling::getPrice).hideOnMobile().build(new ResourceModel("price")))
+                .addColumn(ColumnBuilderFactory.<Refueling, String>simple( Refueling::getPricePerLiter).build(new ResourceModel("price.per.liter")))
                 .addColumn(new CheckBoxColumn<>(new ResourceModel("fuel.tank.full"), Refueling::isFuelTankFull))
                 .addColumn(ColumnBuilderFactory.actions(new ResourceModel("actions"),
                         (target, link) -> this.setResponsePage(new RefuelingPage(link.getModel())),
