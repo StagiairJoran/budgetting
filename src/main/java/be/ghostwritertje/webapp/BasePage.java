@@ -1,13 +1,8 @@
 package be.ghostwritertje.webapp;
 
 import be.ghostwritertje.domain.Person;
-import be.ghostwritertje.webapp.budgetting.StatementListPage;
-import be.ghostwritertje.webapp.investing.FinancialInstrumentListPage;
-import be.ghostwritertje.webapp.investing.FundPurchaseListPage;
-import be.ghostwritertje.webapp.investing.PortfolioListPage;
 import be.ghostwritertje.webapp.person.pages.LoginPage;
 import be.ghostwritertje.webapp.person.pages.LogoutPage;
-import be.ghostwritertje.webapp.person.pages.PersonListPage;
 import be.ghostwritertje.webapp.person.pages.RegisterPage;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
@@ -18,7 +13,6 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
-import org.apache.wicket.model.Model;
 
 /**
  * Created by Ghostwritertje
@@ -38,9 +32,9 @@ public abstract class BasePage<T> extends GenericWebPage<T>  implements Authoriz
         super.onInitialize();
 
         this.add(new BookmarkablePageLink("homeLink", DashboardPage.class));
-        this.add(new BookmarkablePageLink("usersLink", PersonListPage.class));
-        this.add(new BookmarkablePageLink("funds", FinancialInstrumentListPage.class));
-        this.add(new BookmarkablePageLink("portfolioLink", PortfolioListPage.class));
+//        this.add(new BookmarkablePageLink("usersLink", PersonListPage.class));
+//        this.add(new BookmarkablePageLink("funds", FinancialInstrumentListPage.class));
+//        this.add(new BookmarkablePageLink("portfolioLink", PortfolioListPage.class));
 
         this.add(new BookmarkablePageLink("registerLink", RegisterPage.class)
                 .add(new VisibilityBehavior<>(component -> CustomSession.get().getLoggedInPerson() == null)));
@@ -62,12 +56,12 @@ public abstract class BasePage<T> extends GenericWebPage<T>  implements Authoriz
 
             }
         });
-        this.add(new Link<Person>("fundPurchasesLink") {
-            @Override
-            public void onClick() {
-                this.setResponsePage(FundPurchaseListPage.class);
-            }
-        });
+//        this.add(new Link<Person>("fundPurchasesLink") {
+//            @Override
+//            public void onClick() {
+//                this.setResponsePage(FundPurchaseListPage.class);
+//            }
+//        });
 
         this.add(new Link<Person>("logoutLink") {
             @Override
@@ -77,18 +71,18 @@ public abstract class BasePage<T> extends GenericWebPage<T>  implements Authoriz
             }
         });
 
-        this.add(new Link<T>("statementsLink", this.getModel()) {
-            @Override
-            public void onClick() {
-                this.setResponsePage(new StatementListPage(new Model<Person>(CustomSession.get().getLoggedInPerson())));
-            }
-
-            @Override
-            protected void onInitialize() {
-                super.onInitialize();
-                this.add(new VisibilityBehavior<>(component -> CustomSession.get().getLoggedInPerson() != null));
-            }
-        });
+//        this.add(new Link<T>("statementsLink", this.getModel()) {
+//            @Override
+//            public void onClick() {
+//                this.setResponsePage(new StatementListPage(new Model<Person>(CustomSession.get().getLoggedInPerson())));
+//            }
+//
+//            @Override
+//            protected void onInitialize() {
+//                super.onInitialize();
+//                this.add(new VisibilityBehavior<>(component -> CustomSession.get().getLoggedInPerson() != null));
+//            }
+//        });
     }
 
     @Override

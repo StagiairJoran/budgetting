@@ -48,7 +48,7 @@ public class RefuelingPage extends BasePage<Refueling> {
             }
         };
 
-        IModel<LocalDate> localDateLambdaModel = new LambdaModel<>(() -> this.getModel().getObject().getDate(), localDate -> this.getModel().getObject().setDate(localDate));
+        IModel<LocalDate> localDateLambdaModel = LambdaModel.of(this.getModel(), Refueling::getDate, Refueling::setDate);
 
         FormComponentBuilderFactory.date()
                 .usingDefaults()
