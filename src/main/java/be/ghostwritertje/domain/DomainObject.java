@@ -33,4 +33,5 @@ public abstract class DomainObject implements Serializable, Cloneable {
         clone.uuid = this.uuid;
         return clone;
     }
+
 }

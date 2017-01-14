@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,9 @@ public class PersonServiceImpl extends DomainObjectCrudServiceSupport<Person> im
 
     @Override
     public Person save(Person person) {
-        person.setPassword(PasswordUtility.hashPassword(person.getPassword()));
+        if(StringUtils.isEmpty(person.getUuid())){
+            person.setPassword(PasswordUtility.hashPassword(person.getPassword()));
+        }
         return this.dao.save(person);
     }
 

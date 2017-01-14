@@ -1,8 +1,8 @@
 package be.ghostwritertje.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import be.ghostwritertje.domain.car.Car;
+
+import javax.persistence.*;
 
 /**
  * Created by Ghostwritertje
@@ -14,8 +14,13 @@ public class Person extends DomainObject {
 
     @Column(unique = true, nullable = false)
     private String username;
+
     @Column(nullable = false, name = "password")
     private String password;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "FAVOURITE_CAR_UUID")
+    private Car favouriteCar;
 
     public Person() {
     }
@@ -29,6 +34,14 @@ public class Person extends DomainObject {
             this.username = "";
         }
         return username;
+    }
+
+    public Car getFavouriteCar() {
+        return this.favouriteCar;
+    }
+
+    public void setFavouriteCar(Car favouriteCar) {
+        this.favouriteCar = favouriteCar;
     }
 
     public void setUsername(String username) {

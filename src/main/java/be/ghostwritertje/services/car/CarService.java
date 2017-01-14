@@ -13,5 +13,11 @@ import java.util.List;
 public interface CarService extends DomainObjectCrudService<Car> {
     List<Car> findAll(Person person);
 
+    @Override
     Car save(Car car);
+
+    void makeFavourite(Car car, Person loggedInPerson);
+
+    void removeFavourite(Car car, Person loggedInPerson);
+
 }

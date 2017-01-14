@@ -36,6 +36,7 @@ public class CarPage extends BasePage<Car> {
 
         BaseForm<Car> form = new BaseForm<>("form", this.getModel());
 
+
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
                 .body(new ResourceModel("brand"))
@@ -43,8 +44,15 @@ public class CarPage extends BasePage<Car> {
                 .body(new ResourceModel("model"))
                 .attach(form, "model", new LambdaModel<String>(() -> this.getModelObject().getModel(), model -> this.getModelObject().setModel(model)));
 
-        form.add(new NumberTextField<Double>("price", new LambdaModel<>(() -> this.getModelObject().getPurchasePrice(), model -> this.getModelObject().setPurchasePrice(model)), Double.class));
-        form.add(new LocalDateTextField("date", new LambdaModel<LocalDate>(() -> this.getModelObject().getPurchaseDate(), date -> this.getModelObject().setPurchaseDate(date))));
+        form.add(new NumberTextField<Double>(
+                "price",
+                new LambdaModel<>(() -> this.getModelObject().getPurchasePrice(), model -> this.getModelObject().setPurchasePrice(model)),
+                Double.class
+        ));
+        form.add(new LocalDateTextField(
+                "date",
+                new LambdaModel<LocalDate>(() -> this.getModelObject().getPurchaseDate(), date -> this.getModelObject().setPurchaseDate(date))
+        ));
 
         LinkBuilderFactory.submitLink((target, o) -> CarPage.this.carService.save(CarPage.this.getModelObject()))
                 .usingDefaults()

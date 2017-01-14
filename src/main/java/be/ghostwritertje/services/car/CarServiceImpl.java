@@ -40,4 +40,18 @@ public class CarServiceImpl extends DomainObjectCrudServiceSupport<Car> implemen
     protected CrudRepository<Car, String> getDao() {
         return this.dao;
     }
+
+    @Override
+    public void makeFavourite(Car car, Person loggedInPerson) {
+        Person person = this.personService.findByUsername(loggedInPerson.getUsername());
+        person.setFavouriteCar(car);
+        this.personService.save(person);
+    }
+
+    @Override
+    public void removeFavourite(Car car, Person loggedInPerson) {
+        Person person = this.personService.findByUsername(loggedInPerson.getUsername());
+        person.setFavouriteCar(null);
+        this.personService.save(person);
+    }
 }

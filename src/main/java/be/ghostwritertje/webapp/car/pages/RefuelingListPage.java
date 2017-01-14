@@ -40,6 +40,7 @@ public class RefuelingListPage extends BasePage<Car> {
     protected void onInitialize() {
         super.onInitialize();
 
+
         this.add(new CarInfoPanel("carInfo", this.getModel()));
 
         this.add(DataTableBuilderFactory.<Refueling, String>simple()
