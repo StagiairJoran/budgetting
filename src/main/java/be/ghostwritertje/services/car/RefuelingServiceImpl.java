@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,12 +33,12 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
 
     @Override
     public List<Refueling> findByCar(Car car) {
-        return this.dao.findByCarOrderByDateAsc(car);
+        return this.dao.findByCarOrderByDateDesc(car);
     }
 
     @Override
     public List<RefuelingSearchResult> mapRefuelingsToSearchResults(List<Refueling> refuelings) {
-        List<RefuelingSearchResult> searchResults = StreamEx.of(refuelings.stream())
+        List<RefuelingSearchResult> searchResults = StreamEx.of(refuelings.stream().sorted(Comparator.comparing(Refueling::getDate)))
                 .pairMap((refueling, refueling2) -> new RefuelingSearchResult(refueling2)
                         //TODO error when 2 refuelings on same day (divide by zero)
                         .setKilometresPerMonth((refueling2.getKilometres() - refueling.getKilometres()) / refueling.getDate().until(refueling2.getDate(), ChronoUnit.DAYS) * 365.25 / 12)

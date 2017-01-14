@@ -14,7 +14,8 @@ import java.util.List;
 @Repository
 public interface RefuelingDao extends CrudRepository<Refueling, String> {
 
-    List<Refueling> findByCarOrderByDateAsc(Car car);
+    List<Refueling> findByCarOrderByDateDesc(Car car);
 
+    @Override
     void delete(Refueling refueling);
 }

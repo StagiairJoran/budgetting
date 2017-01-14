@@ -19,6 +19,8 @@ import org.apache.wicket.model.LambdaModel;
  * Date: 30-Sep-16.
  */
 public abstract class BasePage<T> extends GenericWebPage<T>  implements AuthorizationRequired {
+    private static final long serialVersionUID = 6192050997210969297L;
+
     protected BasePage() {
         super();
     }

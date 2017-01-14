@@ -33,7 +33,7 @@ public class RefuelingListPage extends BasePage<Car> {
 
     public RefuelingListPage(IModel<Car> model) {
         super(model);
-        refuelingListModel = new ListModel<>(this.refuelingService.findByCar(this.getModelObject()));
+        this.refuelingListModel = new ListModel<>(this.refuelingService.findByCar(this.getModelObject()));
     }
 
     @Override
