@@ -88,7 +88,6 @@ public abstract class BasePage<T> extends GenericWebPage<T>  implements Authoriz
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-
         response.render(new CssReferenceHeaderItem(FontAwesomeCssReference.instance(), null, null, null));
     }
 }
