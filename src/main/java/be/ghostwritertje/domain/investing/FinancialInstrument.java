@@ -128,6 +128,6 @@ public class FinancialInstrument extends DomainObject {
 
     @Override
     public String getDisplayValue() {
-        return this.getQuote();
+        return this.getName();
     }
 }

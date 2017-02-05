@@ -4,20 +4,9 @@ import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.utilities.Pair;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -28,6 +17,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "T_PORTFOLIO")
 public class Portfolio extends DomainObject {
+    private static final long serialVersionUID = 7536007246538849261L;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "PORTFOLIO_UUID")
@@ -48,7 +38,7 @@ public class Portfolio extends DomainObject {
             list.put(localDateDoublePair.getK(), Optional.ofNullable(list.get(localDateDoublePair.getK())).orElse(new Value()).add(localDateDoublePair.getV()));
         }));
         return list.entrySet().stream()
-                .filter(entry-> entry.getValue().getCount() == allocationList.size())
+                .filter(entry-> entry.getValue().getCount() == this.allocationList.size())
                 .map(entry -> new Pair<LocalDate, Double>(entry.getKey(), entry.getValue().getValue()))
                 .sorted(Comparator.comparing((Function<Pair<LocalDate, Double>, LocalDate>) Pair::getK).reversed())
                 .collect(Collectors.toList());
@@ -56,11 +46,11 @@ public class Portfolio extends DomainObject {
 
 
     public List<Allocation> getAllocationList() {
-        return allocationList;
+        return this.allocationList;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -68,7 +58,7 @@ public class Portfolio extends DomainObject {
     }
 
     public Person getPerson() {
-        return person;
+        return this.person;
     }
 
     public void setPerson(Person person) {
@@ -81,16 +71,16 @@ public class Portfolio extends DomainObject {
 
         private Value add(Double value){
             this.value+= value;
-            count++;
+            this.count++;
            return this;
         }
 
         public Double getValue() {
-            return value;
+            return this.value;
         }
 
         private int getCount(){
-            return count;
+            return this.count;
         }
     }
 }
