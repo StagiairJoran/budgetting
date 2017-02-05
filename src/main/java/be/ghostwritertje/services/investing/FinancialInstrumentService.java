@@ -1,5 +1,6 @@
 package be.ghostwritertje.services.investing;
 
+import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.services.DomainObjectCrudService;
 
@@ -13,4 +14,7 @@ public interface FinancialInstrumentService extends DomainObjectCrudService<Fina
     List<FinancialInstrument> findFinancialInstrumentsWithoutHistory();
 
     FinancialInstrument findByQuote(String quote);
+
+    List<FinancialInstrument> findFinancialInstrumentsByPerson(Person person);
+
 }

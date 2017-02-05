@@ -1,0 +1,3 @@
+ALTER TABLE saving.t_fund_purchase
+  ADD CONSTRAINT FK02_FUND_PURCHASE
+FOREIGN KEY (QUOTE) REFERENCES t_financial_instrument (QUOTE);

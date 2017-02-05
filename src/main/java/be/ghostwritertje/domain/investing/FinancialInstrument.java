@@ -125,4 +125,9 @@ public class FinancialInstrument extends DomainObject {
         LOG.debug(String.format("Calculating values from %s took %.2f seconds (historicpricelist size = %d) ", date.toString(), sw.getTotalTimeSeconds(), this.historicPriceList.size()));
         return result;
     }
+
+    @Override
+    public String getDisplayValue() {
+        return this.getQuote();
+    }
 }

@@ -3,11 +3,7 @@ package be.ghostwritertje.domain.investing;
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 /**
@@ -17,7 +13,11 @@ import java.time.LocalDate;
 @Table(name = "T_FUND_PURCHASE")
 @Entity
 public class FundPurchase extends DomainObject {
-    private String quote;
+    private static final long serialVersionUID = 3252851418490578339L;
+
+    @ManyToOne
+    @JoinColumn(name = "QUOTE", referencedColumnName = "QUOTE")
+    private FinancialInstrument financialInstrument;
 
     @Column(nullable = false)
     private Integer numberOfShares;
@@ -36,16 +36,21 @@ public class FundPurchase extends DomainObject {
     private Person owner;
 
     public String getQuote() {
-        if (this.quote == null) {
-            this.quote = "";
-        }
-        return quote;
+        return this.getFinancialInstrument().getQuote();
     }
 
-    public void setQuote(String quote) {
-        this.quote = quote;
+//    public void setQuote(String quote) {
+//        this.quote = quote;
+//    }
+
+
+    public FinancialInstrument getFinancialInstrument() {
+        return this.financialInstrument;
     }
 
+    public void setFinancialInstrument(FinancialInstrument financialInstrument) {
+        this.financialInstrument = financialInstrument;
+    }
 
     public Person getOwner() {
         return owner;

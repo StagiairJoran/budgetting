@@ -1,6 +1,7 @@
 package be.ghostwritertje.repository;
 
 import be.ghostwritertje.domain.Person;
+import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.domain.investing.FundPurchase;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,7 @@ import java.util.List;
 @Repository
 public interface FundPurchaseDao extends CrudRepository<FundPurchase, String> {
     List<FundPurchase> findByOwnerOrderByDateAsc(Person owner);
+
+    List<FundPurchase> findByOwnerAndFinancialInstrumentOrderByDateAsc(Person owner, FinancialInstrument financialInstrument);
+
 }

@@ -1,5 +1,6 @@
 package be.ghostwritertje.services.investing;
 
+import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.repository.FinancialInstrumentDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
@@ -47,8 +48,14 @@ public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSuppo
         }).orElse(null);
     }
 
+    @Override
     public List<FinancialInstrument> findFinancialInstrumentsWithoutHistory() {
         return this.financialInstrumentDao.findFinancialInstrumentsWithoutHistory();
+    }
+
+    @Override
+    public List<FinancialInstrument> findFinancialInstrumentsByPerson(Person person){
+        return this.financialInstrumentDao.findFinancialInstrumentsByPerson(person);
     }
 
     @Override
