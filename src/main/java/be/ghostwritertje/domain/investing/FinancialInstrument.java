@@ -109,7 +109,7 @@ public class FinancialInstrument extends DomainObject {
         StopWatch sw = new StopWatch();
         sw.start();
         List<Pair<LocalDate, Double>> result = this.historicPriceList.stream()
-                .filter(historicPrice -> historicPrice.getDate().isAfter(date))
+                .filter(historicPrice -> historicPrice.getDate().isAfter(date) && historicPrice.getDate().isBefore(date.plusDays(7)))
                 .sorted(Comparator.comparing(HistoricPrice::getDate))
                 .findFirst()
                 .map(historicPrice -> {
