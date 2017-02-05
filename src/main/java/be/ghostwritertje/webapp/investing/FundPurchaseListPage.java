@@ -9,7 +9,6 @@ import be.ghostwritertje.services.investing.InvestmentSummary;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.CustomSession;
 import be.ghostwritertje.webapp.IModelBasedVisibilityBehavior;
-import com.google.common.util.concurrent.AbstractFuture;
 import org.apache.log4j.Logger;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -24,10 +23,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Jorandeboever
@@ -82,7 +77,7 @@ public class FundPurchaseListPage extends BasePage<Person> {
             @Override
             protected void populateItem(ListItem<FundPurchase> item) {
                 item.add(new Label("date", item.getModelObject().getDate()));
-                item.add(new Label("quote", item.getModelObject().getQuote()));
+                item.add(new Label("name", item.getModelObject().getFinancialInstrument().getName()));
                 item.add(new Label("count", item.getModelObject().getNumberOfShares()));
                 item.add(new Label("sharePrice", item.getModelObject().getSharePrice()));
                 item.add(new Label("transactionCost", item.getModelObject().getTransactionCost()));
