@@ -19,6 +19,8 @@ public class FlywayMigrate {
     @Bean
     @Autowired
     public Flyway flywayMigrate(@Qualifier("flyway") Flyway flyway){
+        flyway.clean();
+        flyway.repair();
         flyway.migrate();
         return flyway;
     }
