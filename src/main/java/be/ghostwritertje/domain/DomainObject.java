@@ -1,5 +1,6 @@
 package be.ghostwritertje.domain;
 
+import be.ghostwritertje.webapp.form.Display;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.GeneratedValue;
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * Date: 01-Oct-16.
  */
 @MappedSuperclass
-public abstract class DomainObject implements Serializable, Cloneable {
+public abstract class DomainObject implements Serializable, Cloneable, Display {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -38,4 +39,8 @@ public abstract class DomainObject implements Serializable, Cloneable {
         return this.getUuid();
     }
 
+    @Override
+    public String getId() {
+        return this.getUuid();
+    }
 }

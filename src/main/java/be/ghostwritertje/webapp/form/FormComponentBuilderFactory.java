@@ -1,5 +1,7 @@
 package be.ghostwritertje.webapp.form;
 
+import java.io.Serializable;
+
 /**
  * Created by Jorandeboever
  * Date: 23-Dec-16.
@@ -19,5 +21,9 @@ public class FormComponentBuilderFactory {
 
     public static LocalDateTextFieldComponentBuilder date(){
         return new LocalDateTextFieldComponentBuilder();
+    }
+
+    public static <X extends Serializable & Display> DropDownComponentBuilder<X> dropDown(){
+        return new DropDownComponentBuilder<>();
     }
 }

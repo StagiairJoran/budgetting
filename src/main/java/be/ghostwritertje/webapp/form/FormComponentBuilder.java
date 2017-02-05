@@ -1,14 +1,11 @@
 package be.ghostwritertje.webapp.form;
 
 import be.ghostwritertje.webapp.VisibilityBehavior;
-import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.lambda.WicketBiFunction;
-import org.apache.wicket.lambda.WicketFunction;
 import org.apache.wicket.lambda.WicketSupplier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
@@ -18,7 +15,6 @@ import org.apache.wicket.model.ResourceModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * Created by Jorandeboever
@@ -53,7 +49,7 @@ public abstract class FormComponentBuilder<X extends FormComponent<?>, T extends
     }
 
     @SuppressWarnings("unchecked")
-    private F self() {
+    protected F self() {
         return (F) this;
     }
 

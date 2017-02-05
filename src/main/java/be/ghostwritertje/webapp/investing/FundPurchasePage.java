@@ -7,13 +7,11 @@ import be.ghostwritertje.services.investing.FinancialInstrumentService;
 import be.ghostwritertje.services.investing.FundPurchaseService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.form.BaseForm;
-import be.ghostwritertje.webapp.form.DomainObjectChoiceRenderer;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
@@ -49,12 +47,13 @@ public class FundPurchasePage extends BasePage<FundPurchase> {
                 .body(new ResourceModel("date"))
                 .attach(form, "date", new LambdaModel<>(() -> this.getModel().getObject().getDate(), localDate -> this.getModel().getObject().setDate(localDate)));
 
-        form.add(new DropDownChoice<FinancialInstrument>(
-                "quote",
-                LambdaModel.of(this.getModel(), FundPurchase::getFinancialInstrument, FundPurchase::setFinancialInstrument),
-                this.financialInstrumentService.findAll(),
-                new DomainObjectChoiceRenderer()
-        ));
+        FormComponentBuilderFactory.<FinancialInstrument>dropDown()
+                .usingDefaults()
+                .body(new ResourceModel("quote"))
+                .attach(form,
+                        "quote",
+                        LambdaModel.of(this.getModel(), FundPurchase::getFinancialInstrument, FundPurchase::setFinancialInstrument),
+                        () -> this.financialInstrumentService.findAll());
 
         FormComponentBuilderFactory.number()
                 .usingDefaults()
