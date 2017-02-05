@@ -6,11 +6,7 @@ import be.ghostwritertje.utilities.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.util.StopWatch;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -90,7 +86,7 @@ public class FinancialInstrument extends DomainObject {
     }
 
     public String getQuote() {
-        return quote;
+        return this.quote;
     }
 
     public void setQuote(String quote) {
@@ -98,7 +94,7 @@ public class FinancialInstrument extends DomainObject {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -106,20 +102,21 @@ public class FinancialInstrument extends DomainObject {
     }
 
     public List<HistoricPrice> getHistoricPriceList() {
-        return historicPriceList;
+        return this.historicPriceList;
     }
 
     public List<Pair<LocalDate, Double>> getValuesFromStartDate(LocalDate date) {
         StopWatch sw = new StopWatch();
         sw.start();
         List<Pair<LocalDate, Double>> result = this.historicPriceList.stream()
-                .filter(historicPrice -> historicPrice.getDate().isBefore(date))
-                .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
+                .filter(historicPrice -> historicPrice.getDate().isAfter(date))
+                .sorted(Comparator.comparing(HistoricPrice::getDate))
                 .findFirst()
                 .map(historicPrice -> {
                     BigDecimal value = new BigDecimal("10000").divide(BigDecimal.valueOf(historicPrice.getPrice()),100, RoundingMode.HALF_EVEN);
                     return this.historicPriceList.stream()
                             .filter(h -> h.getDate().isAfter(date))
+                            .sorted(Comparator.comparing(HistoricPrice::getDate))
                             .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), BigDecimal.valueOf(historicPrice1.getPrice()).multiply(value).doubleValue()))
                             .collect(Collectors.toList());
                 }).orElse(new ArrayList<>());

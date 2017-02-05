@@ -88,7 +88,8 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
         ChartBuilderFactory.splineChart()
                 .usingDefaults()
                 .title("1 year return")
-                .addLines(coordinatesMap3, Pair::getK, Pair::getV, 2)
+                .addLine("SWDA.MI", coordinatesMap1.get("SWDA.MI"), Pair::getK, Pair::getV, 2)
+                .setYAxis("Price/liter")
                 .attach(this, "chart1");
 
 
