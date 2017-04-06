@@ -25,4 +25,5 @@ public interface FinancialInstrumentDao extends CrudRepository<FinancialInstrume
             "WHERE person.USERNAME = ?1", nativeQuery = true)
 
     List<FinancialInstrument> findFinancialInstrumentsByPerson(Person person);
+
 }
