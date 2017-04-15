@@ -2,8 +2,10 @@ package be.ghostwritertje.domain.budgetting;
 
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 /**
  * Created by Jorandeboever
@@ -34,6 +36,10 @@ public class BankAccount extends DomainObject {
 
     @Column
     private String name;
+
+    @Formula(value = "(SELECT SUM(statement.AMOUNT) FROM t_statement statement WHERE statement.ORIGINATINGACCOUNT_UUID = UUID)")
+    @Access(AccessType.FIELD)
+    private BigDecimal balance;
 
     public Person getOwner() {
         return owner;
@@ -76,5 +82,13 @@ public class BankAccount extends DomainObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public BigDecimal getBalance() {
+        return this.balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 }
