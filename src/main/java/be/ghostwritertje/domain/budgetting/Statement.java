@@ -31,7 +31,7 @@ public class Statement extends DomainObject {
     private String csv_line;
 
     public BankAccount getOriginatingAccount() {
-        return originatingAccount;
+        return this.originatingAccount;
     }
 
     public void setOriginatingAccount(BankAccount originatingAccount) {
@@ -39,7 +39,7 @@ public class Statement extends DomainObject {
     }
 
     public BankAccount getDestinationAccount() {
-        return destinationAccount;
+        return this.destinationAccount;
     }
 
     public void setDestinationAccount(BankAccount destinationAccount) {
@@ -47,7 +47,7 @@ public class Statement extends DomainObject {
     }
 
     public LocalDate getDate() {
-        return date;
+        return this.date;
     }
 
     public void setDate(LocalDate date) {
@@ -55,7 +55,7 @@ public class Statement extends DomainObject {
     }
 
     public BigDecimal getAmount() {
-        return amount;
+        return this.amount;
     }
 
     public void setAmount(BigDecimal amount) {
@@ -77,4 +77,6 @@ public class Statement extends DomainObject {
     public void setCsv_line(String csv_line) {
         this.csv_line = csv_line;
     }
+
+
 }

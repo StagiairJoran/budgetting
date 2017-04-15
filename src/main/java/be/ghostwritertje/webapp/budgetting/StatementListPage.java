@@ -5,14 +5,14 @@ import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.budgetting.CsvService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.BasePage;
-import org.apache.wicket.markup.html.basic.Label;
+import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
+import be.ghostwritertje.webapp.model.DomainObjectListModel;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LambdaModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.file.File;
@@ -43,24 +43,12 @@ public class StatementListPage extends BasePage<BankAccount> {
     protected void onInitialize() {
         super.onInitialize();
 
-        this.add(new ListView<Statement>("statements", this.statementService.findByOriginatingAccount(this.getModelObject())) {
-            @Override
-            protected void onInitialize() {
-                super.onInitialize();
-                this.setViewSize(25);
-            }
-
-            @Override
-            protected void populateItem(ListItem<Statement> item) {
-                item.add(new Label("originatingAccount", item.getModelObject().getOriginatingAccount().getNumber()));
-                item.add(new Label("destinationAccount", LambdaModel.of(LambdaModel.of(item.getModel(), Statement::getDestinationAccount), BankAccount::getNumber)));
-                item.add(new Label("amount", item.getModelObject().getAmount()));
-                item.add(new Label("date", item.getModelObject().getDate()));
-            }
-        });
-
-
-
+        this.add(DataTableBuilderFactory.<Statement, String>simple()
+                .addColumn(new LambdaColumn<>(new ResourceModel("date"), Statement::getDate))
+                .addColumn(new LambdaColumn<>(new ResourceModel("amount"), Statement::getAmount))
+                .addColumn(new LambdaColumn<>(new ResourceModel("from"), Statement::getOriginatingAccount))
+                .addColumn(new LambdaColumn<>(new ResourceModel("to"), Statement::getDestinationAccount))
+                .build("statements", new DomainObjectListModel<>(this.statementService, service -> service.findByOriginatingAccount(this.getModelObject()))));
 
         FileUploadField fileUpload = new FileUploadField("fileUpload", this.fileUploadModel);
 

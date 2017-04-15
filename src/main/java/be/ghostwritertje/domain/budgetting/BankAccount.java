@@ -42,7 +42,7 @@ public class BankAccount extends DomainObject {
     private BigDecimal balance;
 
     public Person getOwner() {
-        return owner;
+        return this.owner;
     }
 
     public void setOwner(Person owner) {
@@ -50,7 +50,7 @@ public class BankAccount extends DomainObject {
     }
 
     public Person getAdministrator() {
-        return administrator;
+        return this.administrator;
     }
 
     public void setAdministrator(Person administrator) {
@@ -61,7 +61,7 @@ public class BankAccount extends DomainObject {
         if(this.bank == null){
             this.bank = new Bank();
         }
-        return bank;
+        return this.bank;
     }
 
     public void setBank(Bank bank) {
@@ -69,7 +69,7 @@ public class BankAccount extends DomainObject {
     }
 
     public String getNumber() {
-        return number;
+        return this.number;
     }
 
     public void setNumber(String number) {
@@ -90,5 +90,10 @@ public class BankAccount extends DomainObject {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    @Override
+    public String toString() {
+        return this.name != null ? this.name : this.number;
     }
 }
