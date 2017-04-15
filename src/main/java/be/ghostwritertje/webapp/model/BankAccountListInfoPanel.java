@@ -3,7 +3,7 @@ package be.ghostwritertje.webapp.model;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.services.budgetting.BankAccountService;
 import be.ghostwritertje.services.budgetting.StatementService;
-import be.ghostwritertje.webapp.budgetting.StatementListPage;
+import be.ghostwritertje.webapp.budgetting.BankAccountListPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -33,7 +33,7 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
         this.add(new Link<Person>("budgettingLink") {
             @Override
             public void onClick() {
-                setResponsePage(new StatementListPage(this.getModel()));
+                setResponsePage(new BankAccountListPage(BankAccountListInfoPanel.this.getModel()));
             }
         });
         this.add(new Label("total", new LambdaModel<>(() -> this.statementService.getTotal(this.getModelObject()), a -> {

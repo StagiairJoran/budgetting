@@ -47,6 +47,11 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
     }
 
     @Override
+    public List<Statement> findByOriginatingAccount(BankAccount bankAccount) {
+        return this.dao.findByOriginatingAccount(bankAccount);
+    }
+
+    @Override
     public BigDecimal getTotal(BankAccount bankAccount) {
         return this.dao.findByOriginatingAccount(bankAccount).stream().map(Statement::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }

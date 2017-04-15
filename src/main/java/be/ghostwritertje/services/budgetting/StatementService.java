@@ -18,6 +18,8 @@ public interface StatementService extends DomainObjectCrudService<Statement> {
 
     List<Statement> findAll(Person administrator);
 
+    List<Statement> findByOriginatingAccount(BankAccount bankAccount);
+
     BigDecimal getTotal(BankAccount bankAccount);
 
     BigDecimal getTotal(Person owner);
