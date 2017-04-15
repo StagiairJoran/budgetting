@@ -25,13 +25,13 @@ class EditDeleteCell<T> extends GenericPanel<T> {
     protected void onInitialize() {
         super.onInitialize();
 
-        LinkBuilderFactory.editLink(editConsumer)
+        LinkBuilderFactory.editLink(this.editConsumer)
                 .usingDefaults()
                 .attach(this, "edit", this.getModel());
 
-        LinkBuilderFactory.deleteLink(deleteConsumer)
+        LinkBuilderFactory.deleteLink(this.deleteConsumer)
                 .usingDefaults()
-                .attach(this, "delete");
+                .attach(this, "delete", this.getModel());
 
     }
 }

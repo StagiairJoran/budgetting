@@ -11,16 +11,16 @@ import java.util.Optional;
  * Created by Jorandeboever
  * Date: 27-Dec-16.
  */
-public class DomainObjectListModel<T extends DomainObject> extends LoadableListModel<T> {
+public class DomainObjectListModel<T extends DomainObject, S extends DomainObjectCrudService<T>> extends LoadableListModel<T> {
 
-    private final WicketFunction<DomainObjectCrudService<T>, List<T>> loadFunction;
-    private final DomainObjectCrudService<T> service;
+    private final WicketFunction<S, List<T>> loadFunction;
+    private final S service;
 
-    public DomainObjectListModel(DomainObjectCrudService<T> service) {
+    public DomainObjectListModel(S service) {
         this(service, null);
     }
 
-    public DomainObjectListModel(DomainObjectCrudService<T> service, WicketFunction<DomainObjectCrudService<T>, List<T>> loadFunction) {
+    public DomainObjectListModel(S service, WicketFunction<S, List<T>> loadFunction) {
         this.service = service;
         this.loadFunction = loadFunction;
     }

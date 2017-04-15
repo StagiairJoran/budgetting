@@ -1,7 +1,6 @@
 package be.ghostwritertje.webapp.investing;
 
 import be.ghostwritertje.domain.Person;
-import be.ghostwritertje.domain.investing.FundPurchase;
 import be.ghostwritertje.domain.investing.Portfolio;
 import be.ghostwritertje.services.investing.PortfolioService;
 import be.ghostwritertje.webapp.BasePage;
@@ -27,7 +26,7 @@ public class PortfolioListPage extends BasePage<Person> {
     private final IModel<List<Portfolio>> portfolioListModel;
 
     public PortfolioListPage() {
-        this.portfolioListModel = new DomainObjectListModel<Portfolio>(this.portfolioService);
+        this.portfolioListModel = new DomainObjectListModel<>(this.portfolioService);
     }
 
     @Override

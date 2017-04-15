@@ -3,12 +3,7 @@ package be.ghostwritertje.domain.budgetting;
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 /**
  * Created by Jorandeboever
@@ -30,7 +25,7 @@ public class BankAccount extends DomainObject {
     @JoinColumn(name = "owner_UUID")
     private Person owner;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bank_UUID")
     private Bank bank;
 
@@ -54,6 +49,9 @@ public class BankAccount extends DomainObject {
     }
 
     public Bank getBank() {
+        if(this.bank == null){
+            this.bank = new Bank();
+        }
         return bank;
     }
 

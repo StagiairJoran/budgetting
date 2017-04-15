@@ -20,7 +20,7 @@ public class LinkBuilderFactory {
         return new AjaxSubmitLinkBuilder(onClickConsumer);
     }
 
-    public static <X> AjaxLinkBuilder ajaxLink(WicketBiConsumer<AjaxRequestTarget, AjaxLink<X>> onClickConsumer) {
+    public static <X> AjaxLinkBuilder<X> ajaxLink(WicketBiConsumer<AjaxRequestTarget, AjaxLink<X>> onClickConsumer) {
         return new AjaxLinkBuilder<>(onClickConsumer);
     }
 
