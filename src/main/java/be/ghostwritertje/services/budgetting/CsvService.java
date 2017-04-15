@@ -76,9 +76,11 @@ public class CsvService {
                         to.setAdministrator(originatingBankAccount.getAdministrator());
                         bankAccountMap.put(toAccount, to);
                     }
-
+                    statement.setDescription(row[4]);
                     statement.setOriginatingAccount(originatingBankAccount);
                     statement.setDestinationAccount(to);
+
+                    statement.setCsv_line(line);
                     statementList.add(statement);
                 }
             }

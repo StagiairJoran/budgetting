@@ -26,6 +26,10 @@ public class Statement extends DomainObject {
     private LocalDate date;
     private BigDecimal amount;
 
+    private String description;
+
+    private String csv_line;
+
     public BankAccount getOriginatingAccount() {
         return originatingAccount;
     }
@@ -56,5 +60,21 @@ public class Statement extends DomainObject {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCsv_line() {
+        return this.csv_line;
+    }
+
+    public void setCsv_line(String csv_line) {
+        this.csv_line = csv_line;
     }
 }
