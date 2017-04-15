@@ -40,6 +40,11 @@ public class BankAccountPage extends BasePage<BankAccount> {
 
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
+                .body(new ResourceModel("name"))
+                .attach(form, "name", LambdaModel.of(this.getModel(), BankAccount::getName, BankAccount::setName));
+
+        FormComponentBuilderFactory.textField()
+                .usingDefaults()
                 .body(new ResourceModel("number"))
                 .attach(form, "number", LambdaModel.of(this.getModel(), BankAccount::getNumber, BankAccount::setNumber));
 

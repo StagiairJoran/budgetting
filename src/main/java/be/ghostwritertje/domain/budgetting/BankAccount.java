@@ -32,6 +32,9 @@ public class BankAccount extends DomainObject {
     @Column(nullable = false)
     private String number;
 
+    @Column
+    private String name;
+
     public Person getOwner() {
         return owner;
     }
@@ -65,5 +68,13 @@ public class BankAccount extends DomainObject {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -39,7 +39,7 @@ public class BankAccountListPage extends BasePage<Person> {
                 .attach(this, "new", this.getModel());
 
         this.add(DataTableBuilderFactory.<BankAccount, String>simple()
-                .addColumn(new LambdaColumn<>(new ResourceModel("number"), BankAccount::getNumber))
+                .addColumn(new LambdaColumn<>(new ResourceModel("name"), BankAccount::getName))
                 .addColumn(new LambdaColumn<>(new ResourceModel("username"),  b -> b.getAdministrator().getUsername()))
                 .addColumn(new LambdaColumn<>(new ResourceModel("total"), BankAccount::getDisplayValue))
                 .addColumn(ColumnBuilderFactory.actions(new ResourceModel("actions"), (target, link) -> this.setResponsePage(new StatementListPage(link.getModel())),

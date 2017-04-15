@@ -70,7 +70,7 @@ public class CsvService {
                     String toAccount = row[3];
                     BankAccount to = bankAccountMap.get(toAccount);
 
-                    if(toAccount != null && !"-".equalsIgnoreCase(toAccount)){
+                    if(to == null && toAccount != null && !"-".equalsIgnoreCase(toAccount)){
                         to = new BankAccount();
                         to.setNumber(toAccount);
                         to.setAdministrator(originatingBankAccount.getAdministrator());
