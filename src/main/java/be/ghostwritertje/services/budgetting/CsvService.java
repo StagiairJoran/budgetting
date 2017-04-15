@@ -68,14 +68,14 @@ public class CsvService {
                     statement.setDate(date);
 
                     String toAccount = row[3];
+                    BankAccount to = bankAccountMap.get(toAccount);
 
-                    BankAccount to = Optional.ofNullable(bankAccountMap.get(toAccount)).orElseGet(() -> {
-                        BankAccount bankAccount = new BankAccount();
-                        bankAccount.setNumber(toAccount);
-                        bankAccount.setAdministrator(originatingBankAccount.getAdministrator());
-                        bankAccountMap.put(toAccount, bankAccount);
-                        return bankAccount;
-                    });
+                    if(toAccount != null && !"-".equalsIgnoreCase(toAccount)){
+                        to = new BankAccount();
+                        to.setNumber(toAccount);
+                        to.setAdministrator(originatingBankAccount.getAdministrator());
+                        bankAccountMap.put(toAccount, to);
+                    }
 
                     statement.setOriginatingAccount(originatingBankAccount);
                     statement.setDestinationAccount(to);

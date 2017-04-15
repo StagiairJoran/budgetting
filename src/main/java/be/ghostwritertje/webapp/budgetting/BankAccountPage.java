@@ -12,6 +12,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
@@ -39,10 +40,12 @@ public class BankAccountPage extends BasePage<BankAccount> {
 
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
+                .body(new ResourceModel("number"))
                 .attach(form, "number", LambdaModel.of(this.getModel(), BankAccount::getNumber, BankAccount::setNumber));
 
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
+                .body(new ResourceModel("bank"))
                 .attach(form, "bank", LambdaModel.of(LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), Bank::getName, Bank::setName));
 
 
