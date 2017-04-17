@@ -55,4 +55,9 @@ public class Person extends DomainObject {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Person with name '%s'", this.username);
+    }
 }
