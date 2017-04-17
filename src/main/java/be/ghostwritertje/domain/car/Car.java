@@ -39,6 +39,9 @@ public class Car extends DomainObject {
             "  WHERE T2.CAR_UUID = UUID )) ")
     private BigDecimal averageConsumption;
 
+    @Formula(value = "(SELECT MAX(t1.KILOMETRES) - MIN(t1.KILOMETRES) FROM T_REFUELING t1 WHERE t1.CAR_UUID = UUID)")
+    private BigDecimal kilometresDriven;
+
     public Person getOwner() {
         return owner;
     }
@@ -97,5 +100,13 @@ public class Car extends DomainObject {
 
     public void setAverageConsumption(BigDecimal averageConsumption) {
         this.averageConsumption = averageConsumption;
+    }
+
+    public BigDecimal getKilometresDriven() {
+        return this.kilometresDriven;
+    }
+
+    public void setKilometresDriven(BigDecimal kilometresDriven) {
+        this.kilometresDriven = kilometresDriven;
     }
 }
