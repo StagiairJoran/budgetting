@@ -16,4 +16,6 @@ public interface CategoryService extends DomainObjectCrudService<Category> {
     Iterable<Category> save(Iterable<Category> categories);
 
     void initForNewPerson(Person person);
+
+    void attemptToAssignCategoriesAutomaticallyForPerson(Person person);
 }

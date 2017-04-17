@@ -40,7 +40,7 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
     }
 
     @Override
-    public List<Statement> findAll(Person administrator) {
+    public List<Statement> findByAdministrator(Person administrator) {
         List<Statement> statements = new ArrayList<>();
         this.bankAccountService.findByAdministrator(administrator).forEach(bankAccount -> statements.addAll(this.dao.findByOriginatingAccount(bankAccount)));
         return statements;

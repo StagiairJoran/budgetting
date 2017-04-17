@@ -16,7 +16,7 @@ public interface StatementService extends DomainObjectCrudService<Statement> {
 
     Iterable<Statement> save(Iterable<Statement> statements);
 
-    List<Statement> findAll(Person administrator);
+    List<Statement> findByAdministrator(Person administrator);
 
     List<Statement> findByOriginatingAccount(BankAccount bankAccount);
 
