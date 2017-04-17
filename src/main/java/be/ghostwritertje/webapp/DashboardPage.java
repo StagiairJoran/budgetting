@@ -2,9 +2,14 @@ package be.ghostwritertje.webapp;
 
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.car.Car;
+import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.car.CarService;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
+import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.model.BankAccountListInfoPanel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -20,6 +25,9 @@ import java.util.List;
 public class DashboardPage extends BasePage<Person> {
     @SpringBean
     private CarService carService;
+
+    @SpringBean
+    private CategoryService categoryService;
 
     public DashboardPage() {
         super(new Model<>(CustomSession.get().getLoggedInPerson()));
@@ -44,6 +52,12 @@ public class DashboardPage extends BasePage<Person> {
 
         this.add(new BankAccountListInfoPanel("bankAccountView", this.getModel()));
 
+        LinkBuilderFactory.<Person>ajaxLink(initCategories(categoryService))
+                .usingDefaults()
+                .attach(this, "initCategories", this.getModel());
+    }
 
+    private static WicketBiConsumer<AjaxRequestTarget, AjaxLink<Person>> initCategories(CategoryService categoryService) {
+        return (ajaxRequestTarget, components) -> {categoryService.initForNewPerson(components.getModelObject());};
     }
 }

@@ -11,7 +11,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +33,6 @@ public class PersonServiceImpl extends DomainObjectCrudServiceSupport<Person> im
         this.categoryService = categoryService;
     }
 
-    @PostConstruct
-    public void init(){
-        List<Person> people = this.findAll();
-        people.forEach(this.categoryService::initForNewPerson);
-    }
 
     @Override
     public String getLoggedInUser() {
