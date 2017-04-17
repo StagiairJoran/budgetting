@@ -26,6 +26,10 @@ public class Statement extends DomainObject {
     private LocalDate date;
     private BigDecimal amount;
 
+    @ManyToOne
+    @JoinColumn(name = "CATEG0RY_UUID")
+    private Category category;
+
     private String description;
 
     private String csv_line;
@@ -78,5 +82,11 @@ public class Statement extends DomainObject {
         this.csv_line = csv_line;
     }
 
+    public Category getCategory() {
+        return this.category;
+    }
 
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }

@@ -1,8 +1,11 @@
 package be.ghostwritertje.domain.budgetting;
 
 import be.ghostwritertje.domain.DomainObject;
+import be.ghostwritertje.domain.Person;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -12,6 +15,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "T_CATEGORY")
 public class Category extends DomainObject {
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ADMINISTRATOR_UUID")
+    private Person administrator;
+
     private String name;
 
     public String getName() {
@@ -20,5 +28,13 @@ public class Category extends DomainObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Person getAdministrator() {
+        return this.administrator;
+    }
+
+    public void setAdministrator(Person administrator) {
+        this.administrator = administrator;
     }
 }
