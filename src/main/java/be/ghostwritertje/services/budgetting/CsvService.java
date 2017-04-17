@@ -3,6 +3,8 @@ package be.ghostwritertje.services.budgetting;
 
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Statement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,8 @@ public class CsvService {
 
     @Autowired
     private BankAccountService bankAccountService;
+
+    private static final Logger LOG = LogManager.getLogger();
 
     public void uploadCSVFile(String fileUrl, BankAccount bankAccount, String bank) {
 
@@ -147,12 +151,14 @@ public class CsvService {
 
         } catch (IOException e) {
             e.printStackTrace();
+            LOG.error(String.format("Error importing csv data %s", e));
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    LOG.error(String.format("Error importing csv data %s", e));
                 }
             }
         }
