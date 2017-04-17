@@ -2,16 +2,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <ul class="list-group">
-        <li class="list-group-item list-group-item-success"><a href="#">
-            <a href="#" wicket:id="budgettingLink"> <label>Budgetting</label></a>
-        </a>
-        </li>
-        <li class="list-group-item ">
-            <label>Total: </label>
-            <span wicket:id="total" class="badge">0</span>
-        </li>
-    </ul>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a wicket:id="budgettingLink"> <label>Budgetting</label></a>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <dl class="dl-horizontal col-lg-12">
+                    <dt>
+                        <label>Total: </label>
+                    </dt>
+                    <dd>
+                        <span wicket:id="total">10.000</span><span>EUR</span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
 </wicket:panel>
 </body>
 </html>
