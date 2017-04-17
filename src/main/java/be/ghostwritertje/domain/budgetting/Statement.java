@@ -18,10 +18,10 @@ import java.time.LocalDate;
 public class Statement extends DomainObject {
 
     @ManyToOne
-    @JoinColumn(name = "originatingAccount_UUID")
+    @JoinColumn(name = "ORIGINATINGACCOUNT_UUID")
     private BankAccount originatingAccount;
     @ManyToOne
-    @JoinColumn(name = "destinationAccount_UUID")
+    @JoinColumn(name = "DESTINATIONACCOUNT_UUID")
     private BankAccount destinationAccount;
     private LocalDate date;
     private BigDecimal amount;

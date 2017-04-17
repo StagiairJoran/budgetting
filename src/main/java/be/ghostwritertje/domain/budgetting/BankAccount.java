@@ -20,15 +20,15 @@ import java.math.BigDecimal;
 public class BankAccount extends DomainObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "administrator_UUID")
+    @JoinColumn(name = "ADMINISTRATOR_UUID")
     private Person administrator;
 
     @ManyToOne
-    @JoinColumn(name = "owner_UUID")
+    @JoinColumn(name = "OWNER_UUID")
     private Person owner;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bank_UUID")
+    @JoinColumn(name = "BANK_UUID")
     private Bank bank;
 
     @Column(nullable = false)
