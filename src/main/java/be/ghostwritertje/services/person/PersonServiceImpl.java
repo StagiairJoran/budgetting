@@ -27,6 +27,7 @@ public class PersonServiceImpl extends DomainObjectCrudServiceSupport<Person> im
 
     private static final Logger logger = Logger.getLogger(PersonServiceImpl.class);
 
+
     @Autowired
     public PersonServiceImpl(PersonDao dao, CategoryService categoryService) {
         this.dao = dao;
