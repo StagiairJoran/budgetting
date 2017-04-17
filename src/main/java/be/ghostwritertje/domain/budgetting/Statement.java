@@ -27,7 +27,7 @@ public class Statement extends DomainObject {
     private BigDecimal amount;
 
     @ManyToOne
-    @JoinColumn(name = "CATEG0RY_UUID")
+    @JoinColumn(name = "CATEGORY_UUID")
     private Category category;
 
     private String description;

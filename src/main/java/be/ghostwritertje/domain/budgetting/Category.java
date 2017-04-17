@@ -22,6 +22,13 @@ public class Category extends DomainObject {
 
     private String name;
 
+    public Category() {
+    }
+
+    public Category(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

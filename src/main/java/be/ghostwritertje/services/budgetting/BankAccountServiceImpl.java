@@ -22,7 +22,6 @@ public class BankAccountServiceImpl extends DomainObjectCrudServiceSupport<BankA
 
     private static final Logger LOG = LogManager.getLogger();
 
-
     @Autowired
     public BankAccountServiceImpl(BankAccountDao dao) {
         this.dao = dao;

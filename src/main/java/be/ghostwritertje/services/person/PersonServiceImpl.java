@@ -3,6 +3,7 @@ package be.ghostwritertje.services.person;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.repository.PersonDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
+import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.utilities.PasswordUtility;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,15 @@ import java.util.List;
 @Service
 public class PersonServiceImpl extends DomainObjectCrudServiceSupport<Person> implements PersonService {
     private final PersonDao dao;
+
+    private final CategoryService categoryService;
+
     private static final Logger logger = Logger.getLogger(PersonServiceImpl.class);
 
     @Autowired
-    public PersonServiceImpl(PersonDao dao) {
+    public PersonServiceImpl(PersonDao dao, CategoryService categoryService) {
         this.dao = dao;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -50,10 +55,19 @@ public class PersonServiceImpl extends DomainObjectCrudServiceSupport<Person> im
 
     @Override
     public Person save(Person person) {
-        if(StringUtils.isEmpty(person.getUuid())){
-            person.setPassword(PasswordUtility.hashPassword(person.getPassword()));
-        }
-        return this.dao.save(person);
+        return StringUtils.isEmpty(person.getUuid()) ? this.create(person) : this.update(person);
+    }
+
+    private Person create(Person person){
+        person.setPassword(PasswordUtility.hashPassword(person.getPassword()));
+        person = this.dao.save(person);
+        this.categoryService.initForNewPerson(person);
+        return person;
+    }
+
+    private Person update(Person person){
+        person = this.dao.save(person);
+        return person;
     }
 
     @Override
