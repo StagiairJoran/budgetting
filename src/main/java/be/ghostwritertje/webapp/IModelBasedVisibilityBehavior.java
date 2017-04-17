@@ -1,8 +1,8 @@
 package be.ghostwritertje.webapp;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.model.IModel;
+import org.danekja.java.util.function.serializable.SerializablePredicate;
 
 import java.util.function.Predicate;
 
@@ -15,7 +15,7 @@ public class IModelBasedVisibilityBehavior<T> extends VisibilityBehaviorSupport 
     private final IModel<T> entityModel;
     private final Predicate<T> visibilityLogic;
 
-    public IModelBasedVisibilityBehavior(IModel<T> entityModel, Predicate<T> visibilityLogic) {
+    public IModelBasedVisibilityBehavior(IModel<T> entityModel, SerializablePredicate<T> visibilityLogic) {
         this.entityModel = entityModel;
         this.visibilityLogic = visibilityLogic;
     }

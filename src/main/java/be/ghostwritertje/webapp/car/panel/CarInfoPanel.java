@@ -22,6 +22,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.util.Objects;
 import java.util.Optional;
 
+;
+
 /**
  * Created by Jorandeboever
  * Date: 02-Oct-16.
@@ -43,7 +45,7 @@ public class CarInfoPanel extends GenericPanel<Car> {
     protected void onInitialize() {
         super.onInitialize();
         this.setOutputMarkupId(true);
-        this.add(new Label("price", new LambdaModel<>(() -> this.getModelObject().getPurchasePrice(), (b) -> this.getModelObject().setPurchasePrice(b))));
+        this.add(new Label("price", LambdaModel.of(this.getModel(), Car::getPurchasePrice)));
 
         LinkBuilderFactory.ajaxLink(makeFavourite())
                 .usingDefaults()
@@ -54,7 +56,7 @@ public class CarInfoPanel extends GenericPanel<Car> {
                 ))
                 .attach(this, "favourite");
 
-        LinkBuilderFactory.ajaxLink(getAjaxRequestTargetAjaxLinkWicketBiConsumer())
+        LinkBuilderFactory.ajaxLink(getAjaxRequestTargetAjaxLinkSerializableBiConsumer())
                 .usingDefaults()
                 .behave(() -> new IModelBasedVisibilityBehavior<>(
                         this.getModel(),
@@ -68,8 +70,8 @@ public class CarInfoPanel extends GenericPanel<Car> {
             @Override
             protected void onInitialize() {
                 super.onInitialize();
-                this.add(new Label("brand", new LambdaModel<>(() -> this.getModelObject().getBrand(), (b) -> this.getModelObject().setBrand(b))));
-                this.add(new Label("model", new LambdaModel<>(() -> this.getModelObject().getModel(), (b) -> this.getModelObject().setModel(b))));
+                this.add(new Label("brand", LambdaModel.of(this.getModel(), Car::getBrand)));
+                this.add(new Label("model",LambdaModel.of(this.getModel(), Car::getModel)));
             }
 
             @Override
@@ -83,7 +85,7 @@ public class CarInfoPanel extends GenericPanel<Car> {
         this.add(new Label("averageConsumption", LambdaModel.of(this.getModel(), Car::getAverageConsumption)));
     }
 
-    private static WicketBiConsumer<AjaxRequestTarget, AjaxLink<Object>> getAjaxRequestTargetAjaxLinkWicketBiConsumer() {
+    private static WicketBiConsumer<AjaxRequestTarget, AjaxLink<Object>> getAjaxRequestTargetAjaxLinkSerializableBiConsumer() {
         return (target, components) -> {
             CarInfoPanel parent = components.findParent(CarInfoPanel.class);
             Person loggedInPerson = CustomSession.get().getLoggedInPerson();
