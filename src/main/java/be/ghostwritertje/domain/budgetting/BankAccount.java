@@ -37,7 +37,7 @@ public class BankAccount extends DomainObject {
     @Column
     private String name;
 
-    @Formula(value = "(SELECT SUM(statement.AMOUNT) FROM t_statement statement WHERE statement.ORIGINATINGACCOUNT_UUID = UUID)")
+    @Formula(value = "(SELECT SUM(statement.AMOUNT) FROM T_STATEMENT statement WHERE statement.ORIGINATINGACCOUNT_UUID = UUID)")
     @Access(AccessType.FIELD)
     private BigDecimal balance;
 
