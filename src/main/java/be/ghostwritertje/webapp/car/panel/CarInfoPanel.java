@@ -77,6 +77,8 @@ public class CarInfoPanel extends GenericPanel<Car> {
                 this.setResponsePage(new RefuelingListPage(this.getModel()));
             }
         });
+
+        this.add(new Label("averageConsumption", LambdaModel.of(this.getModel(), Car::getAverageConsumption)));
     }
 
     private static WicketBiConsumer<AjaxRequestTarget, AjaxLink<Object>> getAjaxRequestTargetAjaxLinkWicketBiConsumer() {
