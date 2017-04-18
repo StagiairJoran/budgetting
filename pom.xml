@@ -13,7 +13,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <wicket.version>8.0.0-M2</wicket.version>
-        <spring.version>4.3.3.RELEASE</spring.version>
+        <spring.version>4.3.7.RELEASE</spring.version>
         <postgres.version>9.4.1211.jre7</postgres.version>
         <hibernate.version>5.2.2.Final</hibernate.version>
         <derby.version>10.11.1.1</derby.version>
