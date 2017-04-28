@@ -1,8 +1,10 @@
 package be.ghostwritertje.webapp.car.pages;
 
 import be.ghostwritertje.domain.car.Refueling;
+import be.ghostwritertje.services.car.RefuelingSearchResult;
 import be.ghostwritertje.services.car.RefuelingService;
 import be.ghostwritertje.webapp.BasePage;
+import be.ghostwritertje.webapp.IModelBasedVisibilityBehavior;
 import be.ghostwritertje.webapp.LambdaOnChangeBehavior;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
@@ -12,29 +14,35 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Created by Jorandeboever
  * Date: 01-Oct-16.
  */
 public class RefuelingPage extends BasePage<Refueling> {
+    private static final long serialVersionUID = -2645779277878940810L;
 
     @SpringBean
     private RefuelingService refuelingService;
 
     private static final String LITERS_ID = "liters";
 
-    protected RefuelingPage(IModel<Refueling> model) {
+    private final IModel<RefuelingSearchResult> searchResultIModel = new Model<RefuelingSearchResult>();
+
+    RefuelingPage(IModel<Refueling> model) {
         super(model);
     }
 
@@ -47,12 +55,7 @@ public class RefuelingPage extends BasePage<Refueling> {
                 .usingDefaults()
                 .attach(this, "back");
 
-        Form<Refueling> form = new BaseForm<Refueling>("form", this.getModel()) {
-            @Override
-            public void onSubmit() {
-                super.onSubmit();
-            }
-        };
+        Form<Refueling> form = new BaseForm<Refueling>("form", this.getModel());
 
         IModel<LocalDate> localDateLambdaModel = LambdaModel.of(this.getModel(), Refueling::getDate, Refueling::setDate);
 
@@ -80,13 +83,34 @@ public class RefuelingPage extends BasePage<Refueling> {
                 .usingDefaults()
                 .attach(form, "save");
 
+
+
+
+        WebMarkupContainer savedinfoContainer = new WebMarkupContainer("result");
+        savedinfoContainer.setOutputMarkupId(true);
+        savedinfoContainer.add(new IModelBasedVisibilityBehavior<>(this.searchResultIModel, Objects::nonNull));
+
+        FormComponentBuilderFactory.number(BigDecimal.class)
+                .usingDefaults()
+                .body(new ResourceModel("consumption"))
+                .attach(savedinfoContainer, "consumption", LambdaModel.of(this.searchResultIModel, RefuelingSearchResult::getConsumption));
+
+        FormComponentBuilderFactory.number(BigDecimal.class)
+                .usingDefaults()
+                .body(new ResourceModel("average.distance.year"))
+                .attach(savedinfoContainer, "averageDistance", LambdaModel.of(this.searchResultIModel, RefuelingSearchResult::getKilometresPerYear));
+
+
+        form.add(savedinfoContainer);
         this.add(form);
     }
 
     private static WicketBiConsumer<AjaxRequestTarget, AjaxSubmitLink> save() {
         return (target, components) -> {
             RefuelingPage parent = components.findParent(RefuelingPage.class);
-            parent.refuelingService.save(parent.getModelObject());
+            Refueling saved = parent.refuelingService.save(parent.getModelObject());
+            parent.setModelObject(saved);
+            parent.searchResultIModel.setObject(parent.refuelingService.mapRefuelingToSearchResult(saved));
         };
     }
 

@@ -2,20 +2,24 @@ package be.ghostwritertje.services.car;
 
 import be.ghostwritertje.domain.car.Refueling;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * Created by Jorandeboever
  * Date: 20-Dec-16.
  */
-public class RefuelingSearchResult {
-    private Refueling refueling;
+public class RefuelingSearchResult implements Serializable {
+    private static final long serialVersionUID = -1066394414299462890L;
+
+    private final Refueling refueling;
     private BigDecimal consumption;
     private BigDecimal kilometresPerMonth;
+    private BigDecimal kilometresPerYear;
     private long numberOfDays;
     private BigDecimal totalDistanceDriven;
 
-    public RefuelingSearchResult(Refueling refueling) {
+    RefuelingSearchResult(Refueling refueling) {
         this.refueling = refueling;
     }
 
@@ -31,30 +35,39 @@ public class RefuelingSearchResult {
         return this.kilometresPerMonth;
     }
 
-    public long getNumberOfDays() {
+    public BigDecimal getKilometresPerYear() {
+        return this.kilometresPerYear;
+    }
+
+    public RefuelingSearchResult setKilometresPerYear(BigDecimal kilometresPerYear) {
+        this.kilometresPerYear = kilometresPerYear;
+        return this;
+    }
+
+    long getNumberOfDays() {
         return this.numberOfDays;
     }
 
-    public BigDecimal getTotalDistanceDriven() {
+    BigDecimal getTotalDistanceDriven() {
         return this.totalDistanceDriven;
     }
 
-    public RefuelingSearchResult setNumberOfDays(long numberOfDays) {
+    RefuelingSearchResult setNumberOfDays(long numberOfDays) {
         this.numberOfDays = numberOfDays;
         return this;
     }
 
-    public RefuelingSearchResult setTotalDistanceDriven(BigDecimal totalDistanceDriven) {
+    RefuelingSearchResult setTotalDistanceDriven(BigDecimal totalDistanceDriven) {
         this.totalDistanceDriven = totalDistanceDriven;
         return this;
     }
 
-    public RefuelingSearchResult setKilometresPerMonth(BigDecimal kilometresPerMonth) {
+    RefuelingSearchResult setKilometresPerMonth(BigDecimal kilometresPerMonth) {
         this.kilometresPerMonth = kilometresPerMonth;
         return this;
     }
 
-    public RefuelingSearchResult setConsumption(BigDecimal consumption) {
+    RefuelingSearchResult setConsumption(BigDecimal consumption) {
         this.consumption = consumption;
         return this;
     }

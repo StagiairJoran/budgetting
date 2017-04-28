@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @Service
 public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueling> implements RefuelingService {
 
-    private static final double DAYS_PER_YEAR = 365.25;
-    private static final double AVG_DAYS_PER_MONTH = DAYS_PER_YEAR / 12;
+    private static final double AVG_DAYS_PER_YEAR = 365.25;
+    private static final double AVG_DAYS_PER_MONTH = AVG_DAYS_PER_YEAR / 12;
     private static final int SCALE_ON_DIVIDE = 10;
     private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_DOWN;
 
@@ -43,6 +43,15 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
     }
 
     @Override
+    public RefuelingSearchResult mapRefuelingToSearchResult(Refueling refueling) {
+        return this.mapRefuelingsToSearchResults(this.dao.findByCarOrderByDateDesc(refueling.getCar()))
+                .stream()
+                .filter(sr -> sr.getRefueling().getUuid().equals(refueling.getUuid()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public List<RefuelingSearchResult> mapRefuelingsToSearchResults(List<Refueling> refuelings) {
         List<RefuelingSearchResult> searchResults = StreamEx.of(refuelings.stream().sorted(Comparator.comparing(Refueling::getDate)))
                 .pairMap((refueling, refueling2) -> {
@@ -51,6 +60,7 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
                             .until(refueling2.getDate(), ChronoUnit.DAYS);
 
                     BigDecimal averageKilometresDiverPerMonth = this.getAverageDistanceDrivenPerMonth(kilometresDriven, numberOfDays);
+                    BigDecimal averageKilometresDiverPerYear = this.getAverageDistanceDrivenPerYear(kilometresDriven, numberOfDays);
 
                     BigDecimal consumption = this.getAverageConsumption(kilometresDriven, refueling2.getLiters());
 
@@ -59,10 +69,11 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
                             .setTotalDistanceDriven(kilometresDriven)
                             .setNumberOfDays(numberOfDays)
                             .setKilometresPerMonth(averageKilometresDiverPerMonth)
+                            .setKilometresPerYear(averageKilometresDiverPerYear)
                             .setConsumption(consumption);
                 })
                 .collect(Collectors.toList());
-        return  this.averageOutPartialRefuelings(searchResults);
+        return this.averageOutPartialRefuelings(searchResults);
     }
 
     private BigDecimal getAverageConsumption(BigDecimal distanceDriven, BigDecimal liters) {
@@ -70,49 +81,53 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
     }
 
     private BigDecimal getAverageDistanceDrivenPerMonth(BigDecimal kilometresDriven, long numberOfDays) {
+        return this.getAverageDistanceDrivenPerYear(kilometresDriven, numberOfDays).divide(new BigDecimal("12"), SCALE_ON_DIVIDE, ROUNDING_MODE);
+    }
+
+    private BigDecimal getAverageDistanceDrivenPerYear(BigDecimal kilometresDriven, long numberOfDays) {
         BigDecimal averageKilometresDrivenPerDay = kilometresDriven.divide(BigDecimal.valueOf(numberOfDays), SCALE_ON_DIVIDE, ROUNDING_MODE);
-        return averageKilometresDrivenPerDay.multiply(BigDecimal.valueOf(AVG_DAYS_PER_MONTH));
+        return averageKilometresDrivenPerDay.multiply(BigDecimal.valueOf(AVG_DAYS_PER_YEAR));
     }
 
     private List<RefuelingSearchResult> averageOutPartialRefuelings(List<RefuelingSearchResult> searchResults) {
         Collection<RefuelingSearchResult> incompleteRefuelings = new ArrayList<>();
 
         for (RefuelingSearchResult searchResult : searchResults) {
-                if (!searchResult.getRefueling().isFuelTankFull()) {
-                    incompleteRefuelings.add(searchResult);
-                } else {
-                    incompleteRefuelings.add(searchResult);
+            if (!searchResult.getRefueling().isFuelTankFull()) {
+                incompleteRefuelings.add(searchResult);
+            } else {
+                incompleteRefuelings.add(searchResult);
 
-                    BigDecimal totalLiters = incompleteRefuelings.stream()
-                            .map(RefuelingSearchResult::getRefueling)
-                            .map(Refueling::getLiters)
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal totalLiters = incompleteRefuelings.stream()
+                        .map(RefuelingSearchResult::getRefueling)
+                        .map(Refueling::getLiters)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-                    RefuelingSearchResult first = incompleteRefuelings.stream()
-                            .findFirst()
-                            .orElse(null);
+                RefuelingSearchResult first = incompleteRefuelings.stream()
+                        .findFirst()
+                        .orElse(null);
 
-                    Refueling last = incompleteRefuelings.stream()
-                            .map(RefuelingSearchResult::getRefueling)
-                            .reduce((refueling, refueling2) -> refueling2)
-                            .orElse(null);
+                Refueling last = incompleteRefuelings.stream()
+                        .map(RefuelingSearchResult::getRefueling)
+                        .reduce((refueling, refueling2) -> refueling2)
+                        .orElse(null);
 
-                    long numberOfDays = first.getRefueling().getDate().until(last.getDate(), ChronoUnit.DAYS) + first.getNumberOfDays();
+                long numberOfDays = first.getRefueling().getDate().until(last.getDate(), ChronoUnit.DAYS) + first.getNumberOfDays();
 
-                    BigDecimal totalDistanceDriven = last.getKilometres().subtract(first.getRefueling().getKilometres()).add(first.getTotalDistanceDriven());
-                    BigDecimal averageConsumption = this.getAverageConsumption(totalDistanceDriven, totalLiters);
-                    BigDecimal averageDistanceDrivenPerMonth = this.getAverageDistanceDrivenPerMonth(totalDistanceDriven, numberOfDays);
+                BigDecimal totalDistanceDriven = last.getKilometres().subtract(first.getRefueling().getKilometres()).add(first.getTotalDistanceDriven());
+                BigDecimal averageConsumption = this.getAverageConsumption(totalDistanceDriven, totalLiters);
+                BigDecimal averageDistanceDrivenPerMonth = this.getAverageDistanceDrivenPerMonth(totalDistanceDriven, numberOfDays);
 
-                    incompleteRefuelings.forEach((sr) -> {
-                        sr.setKilometresPerMonth(averageDistanceDrivenPerMonth);
-                        sr.setConsumption(averageConsumption);
-                    });
+                incompleteRefuelings.forEach((sr) -> {
+                    sr.setKilometresPerMonth(averageDistanceDrivenPerMonth);
+                    sr.setConsumption(averageConsumption);
+                });
 
-                    incompleteRefuelings.clear();
-                }
+                incompleteRefuelings.clear();
             }
+        }
 
-            return searchResults;
+        return searchResults;
     }
 
     @Override
