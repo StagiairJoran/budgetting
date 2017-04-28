@@ -22,6 +22,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -79,12 +80,10 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
                         allocationBaseForm.getModelObject().getQuote(),
                         s -> allocationBaseForm.getModelObject().setQuote(s)));
 
-        FormComponentBuilderFactory.number()
+        FormComponentBuilderFactory.number(BigDecimal.class)
                 .usingDefaults()
                 .body(new ResourceModel("allocation"))
-                .attach(allocationBaseForm, "allocation", new LambdaModel<Double>(
-                        () -> allocationBaseForm.getModelObject().getAllocation(),
-                        s -> allocationBaseForm.getModelObject().setAllocation(s)));
+                .attach(allocationBaseForm, "allocation", LambdaModel.of(allocationBaseForm.getModel(), CustomAllocation::getAllocation, CustomAllocation::setAllocation));
 
         LinkBuilderFactory.submitLink((target, components) -> {
             CustomAllocation customAllocation = allocationBaseForm.getModelObject();
@@ -125,7 +124,7 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
 
     private static class CustomAllocation implements Serializable {
         private String quote;
-        private Double allocation;
+        private BigDecimal allocation;
 
         CustomAllocation() {
         }
@@ -141,14 +140,14 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
             this.quote = quote;
         }
 
-        public Double getAllocation() {
+        public BigDecimal getAllocation() {
             if (this.allocation == null) {
-                this.allocation = 0.0;
+                this.allocation = BigDecimal.ZERO;
             }
             return allocation;
         }
 
-        public void setAllocation(Double allocation) {
+        public void setAllocation(BigDecimal allocation) {
             this.allocation = allocation;
         }
     }

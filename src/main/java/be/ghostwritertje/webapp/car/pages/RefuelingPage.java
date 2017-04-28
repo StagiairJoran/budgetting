@@ -2,7 +2,6 @@ package be.ghostwritertje.webapp.car.pages;
 
 import be.ghostwritertje.domain.car.Refueling;
 import be.ghostwritertje.services.car.RefuelingService;
-import be.ghostwritertje.utilities.NumberUtilities;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.LambdaOnChangeBehavior;
 import be.ghostwritertje.webapp.form.BaseForm;
@@ -20,6 +19,8 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 /**
@@ -31,7 +32,7 @@ public class RefuelingPage extends BasePage<Refueling> {
     @SpringBean
     private RefuelingService refuelingService;
 
-    private final String LITERS_ID = "liters";
+    private static final String LITERS_ID = "liters";
 
     protected RefuelingPage(IModel<Refueling> model) {
         super(model);
@@ -60,17 +61,17 @@ public class RefuelingPage extends BasePage<Refueling> {
                 .body(new ResourceModel("date"))
                 .attach(form, "date", localDateLambdaModel);
 
-        FormComponentBuilderFactory.number()
+        FormComponentBuilderFactory.number(BigDecimal.class)
                 .usingDefaults()
                 .body(new ResourceModel("kilometres"))
                 .attach(form, "kilometres", new LambdaModel<>(() -> this.getModelObject().getKilometres(), kilometres -> this.getModelObject().setKilometres(kilometres)))
                 .body(new ResourceModel("liters"))
-                .attach(form, LITERS_ID, new LambdaModel<Double>(() -> this.getModelObject().getLiters(), liters -> this.getModelObject().setLiters(liters)))
+                .attach(form, LITERS_ID, new LambdaModel<>(() -> this.getModelObject().getLiters(), liters -> this.getModelObject().setLiters(liters)))
                 .behave(() -> new LambdaOnChangeBehavior(updateMissingField(this.getModel())))
                 .body(new ResourceModel("price"))
-                .attach(form, "price", new LambdaModel<Double>(() -> this.getModelObject().getPrice(), price -> this.getModelObject().setPrice(price)))
+                .attach(form, "price", new LambdaModel<>(() -> this.getModelObject().getPrice(), price -> this.getModelObject().setPrice(price)))
                 .body(new ResourceModel("liter.price"))
-                .attach(form, "literPrice", new LambdaModel<Double>(() -> this.getModelObject().getPricePerLiter(), kilometres -> this.getModelObject().setPricePerLiter(kilometres)));
+                .attach(form, "literPrice", new LambdaModel<>(() -> this.getModelObject().getPricePerLiter(), kilometres -> this.getModelObject().setPricePerLiter(kilometres)));
 
         CheckBox checkBox = new BootstrapCheckBoxPicker("tankFull", new LambdaModel<>(() -> this.getModelObject().isFuelTankFull(), full -> this.getModelObject().setFuelTankFull(full)));
         form.add(checkBox);
@@ -97,11 +98,11 @@ public class RefuelingPage extends BasePage<Refueling> {
         return (component, ajaxRequestTarget) -> {
             RefuelingPage parent = component.findParent(RefuelingPage.class);
             Refueling refueling = refuelingModel.getObject();
-            Double pricePerLiter = refueling.getPricePerLiter();
-            Double price = refueling.getPrice();
+            BigDecimal pricePerLiter = refueling.getPricePerLiter();
+            BigDecimal price = refueling.getPrice();
 
-            if (pricePerLiter != 0 && price != 0) {
-                refueling.setLiters(NumberUtilities.round(price / pricePerLiter, 2));
+            if (pricePerLiter.compareTo(BigDecimal.ZERO) != 0 && price.compareTo(BigDecimal.ZERO) != 0) {
+                refueling.setLiters(price.divide(pricePerLiter, RoundingMode.HALF_DOWN));
                 ajaxRequestTarget.add(parent.getLiters());
             }
 

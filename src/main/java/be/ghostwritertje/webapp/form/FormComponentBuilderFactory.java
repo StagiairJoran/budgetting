@@ -15,7 +15,7 @@ public class FormComponentBuilderFactory {
         return new PasswordTextFieldComponentBuilder();
     }
 
-    public static NumberTextFieldComponentBuilder number(){
+    public static <X extends Number & Comparable<X>> NumberTextFieldComponentBuilder<X> number(Class<X> xClass){
         return new NumberTextFieldComponentBuilder();
     }
 

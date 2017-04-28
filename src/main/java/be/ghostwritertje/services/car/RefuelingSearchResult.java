@@ -2,37 +2,59 @@ package be.ghostwritertje.services.car;
 
 import be.ghostwritertje.domain.car.Refueling;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Jorandeboever
  * Date: 20-Dec-16.
  */
 public class RefuelingSearchResult {
     private Refueling refueling;
-    private Double consumption;
-    private Double kilometresPerMonth;
+    private BigDecimal consumption;
+    private BigDecimal kilometresPerMonth;
+    private long numberOfDays;
+    private BigDecimal totalDistanceDriven;
 
     public RefuelingSearchResult(Refueling refueling) {
         this.refueling = refueling;
     }
 
     public Refueling getRefueling() {
-        return refueling;
+        return this.refueling;
     }
 
-    public Double getConsumption() {
-        return consumption;
+    public BigDecimal getConsumption() {
+        return this.consumption;
     }
 
-    public Double getKilometresPerMonth() {
-        return kilometresPerMonth;
+    public BigDecimal getKilometresPerMonth() {
+        return this.kilometresPerMonth;
     }
 
-    public RefuelingSearchResult setKilometresPerMonth(Double kilometresPerMonth) {
+    public long getNumberOfDays() {
+        return this.numberOfDays;
+    }
+
+    public BigDecimal getTotalDistanceDriven() {
+        return this.totalDistanceDriven;
+    }
+
+    public RefuelingSearchResult setNumberOfDays(long numberOfDays) {
+        this.numberOfDays = numberOfDays;
+        return this;
+    }
+
+    public RefuelingSearchResult setTotalDistanceDriven(BigDecimal totalDistanceDriven) {
+        this.totalDistanceDriven = totalDistanceDriven;
+        return this;
+    }
+
+    public RefuelingSearchResult setKilometresPerMonth(BigDecimal kilometresPerMonth) {
         this.kilometresPerMonth = kilometresPerMonth;
         return this;
     }
 
-    public RefuelingSearchResult setConsumption(Double consumption) {
+    public RefuelingSearchResult setConsumption(BigDecimal consumption) {
         this.consumption = consumption;
         return this;
     }

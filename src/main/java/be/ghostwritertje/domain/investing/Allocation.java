@@ -3,11 +3,9 @@ package be.ghostwritertje.domain.investing;
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.utilities.Pair;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,12 +24,12 @@ public class Allocation extends DomainObject{
     @JoinColumn(name = "FINANCIAL_INSTRUMENT_UUID")
     private FinancialInstrument financialInstrument;
 
-    private Double allocation;
+    private BigDecimal allocation;
 
     public Allocation() {
     }
 
-    public Allocation(FinancialInstrument financialInstrument, Double allocation) {
+    public Allocation(FinancialInstrument financialInstrument, BigDecimal allocation) {
         this.financialInstrument = financialInstrument;
         this.allocation = allocation;
     }
@@ -47,24 +45,24 @@ public class Allocation extends DomainObject{
         this.financialInstrument = financialInstrument;
     }
 
-    public Double getAllocation() {
+    public BigDecimal getAllocation() {
         return allocation;
     }
 
-    public void setAllocation(Double allocation) {
+    public void setAllocation(BigDecimal allocation) {
         this.allocation = allocation;
     }
 
-    public List<Pair<LocalDate, Double>> getAllocationAdjustedValuesFromStartDate(LocalDate date) {
+    public List<Pair<LocalDate, BigDecimal>> getAllocationAdjustedValuesFromStartDate(LocalDate date) {
         return this.financialInstrument.getHistoricPriceList().stream()
                 .filter(historicPrice -> historicPrice.getDate().isBefore(date))
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 .findFirst()
                 .map(historicPrice -> {
-                    double value = 10000 / historicPrice.getPrice();
+                    BigDecimal value = new BigDecimal("10000").divide(historicPrice.getPrice(), RoundingMode.HALF_DOWN);
                     return this.financialInstrument.getHistoricPriceList().stream()
                             .filter(h -> h.getDate().isAfter(date))
-                            .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), historicPrice1.getPrice() * value * allocation))
+                            .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), historicPrice1.getPrice().multiply(value).multiply(allocation)))
                             .collect(Collectors.toList());
                 }).orElse(new ArrayList<>());
     }

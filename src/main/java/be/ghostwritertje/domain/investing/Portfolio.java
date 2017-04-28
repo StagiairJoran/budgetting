@@ -5,6 +5,7 @@ import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.utilities.Pair;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
@@ -32,15 +33,15 @@ public class Portfolio extends DomainObject {
     public Portfolio() {
     }
 
-    public List<Pair<LocalDate, Double>> getValuesFromStartDate(LocalDate date) {
+    public List<Pair<LocalDate, BigDecimal>> getValuesFromStartDate(LocalDate date) {
         Map<LocalDate, Value> list = new HashMap<>();
         this.allocationList.forEach(allocation -> allocation.getAllocationAdjustedValuesFromStartDate(date).forEach(localDateDoublePair -> {
             list.put(localDateDoublePair.getK(), Optional.ofNullable(list.get(localDateDoublePair.getK())).orElse(new Value()).add(localDateDoublePair.getV()));
         }));
         return list.entrySet().stream()
-                .filter(entry-> entry.getValue().getCount() == this.allocationList.size())
-                .map(entry -> new Pair<LocalDate, Double>(entry.getKey(), entry.getValue().getValue()))
-                .sorted(Comparator.comparing((Function<Pair<LocalDate, Double>, LocalDate>) Pair::getK).reversed())
+                .filter(entry -> entry.getValue().getCount() == this.allocationList.size())
+                .map(entry -> new Pair<LocalDate, BigDecimal>(entry.getKey(), entry.getValue().getValue()))
+                .sorted(Comparator.comparing((Function<Pair<LocalDate, BigDecimal>, LocalDate>) Pair::getK).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -67,19 +68,19 @@ public class Portfolio extends DomainObject {
 
     private static class Value {
         int count = 0;
-        Double value = 0.0;
+        BigDecimal value = BigDecimal.ZERO;
 
-        private Value add(Double value){
-            this.value+= value;
+        private Value add(BigDecimal value) {
+            this.value = this.value.add(value);
             this.count++;
-           return this;
+            return this;
         }
 
-        public Double getValue() {
+        public BigDecimal getValue() {
             return this.value;
         }
 
-        private int getCount(){
+        private int getCount() {
             return this.count;
         }
     }

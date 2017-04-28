@@ -39,11 +39,16 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
     public void initForNewPerson(Person person) {
         Collection<Category> categories = new ArrayList<>();
         categories.add(new Category("Saving"));
-        categories.add(new Category("Car"));
-        categories.add(new Category("House"));
+        categories.add(new Category("Car & Transport"));
+        categories.add(new Category("Housing"));
         categories.add(new Category("Groceries"));
         categories.add(new Category("Entertainment"));
         categories.add(new Category("Internal"));
+        categories.add(new Category("Medical"));
+        categories.add(new Category("Telecom"));
+        categories.add(new Category("Insurance"));
+        categories.add(new Category("Taxes"));
+        categories.add(new Category("Energy"));
 
         categories.forEach(category -> category.setAdministrator(person));
 

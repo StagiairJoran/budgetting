@@ -1,19 +1,15 @@
 package be.ghostwritertje.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Embeddable
 public class Bedrag implements Serializable {
     private static final long serialVersionUID = 5733465899521194348L;
 
     @Column(name = "AMOUNT")
-    private Double value;
+    private BigDecimal value;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -27,14 +23,14 @@ public class Bedrag implements Serializable {
         this.currency = currency;
     }
 
-    public Double getValue() {
+    public BigDecimal getValue() {
         if(this.value == null){
-            this.value = 0.0;
+            this.value = BigDecimal.ZERO;
         }
         return this.value;
     }
 
-    public void setValue(Double amount) {
+    public void setValue(BigDecimal amount) {
         this.value = amount;
     }
 

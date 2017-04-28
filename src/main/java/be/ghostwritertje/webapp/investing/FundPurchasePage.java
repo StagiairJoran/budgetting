@@ -55,7 +55,7 @@ public class FundPurchasePage extends BasePage<FundPurchase> {
                         LambdaModel.of(this.getModel(), FundPurchase::getFinancialInstrument, FundPurchase::setFinancialInstrument),
                         () -> this.financialInstrumentService.findAll());
 
-        FormComponentBuilderFactory.number()
+        FormComponentBuilderFactory.number(Double.class)
                 .usingDefaults()
                 .body(new ResourceModel("share.price"))
                 .attach(
@@ -63,14 +63,16 @@ public class FundPurchasePage extends BasePage<FundPurchase> {
                         "sharePrice",
                         new LambdaModel<Double>(() -> this.getModelObject().getSharePrice(), sharePrice -> this.getModelObject().setSharePrice(sharePrice))
                 )
-                .body(new ResourceModel("count"))
-                .attach(form, "count", new LambdaModel<Integer>(() -> this.getModelObject().getNumberOfShares(), count -> this.getModelObject().setNumberOfShares(count)))
                 .body(new ResourceModel("transaction.cost"))
                 .attach(
                         form,
                         "transactionCost",
                         new LambdaModel<Double>(() -> this.getModelObject().getTransactionCost(), transactionCost -> this.getModelObject().setTransactionCost(transactionCost))
                 );
+        FormComponentBuilderFactory.number(Integer.class)
+                .body(new ResourceModel("count"))
+                .attach(form, "count", new LambdaModel<Integer>(() -> this.getModelObject().getNumberOfShares(), count -> this.getModelObject().setNumberOfShares(count)));
+
 
         LinkBuilderFactory.submitLink(save())
                 .usingDefaults()

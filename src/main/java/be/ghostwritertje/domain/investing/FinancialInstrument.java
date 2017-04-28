@@ -36,7 +36,7 @@ public class FinancialInstrument extends DomainObject {
     public FinancialInstrument() {
     }
 
-    public Double getCurrentPrice() {
+    public BigDecimal getCurrentPrice() {
         return this.historicPriceList.stream()
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 .findFirst()
@@ -53,7 +53,7 @@ public class FinancialInstrument extends DomainObject {
                 //TODO price may not be exactly a year ago
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
-                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), 1))
+                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(historicPrice.getPrice(), currentPrice, 1))
                         .map(b-> String.format("%s %%", b.setScale(2, BigDecimal.ROUND_HALF_DOWN)))
                         .orElse(null))
                 .orElse(null);
@@ -72,7 +72,7 @@ public class FinancialInstrument extends DomainObject {
                 //TODO price may not be exactly a year ago
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
-                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(BigDecimal.valueOf(historicPrice.getPrice()), BigDecimal.valueOf(currentPrice), yearsToSubtract))
+                        .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(historicPrice.getPrice(), currentPrice, yearsToSubtract))
                         .map(b-> String.format("%s %%", b.setScale(2, BigDecimal.ROUND_HALF_DOWN)))
                         .orElse(null))
                 .orElse(null);
@@ -113,11 +113,11 @@ public class FinancialInstrument extends DomainObject {
                 .sorted(Comparator.comparing(HistoricPrice::getDate))
                 .findFirst()
                 .map(historicPrice -> {
-                    BigDecimal value = new BigDecimal("10000").divide(BigDecimal.valueOf(historicPrice.getPrice()),100, RoundingMode.HALF_EVEN);
+                    BigDecimal value = new BigDecimal("10000").divide(historicPrice.getPrice(),100, RoundingMode.HALF_EVEN);
                     return this.historicPriceList.stream()
                             .filter(h -> h.getDate().isAfter(date))
                             .sorted(Comparator.comparing(HistoricPrice::getDate))
-                            .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), BigDecimal.valueOf(historicPrice1.getPrice()).multiply(value).doubleValue()))
+                            .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), historicPrice1.getPrice().multiply(value).doubleValue()))
                             .collect(Collectors.toList());
                 }).orElse(new ArrayList<>());
 

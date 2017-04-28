@@ -16,11 +16,7 @@ import yahoofinance.histquotes.Interval;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -124,7 +120,7 @@ public class FinanceServiceImpl implements FinanceService {
         HistoricPrice historicPrice = new HistoricPrice();
         historicPrice.setDate(DateUtilities.toLocalDate(historicalQuote.getDate().getTime()));
         historicPrice.setCurrency(mapToCurrency(currency));
-        historicPrice.setPrice(historicalQuote.getAdjClose().doubleValue());
+        historicPrice.setPrice(historicalQuote.getAdjClose());
         historicPrice.setFinancialInstrument(financialInstrument);
         return historicPrice;
     }

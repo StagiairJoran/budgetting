@@ -4,12 +4,8 @@ import be.ghostwritertje.domain.Bedrag;
 import be.ghostwritertje.domain.Currency;
 import be.ghostwritertje.domain.DomainObject;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -53,11 +49,11 @@ public class HistoricPrice extends DomainObject {
         return this.getBedrag().getCurrency();
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return this.getBedrag().getValue();
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.getBedrag().setValue(price);
     }
 
