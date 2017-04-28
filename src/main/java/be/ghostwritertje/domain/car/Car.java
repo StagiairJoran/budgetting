@@ -34,7 +34,7 @@ public class Car extends DomainObject {
     @Formula(value = "(SELECT MAX(t1.KILOMETRES) - MIN(t1.KILOMETRES) FROM T_REFUELING t1 WHERE t1.CAR_UUID = UUID)")
     private BigDecimal kilometresDriven;
 
-    @Formula(value = "(SELECT SUM(T1.LITERS) - (SELECT t2.LITERS FROM t_refueling t2 WHERE  t2.CAR_UUID = UUID AND t2.DATE = (SELECT MIN(t3.DATE) FROM t_refueling t3 WHERE t3.CAR_UUID = UUID))\n" +
+    @Formula(value = "(SELECT SUM(T1.LITERS) - (SELECT T2.LITERS FROM T_REFUELING T2 WHERE  T2.CAR_UUID = UUID AND T2.DATE = (SELECT MIN(T3.DATE) FROM T_REFUELING T3 WHERE T3.CAR_UUID = UUID))\n" +
             "          FROM T_REFUELING T1\n" +
             "          WHERE\n" +
             "            T1.CAR_UUID = UUID\n" +
