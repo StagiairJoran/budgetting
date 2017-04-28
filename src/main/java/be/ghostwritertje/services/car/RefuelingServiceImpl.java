@@ -66,7 +66,7 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
     }
 
     private BigDecimal getAverageConsumption(BigDecimal distanceDriven, BigDecimal liters) {
-        return liters.divide(distanceDriven, SCALE_ON_DIVIDE, ROUNDING_MODE).multiply(BigDecimal.valueOf(10));
+        return liters.divide(distanceDriven, SCALE_ON_DIVIDE, ROUNDING_MODE).multiply(BigDecimal.valueOf(100));
     }
 
     private BigDecimal getAverageDistanceDrivenPerMonth(BigDecimal kilometresDriven, long numberOfDays) {

@@ -1,12 +1,6 @@
 package be.ghostwritertje.webapp.charts;
 
-import com.googlecode.wickedcharts.highcharts.options.Axis;
-import com.googlecode.wickedcharts.highcharts.options.AxisType;
-import com.googlecode.wickedcharts.highcharts.options.ChartOptions;
-import com.googlecode.wickedcharts.highcharts.options.DateTimeLabelFormat;
-import com.googlecode.wickedcharts.highcharts.options.Options;
-import com.googlecode.wickedcharts.highcharts.options.SeriesType;
-import com.googlecode.wickedcharts.highcharts.options.Title;
+import com.googlecode.wickedcharts.highcharts.options.*;
 import com.googlecode.wickedcharts.highcharts.options.series.Coordinate;
 import com.googlecode.wickedcharts.highcharts.options.series.CustomCoordinatesSeries;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
@@ -14,7 +8,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.lambda.WicketFunction;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,21 +20,21 @@ import java.util.stream.Collectors;
 public class HistoricChartBuilder {
     private final Options options = new Options().setChartOptions(new ChartOptions().setType(SeriesType.SPLINE));
 
-    public HistoricChartBuilder() {
-        setXAxis();
+    HistoricChartBuilder() {
+        this.setXAxis();
     }
 
     private HistoricChartBuilder setXAxis() {
-        options.setxAxis(new Axis()
+        this.options.setxAxis(new Axis()
                 .setType(AxisType.DATETIME)
-                .setDateTimeLabelFormats( new DateTimeLabelFormat()
-                .setProperty(DateTimeLabelFormat.DateTimeProperties.MONTH, "%e. %b")
-                .setProperty(DateTimeLabelFormat.DateTimeProperties.YEAR, "%b")));
+                .setDateTimeLabelFormats(new DateTimeLabelFormat()
+                        .setProperty(DateTimeLabelFormat.DateTimeProperties.MONTH, "%e. %b")
+                        .setProperty(DateTimeLabelFormat.DateTimeProperties.YEAR, "%b")));
         return this.self();
     }
 
     public HistoricChartBuilder setYAxis(String title) {
-        options.setyAxis(new Axis()
+        this.options.setyAxis(new Axis()
                 .setTitle(new Title(title)));
         return this.self();
     }
@@ -49,8 +43,8 @@ public class HistoricChartBuilder {
         return this;
     }
 
-    public HistoricChartBuilder addLine(String name, List<DateCoordinate> coordinates) {
-        options.addSeries( new CustomCoordinatesSeries<String, String>()
+    public HistoricChartBuilder addLine(String name, Collection<DateCoordinate> coordinates) {
+        this.options.addSeries(new CustomCoordinatesSeries<String, String>()
                 .setName(name)
                 .setData(coordinates.stream()
                         .map(dateCoordinate -> (Coordinate<String, String>) dateCoordinate)
@@ -58,8 +52,8 @@ public class HistoricChartBuilder {
         return this.self();
     }
 
-    public <X> HistoricChartBuilder addLine(String name, List<X> coordinates, WicketFunction<X, LocalDate> dateFunction, WicketFunction<X, Number> numberFunction) {
-        options.addSeries(new CustomCoordinatesSeries<String, String>()
+    public <X> HistoricChartBuilder addLine(String name, Collection<X> coordinates, WicketFunction<X, LocalDate> dateFunction, WicketFunction<X, Number> numberFunction) {
+        this.options.addSeries(new CustomCoordinatesSeries<String, String>()
                 .setName(name)
                 .setData(coordinates.stream()
                         .map(x -> new DateCoordinate(dateFunction.apply(x), numberFunction.apply(x)))
@@ -68,8 +62,14 @@ public class HistoricChartBuilder {
         return this.self();
     }
 
-    public <X> HistoricChartBuilder addLine(String name, List<X> coordinates, WicketFunction<X, LocalDate> dateFunction, WicketFunction<X, Number> numberFunction, int rounding) {
-        options.addSeries(new CustomCoordinatesSeries<String, String>()
+    public <X> HistoricChartBuilder addLine(
+            String name,
+            Collection<X> coordinates,
+            WicketFunction<X, LocalDate> dateFunction,
+            WicketFunction<X, Number> numberFunction,
+            int rounding
+    ) {
+        this.options.addSeries(new CustomCoordinatesSeries<String, String>()
                 .setName(name)
                 .setData(coordinates.stream()
                         .map(x -> new DateCoordinate(dateFunction.apply(x), numberFunction.apply(x), rounding))
@@ -78,8 +78,13 @@ public class HistoricChartBuilder {
         return this.self();
     }
 
-    public <X> HistoricChartBuilder addLines(Map<String,List<X>> coordinatesMap, WicketFunction<X, LocalDate> dateFunction, WicketFunction<X, Number> numberFunction, int rounding) {
-       coordinatesMap.forEach((s, xes) -> this.addLine(s, xes, dateFunction, numberFunction, rounding));
+    public <X> HistoricChartBuilder addLines(
+            Map<String, List<X>> coordinatesMap,
+            WicketFunction<X, LocalDate> dateFunction,
+            WicketFunction<X, Number> numberFunction,
+            int rounding
+    ) {
+        coordinatesMap.forEach((s, xes) -> this.addLine(s, xes, dateFunction, numberFunction, rounding));
         return this.self();
     }
 
@@ -88,12 +93,12 @@ public class HistoricChartBuilder {
     }
 
     public HistoricChartBuilder title(String title) {
-        options.setTitle(new Title(title));
+        this.options.setTitle(new Title(title));
         return this.self();
     }
 
     public HistoricChartBuilder subTitle(String title) {
-        options.setSubtitle(new Title(title));
+        this.options.setSubtitle(new Title(title));
         return this.self();
     }
 
@@ -104,7 +109,7 @@ public class HistoricChartBuilder {
     }
 
     private Chart build(String id) {
-        Chart chart = new Chart(id, options);
+        Chart chart = new Chart(id, this.options);
 
         return chart;
     }
