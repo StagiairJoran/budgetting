@@ -27,6 +27,9 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
 
     private static final double DAYS_PER_YEAR = 365.25;
     private static final double AVG_DAYS_PER_MONTH = DAYS_PER_YEAR / 12;
+    private static final int SCALE_ON_DIVIDE = 10;
+    private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_DOWN;
+
     private final RefuelingDao dao;
 
     @Autowired
@@ -63,15 +66,15 @@ public class RefuelingServiceImpl extends DomainObjectCrudServiceSupport<Refueli
     }
 
     private BigDecimal getAverageConsumption(BigDecimal distanceDriven, BigDecimal liters) {
-        return liters.divide(distanceDriven, 100, RoundingMode.HALF_DOWN).multiply(BigDecimal.valueOf(100));
+        return liters.divide(distanceDriven, SCALE_ON_DIVIDE, ROUNDING_MODE).multiply(BigDecimal.valueOf(10));
     }
 
     private BigDecimal getAverageDistanceDrivenPerMonth(BigDecimal kilometresDriven, long numberOfDays) {
-        BigDecimal averageKilometresDrivenPerDay = kilometresDriven.divide(BigDecimal.valueOf(numberOfDays), 100, RoundingMode.HALF_DOWN);
+        BigDecimal averageKilometresDrivenPerDay = kilometresDriven.divide(BigDecimal.valueOf(numberOfDays), SCALE_ON_DIVIDE, ROUNDING_MODE);
         return averageKilometresDrivenPerDay.multiply(BigDecimal.valueOf(AVG_DAYS_PER_MONTH));
     }
 
-    List<RefuelingSearchResult> averageOutPartialRefuelings(List<RefuelingSearchResult> searchResults) {
+    private List<RefuelingSearchResult> averageOutPartialRefuelings(List<RefuelingSearchResult> searchResults) {
         Collection<RefuelingSearchResult> incompleteRefuelings = new ArrayList<>();
 
         for (RefuelingSearchResult searchResult : searchResults) {
