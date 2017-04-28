@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 /**
@@ -28,22 +29,18 @@ public class Car extends DomainObject {
     private FuelType fuelType;
     private Double purchasePrice;
 
-    @Formula(value = "( 100* (SELECT SUM(T1.LITERS)\n" +
-            "   FROM T_REFUELING T1\n" +
-            "   WHERE\n" +
-            "     T1.CAR_UUID = UUID AND\n" +
-            "     T1.KILOMETRES != (SELECT MIN(T3.KILOMETRES)\n" +
-            "                          FROM T_REFUELING T3\n" +
-            "     WHERE T3.CAR_UUID = UUID)) / (SELECT MAX(T2.KILOMETRES) - MIN(T2.KILOMETRES)\n" +
-            "                                               FROM T_REFUELING T2\n" +
-            "  WHERE T2.CAR_UUID = UUID )) ")
-    private BigDecimal averageConsumption;
-
     @Formula(value = "(SELECT MAX(t1.KILOMETRES) - MIN(t1.KILOMETRES) FROM T_REFUELING t1 WHERE t1.CAR_UUID = UUID)")
     private BigDecimal kilometresDriven;
 
+    @Formula(value = "(SELECT SUM(T1.LITERS) - (SELECT t2.LITERS FROM t_refueling t2 WHERE  t2.CAR_UUID = UUID AND t2.DATE = (SELECT MIN(t3.DATE) FROM t_refueling t3 WHERE t3.CAR_UUID = UUID))\n" +
+            "          FROM T_REFUELING T1\n" +
+            "          WHERE\n" +
+            "            T1.CAR_UUID = UUID\n" +
+            "           ) ")
+    private BigDecimal totalLitersConsumed;
+
     public Person getOwner() {
-        return owner;
+        return this.owner;
     }
 
     public void setOwner(Person owner) {
@@ -51,7 +48,7 @@ public class Car extends DomainObject {
     }
 
     public String getBrand() {
-        return brand;
+        return this.brand;
     }
 
     public void setBrand(String brand) {
@@ -59,7 +56,7 @@ public class Car extends DomainObject {
     }
 
     public String getModel() {
-        return model;
+        return this.model;
     }
 
     public void setModel(String model) {
@@ -67,7 +64,7 @@ public class Car extends DomainObject {
     }
 
     public LocalDate getPurchaseDate() {
-        return purchaseDate;
+        return this.purchaseDate;
     }
 
     public void setPurchaseDate(LocalDate purchaseDate) {
@@ -75,7 +72,7 @@ public class Car extends DomainObject {
     }
 
     public FuelType getFuelType() {
-        return fuelType;
+        return this.fuelType;
     }
 
     public void setFuelType(FuelType fuelType) {
@@ -87,7 +84,7 @@ public class Car extends DomainObject {
     }
 
     public Double getPurchasePrice() {
-        return purchasePrice;
+        return this.purchasePrice;
     }
 
     public void setPurchasePrice(Double purchasePrice) {
@@ -95,18 +92,10 @@ public class Car extends DomainObject {
     }
 
     public BigDecimal getAverageConsumption() {
-        return this.averageConsumption;
-    }
-
-    public void setAverageConsumption(BigDecimal averageConsumption) {
-        this.averageConsumption = averageConsumption;
+        return this.totalLitersConsumed.divide(this.kilometresDriven, 4, RoundingMode.HALF_DOWN).multiply(new BigDecimal("100"));
     }
 
     public BigDecimal getKilometresDriven() {
         return this.kilometresDriven;
-    }
-
-    public void setKilometresDriven(BigDecimal kilometresDriven) {
-        this.kilometresDriven = kilometresDriven;
     }
 }

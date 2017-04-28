@@ -104,10 +104,11 @@ public class RefuelingListPage extends BasePage<Car> {
                 .title("Driven per month")
                 .addLine(
                         "Kilometres",
-                        this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject())),
+                        coordinates,
                         refueling -> refueling.getRefueling().getDate(),
                         RefuelingSearchResult::getKilometresPerMonth,
                         0
+
                 )
                 .setYAxis("kilometres/month")
                 .attach(this, "chart3");
