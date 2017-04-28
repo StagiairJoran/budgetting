@@ -19,7 +19,6 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -93,17 +92,8 @@ public class RefuelingListPage extends BasePage<Car> {
                         coordinates,
                         refuelingSearchResult -> refuelingSearchResult.getRefueling().getDate(),
                         RefuelingSearchResult::getConsumption,
-                        2
-                )
-                .addLine(
-                        "average",
-                        Arrays.asList(
-                                coordinates.get(0),
-                                coordinates.get(coordinates.size() - 1)
-                        ),
-                        refuelingSearchResult -> refuelingSearchResult.getRefueling().getDate(),
-                        sr -> this.getModelObject().getAverageConsumption(),
-                        2
+                        2,
+                        this.getModelObject().getAverageConsumption()
                 )
                 .setYAxis("liter/100km")
                 .attach(this, "chart2");

@@ -8,9 +8,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.lambda.WicketFunction;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -60,6 +58,24 @@ public class HistoricChartBuilder {
                         .map(dateCoordinate -> (Coordinate<String, String>) dateCoordinate)
                         .collect(Collectors.toList())));
         return this.self();
+    }
+
+    public <X> HistoricChartBuilder addLine(
+            String name,
+            Collection<X> coordinates,
+            WicketFunction<X, LocalDate> dateFunction,
+            WicketFunction<X, Number> numberFunction,
+            int rounding,
+            Number average
+    ) {
+        this.addLine(name, coordinates, dateFunction, numberFunction, rounding);
+
+        this.addLine("average", Arrays.asList(
+                coordinates.stream().sorted(Comparator.comparing(dateFunction)).findFirst().orElse(null ),
+                coordinates.stream().sorted(Comparator.comparing(dateFunction).reversed()).findFirst().orElse(null )
+        ), dateFunction, x -> average, rounding);
+        return this.self();
+
     }
 
     public <X> HistoricChartBuilder addLine(
