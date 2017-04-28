@@ -99,19 +99,5 @@ public class RefuelingListPage extends BasePage<Car> {
                 .attach(this, "chart2");
 
 
-        ChartBuilderFactory.splineChart()
-                .usingDefaults()
-                .title("Driven per month")
-                .addLine(
-                        "Kilometres",
-                        coordinates,
-                        refueling -> refueling.getRefueling().getDate(),
-                        RefuelingSearchResult::getKilometresPerMonth,
-                        0
-
-                )
-                .setYAxis("kilometres/month")
-                .attach(this, "chart3");
-
     }
 }

@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Created by Jorandeboever
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "T_CAR")
 public class Car extends DomainObject {
+    private static final long serialVersionUID = 3043871930212926434L;
 
     @ManyToOne
     @JoinColumn(name = "owner_UUID")
@@ -97,5 +99,11 @@ public class Car extends DomainObject {
 
     public BigDecimal getKilometresDriven() {
         return this.kilometresDriven;
+    }
+
+    public BigDecimal getAverageDistanceDrivenByYear(){
+        return this.getKilometresDriven().divide(BigDecimal.valueOf(this.purchaseDate.until(LocalDate.now(), ChronoUnit.DAYS)), 4, RoundingMode.HALF_DOWN)
+                .multiply(new BigDecimal("365.25"))
+                .setScale(0, RoundingMode.HALF_DOWN);
     }
 }

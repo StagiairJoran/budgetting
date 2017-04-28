@@ -83,6 +83,9 @@ public class CarInfoPanel extends GenericPanel<Car> {
         this.add(new Label("kilometresDriven", LambdaModel.of(this.getModel(), Car::getKilometresDriven)));
 
         this.add(new Label("averageConsumption", LambdaModel.of(this.getModel(), Car::getAverageConsumption)));
+
+        this.add(new Label("distancePerYear", LambdaModel.of(this.getModel(), Car::getAverageDistanceDrivenByYear)));
+
     }
 
     private static WicketBiConsumer<AjaxRequestTarget, AjaxLink<Object>> getAjaxRequestTargetAjaxLinkSerializableBiConsumer() {
