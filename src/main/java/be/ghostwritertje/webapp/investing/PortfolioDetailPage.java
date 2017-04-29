@@ -111,7 +111,6 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
                 .collect(Collectors.toMap(FinancialInstrument::getQuote, (financialInstrument) -> financialInstrument.getValuesFromStartDate(LocalDate.now().minusYears(5))));
 
         ChartBuilderFactory.splineChart()
-                .usingDefaults()
                 .title("1 year return")
                 .addLine(this.getModelObject().getName(), this.getModelObject().getValuesFromStartDate(LocalDate.now().minusYears(5)), Pair::getK, Pair::getV, 2)
                 .addLines(coordinatesMap10, Pair::getK, Pair::getV, 2)

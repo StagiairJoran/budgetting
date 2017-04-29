@@ -86,7 +86,6 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
 
 
         ChartBuilderFactory.splineChart()
-                .usingDefaults()
                 .title("1 year return")
                 .addLines(coordinatesMap1, Pair::getK, Pair::getV, 2)
                 .setYAxis("Price/liter")
@@ -94,26 +93,22 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
 
 
         ChartBuilderFactory.splineChart()
-                .usingDefaults()
                 .title("3 year return")
                 .addLines(coordinatesMap3, Pair::getK, Pair::getV, 2)
                 .attach(this, "chart3");
 
         ChartBuilderFactory.splineChart()
-                .usingDefaults()
                 .title("5 year return")
                 .addLines(coordinatesMap5, Pair::getK, Pair::getV, 2)
                 .attach(this, "chart5");
 
         ChartBuilderFactory.splineChart()
-                .usingDefaults()
                 .title("7 year return")
                 .addLines(coordinatesMap7, Pair::getK, Pair::getV, 2)
                 .attach(this, "chart7");
 
 
         ChartBuilderFactory.splineChart()
-                .usingDefaults()
                 .title("10 year return")
                 .addLines(coordinatesMap10, Pair::getK, Pair::getV, 2)
                 .attach(this, "chart10");

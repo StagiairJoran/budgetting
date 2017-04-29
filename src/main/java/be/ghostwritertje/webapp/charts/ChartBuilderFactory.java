@@ -8,7 +8,11 @@ public class ChartBuilderFactory {
     private ChartBuilderFactory() {
     }
 
-    public static HistoricChartBuilder splineChart(){
+    public static HistoricChartBuilder splineChart() {
         return new HistoricChartBuilder();
+    }
+
+    public static PieChartBuilder pieChart() {
+        return new PieChartBuilder();
     }
 }

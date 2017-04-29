@@ -75,7 +75,6 @@ public class RefuelingListPage extends BasePage<Car> {
         IModel<List<Refueling>> someModel = new DomainObjectListModel<>(this.refuelingService, s -> s.findByCar(this.getModelObject()));
 
         ChartBuilderFactory.splineChart()
-                .usingDefaults()
                 .title("Dieselprijs")
                 .addLine("Kostprijs diesel", someModel.getObject(), Refueling::getDate, Refueling::getPricePerLiter, 3)
 
@@ -85,7 +84,6 @@ public class RefuelingListPage extends BasePage<Car> {
 
         List<RefuelingSearchResult> coordinates = this.refuelingService.mapRefuelingsToSearchResults(this.refuelingService.findByCar(this.getModelObject()));
         ChartBuilderFactory.splineChart()
-                .usingDefaults()
                 .title("Verloop van verbruik")
                 .addLine(
                         "Verbruik",
