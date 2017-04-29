@@ -11,12 +11,12 @@ import java.math.BigDecimal;
  * Created by Jorandeboever
  * Date: 01-Oct-16.
  */
+@Entity
 @Table(name = "T_BANKACCOUNT", uniqueConstraints = {
         @UniqueConstraint(
                 columnNames = {"NUMBER", "ADMINISTRATOR_UUID"}
         )
 })
-@Entity
 public class BankAccount extends DomainObject {
     private static final long serialVersionUID = -4411985824034001947L;
 
