@@ -90,6 +90,15 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
     }
 
     @Override
+    public Map<Category, Long> findCountByAdministrator(Person administrator) {
+        return this.findByAdministrator(administrator).stream()
+                .collect(Collectors.toMap(
+                        category -> category,
+                        category -> this.statementService.findNumberOfStatementsForCategory(category, administrator)
+                ));
+    }
+
+    @Override
     public Iterable<Category> save(Iterable<Category> categories) {
         return this.categoryDao.save(categories);
     }

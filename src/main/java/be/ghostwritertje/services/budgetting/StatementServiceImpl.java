@@ -2,6 +2,7 @@ package be.ghostwritertje.services.budgetting;
 
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.BankAccount;
+import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.repository.StatementDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
@@ -33,6 +34,10 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
         return this.dao;
     }
 
+    @Override
+    public Long findNumberOfStatementsForCategory(Category category, Person administrator){
+        return this.dao.findNumberOfStatementsForCategory(category, administrator);
+    }
 
     @Override
     public Iterable<Statement> save(Iterable<Statement> statements) {

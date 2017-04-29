@@ -2,6 +2,7 @@ package be.ghostwritertje.services.budgetting;
 
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.BankAccount;
+import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.DomainObjectCrudService;
 
@@ -19,6 +20,8 @@ public interface StatementService extends DomainObjectCrudService<Statement> {
     List<Statement> findByAdministrator(Person administrator);
 
     List<Statement> findByOriginatingAccount(BankAccount bankAccount);
+
+    Long findNumberOfStatementsForCategory(Category category, Person administrator);
 
     BigDecimal getTotal(BankAccount bankAccount);
 

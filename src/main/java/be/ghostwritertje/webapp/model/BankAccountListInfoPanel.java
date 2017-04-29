@@ -1,9 +1,12 @@
 package be.ghostwritertje.webapp.model;
 
 import be.ghostwritertje.domain.Person;
+import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.services.budgetting.BankAccountService;
+import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.budgetting.BankAccountListPage;
+import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -22,6 +25,9 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
     @SpringBean
     private BankAccountService bankAccountService;
 
+    @SpringBean
+    private CategoryService categoryService;
+
     public BankAccountListInfoPanel(String id, IModel<Person> model) {
         super(id, model);
     }
@@ -39,6 +45,13 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
         this.add(new Label("total", LambdaModel.of(() -> this.statementService.getTotal(this.getModelObject()), a -> {
         })));
 
+        this.categoryService.findCountByAdministrator(this.getModelObject());
+
+
+        ChartBuilderFactory.pieChart()
+                .name("Categories")
+                .addPoints(this.categoryService.findCountByAdministrator(this.getModelObject()), Category::getName, aLong -> aLong)
+                .attach(this, "pieChart");
 
     }
 }

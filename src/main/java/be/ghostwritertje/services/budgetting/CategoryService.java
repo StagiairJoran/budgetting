@@ -5,6 +5,7 @@ import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.services.DomainObjectCrudService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jorandeboever
@@ -12,6 +13,8 @@ import java.util.List;
  */
 public interface CategoryService extends DomainObjectCrudService<Category> {
     List<Category> findByAdministrator(Person administrator);
+
+    Map<Category, Long> findCountByAdministrator(Person administrator);
 
     Iterable<Category> save(Iterable<Category> categories);
 

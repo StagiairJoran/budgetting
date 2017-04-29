@@ -5,6 +5,9 @@ import com.googlecode.wickedcharts.highcharts.options.SeriesType;
 import com.googlecode.wickedcharts.highcharts.options.series.Point;
 import com.googlecode.wickedcharts.highcharts.options.series.PointSeries;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
+import org.danekja.java.util.function.serializable.SerializableFunction;
+
+import java.util.Map;
 
 /**
  * Created by Jorandeboever
@@ -29,9 +32,19 @@ public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
     }
 
 
-    public <X> PieChartBuilder addPoint(String name, Number number) {
+    public PieChartBuilder addPoint(String name, Number number) {
         this.pointSeries
                 .addPoint(new Point(name, number));
+        return this.self();
+    }
+
+    public PieChartBuilder addPoints(Map<String, Number> map) {
+        map.forEach(this::addPoint);
+        return this.self();
+    }
+
+    public <X, Y> PieChartBuilder addPoints(Map<X, Y> map, SerializableFunction<X, String> nameFunction, SerializableFunction<Y, Number> numberFunction) {
+        map.forEach((s, number) -> this.addPoint(nameFunction.apply(s), numberFunction.apply(number)));
         return this.self();
     }
 
