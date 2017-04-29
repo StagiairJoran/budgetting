@@ -102,7 +102,7 @@ public class CsvService {
 
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error(String.format("IO exception in uploadCsv:", e));
+            LOG.error(String.format("IO exception in uploadCsv: %s", e));
 
         }
     }

@@ -2,6 +2,7 @@ package be.ghostwritertje.webapp.budgetting;
 
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Statement;
+import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.services.budgetting.csv.CsvService;
 import be.ghostwritertje.services.budgetting.csv.CsvService.BankType;
@@ -14,6 +15,7 @@ import be.ghostwritertje.webapp.model.DomainObjectListModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -39,6 +41,9 @@ public class StatementListPage extends BasePage<BankAccount> {
     public static final String FORM_ID = "form";
     @SpringBean
     private StatementService statementService;
+
+    @SpringBean
+    private CategoryService categoryService;
 
     private static final Logger LOG = LogManager.getLogger();
 
@@ -70,14 +75,19 @@ public class StatementListPage extends BasePage<BankAccount> {
         this.add(DataTableBuilderFactory.<Statement, String>simple()
                 .addColumn(new LambdaColumn<>(new ResourceModel("date"), Statement::getDate))
                 .addColumn(new LambdaColumn<>(new ResourceModel("amount"), Statement::getAmount))
-                .addColumn(new LambdaColumn<>(new ResourceModel("from"), Statement::getOriginatingAccount))
+                .addColumn(new LambdaColumn<>(new ResourceModel("description"), Statement::getDescription))
                 .addColumn(new LambdaColumn<>(new ResourceModel("to"), Statement::getDestinationAccount))
+                .addColumn(new LambdaColumn<>(new ResourceModel("category"), Statement::getCategory))
                 .build("statements", this.statementListModel));
 
-        FileUploadField fileUpload = new FileUploadField("fileUpload", this.fileUploadModel);
+
+        LinkBuilderFactory.ajaxLink(assignCategories())
+                .usingDefaults()
+                .attach(this, "assignCategories");
 
 
         BaseForm<BankAccount> form = new BaseForm<>(FORM_ID, this.getModel());
+        FileUploadField fileUpload = new FileUploadField("fileUpload", this.fileUploadModel);
 
         FormComponentBuilderFactory.<BankType>dropDown()
                 .usingDefaults()
@@ -93,8 +103,17 @@ public class StatementListPage extends BasePage<BankAccount> {
         this.add(form);
     }
 
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> assignCategories() {
+        return (ajaxRequestTarget, components) -> {
+            StatementListPage parent = components.findParent(StatementListPage.class);
+            parent.categoryService.attemptToAssignCategoriesAutomaticallyForPerson(parent.getModelObject().getOwner());
+            parent.statementListModel.setObject(null);
+            ajaxRequestTarget.add(parent);
+        };
+    }
+
     @SuppressWarnings("unchecked")
-    public BaseForm<BankAccount> getForm(){
+    public BaseForm<BankAccount> getForm() {
         return (BaseForm<BankAccount>) this.get(FORM_ID);
     }
 
@@ -119,7 +138,7 @@ public class StatementListPage extends BasePage<BankAccount> {
                         uploadedFile.writeTo(newFile);
 
                         components.info("saved file: " + uploadedFile.getClientFileName());
-                        parent.csvService.uploadCSVFile(newFile.getAbsolutePath(), parent.getModelObject(),parent.bankTypeIModel.getObject());
+                        parent.csvService.uploadCSVFile(newFile.getAbsolutePath(), parent.getModelObject(), parent.bankTypeIModel.getObject());
                         parent.statementListModel.setObject(null);
                         parent.getForm().getFormModeModel().setObject(BaseForm.FormMode.EDIT);
                         ajaxRequestTarget.add(parent);
