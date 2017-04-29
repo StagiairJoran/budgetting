@@ -7,6 +7,8 @@ import be.ghostwritertje.services.budgetting.BankAccountService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.form.Display;
 import com.google.common.collect.ImmutableMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 @Service
 public class CsvService {
     private static final Pattern PATTERN = Pattern.compile(",", Pattern.LITERAL);
+    private static final Logger LOG = LogManager.getLogger();
 
     private final StatementService statementService;
     private final BankAccountService bankAccountService;
@@ -99,6 +102,8 @@ public class CsvService {
 
         } catch (IOException e) {
             e.printStackTrace();
+            LOG.error(String.format("IO exception in uploadCsv:", e));
+
         }
     }
 
