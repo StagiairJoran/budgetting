@@ -20,6 +20,7 @@ import org.danekja.java.util.function.serializable.SerializableBiConsumer;
  * Date: 15-Apr-17.
  */
 public class BankAccountPage extends BasePage<BankAccount> {
+    private static final long serialVersionUID = 7297216776778133376L;
 
     @SpringBean
     private BankAccountService bankAccountService;

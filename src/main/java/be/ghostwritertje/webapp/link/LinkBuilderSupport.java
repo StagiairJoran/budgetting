@@ -4,6 +4,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.model.IModel;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.danekja.java.util.function.serializable.SerializableSupplier;
 
@@ -19,6 +20,7 @@ public abstract class LinkBuilderSupport<L extends LinkBuilderSupport<L, F>, F e
 
     private SerializableFunction<String, Component> iconProvider;
     private final List<SerializableFunction<F, ? extends Behavior>> behaviors = new ArrayList<>();
+    private IModel<? extends String> bodyModel;
 
     public LinkBuilderSupport() {
     }
@@ -38,6 +40,11 @@ public abstract class LinkBuilderSupport<L extends LinkBuilderSupport<L, F>, F e
         return this.self();
     }
 
+    public L body(IModel<? extends String> bodyModel){
+        this.bodyModel = bodyModel;
+        return this.self();
+    }
+
     @SuppressWarnings("unchecked")
     private L self() {
         return (L) this;
@@ -45,11 +52,17 @@ public abstract class LinkBuilderSupport<L extends LinkBuilderSupport<L, F>, F e
 
     abstract F buildLink(String id);
 
-    public L attach(MarkupContainer initialParent, String id) {
+    public F build(String id){
         F link = this.buildLink(id);
         Optional.ofNullable(this.iconProvider).ifPresent(ip -> link.add(ip.apply("icon")));
         this.behaviors.forEach(f -> link.add(f.apply(link)));
-        initialParent.add(link.setOutputMarkupPlaceholderTag(true));
+        link.setOutputMarkupPlaceholderTag(true);
+        Optional.ofNullable(this.bodyModel).ifPresent(link::setBody);
+        return link;
+    }
+
+    public L attach(MarkupContainer initialParent, String id) {
+        initialParent.add(this.build(id));
         return this.self();
     }
 }

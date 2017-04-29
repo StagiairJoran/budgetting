@@ -12,6 +12,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -39,7 +40,14 @@ public class BankAccountListPage extends BasePage<Person> {
                 .attach(this, "new", this.getModel());
 
         this.add(DataTableBuilderFactory.<BankAccount, String>simple()
-                .addColumn(new LambdaColumn<>(new ResourceModel("name"), BankAccount::getName))
+                .addColumn(ColumnBuilderFactory.custom(new ResourceModel(
+                                "name"),
+                        (s, bankAccountIModel) -> LinkBuilderFactory.pageLink(() -> bankAccountIModel,
+                                im -> new BankAccountPage(bankAccountIModel))
+                                .usingDefaults()
+                                .body(LambdaModel.of(bankAccountIModel, BankAccount::getName))
+                                .build(s)))
+                .addColumn(new LambdaColumn<>(new ResourceModel("bank"), bankAccount -> bankAccount.getBank().getName()))
                 .addColumn(new LambdaColumn<>(new ResourceModel("username"),  b -> b.getAdministrator().getUsername()))
                 .addColumn(new LambdaColumn<>(new ResourceModel("balance"), BankAccount::getBalance))
                 .addColumn(ColumnBuilderFactory.actions(new ResourceModel("actions"), (target, link) -> this.setResponsePage(new StatementListPage(link.getModel())),
