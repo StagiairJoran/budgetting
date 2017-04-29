@@ -45,4 +45,9 @@ public class Category extends DomainObject {
     public void setAdministrator(Person administrator) {
         this.administrator = administrator;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

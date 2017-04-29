@@ -60,7 +60,7 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
         List<Statement> statements = this.statementService.findByAdministrator(person);
         List<Category> categories = this.findByAdministrator(person);
 
-        Map<String, BankAccount> bankAccountMap = this.bankAccountService.findByAdministrator(person).stream().collect(Collectors.toMap(DomainObject::getUuid, b-> b));
+        Map<String, BankAccount> bankAccountMap = this.bankAccountService.findByOwner(person).stream().collect(Collectors.toMap(DomainObject::getUuid, b -> b));
 
         categories.stream()
                 .filter(category -> "internal".equalsIgnoreCase(category.getName()))
