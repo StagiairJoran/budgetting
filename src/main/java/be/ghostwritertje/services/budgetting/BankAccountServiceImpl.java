@@ -46,6 +46,7 @@ public class BankAccountServiceImpl extends DomainObjectCrudServiceSupport<BankA
     @Override
     public Iterable<BankAccount> save(Iterable<BankAccount> bankAccounts) {
         bankAccounts.forEach(bankAccount -> {
+            System.out.printf("Bankaccount with UUID: %S | name: %s | number: %s | Owner: %s | Administrator: %s | Bank: %s\n", bankAccount.getUuid(), bankAccount.getName(), bankAccount.getNumber(), bankAccount.getOwner(), bankAccount.getAdministrator(), bankAccount.getBank());
             LOG.warn("Bankaccount with UUID: %S | name: %s | number: %s | Owner: %s | Administrator: %s | Bank: %s", bankAccount.getUuid(), bankAccount.getName(), bankAccount.getNumber(), bankAccount.getOwner(), bankAccount.getAdministrator(), bankAccount.getBank());
         });
 
