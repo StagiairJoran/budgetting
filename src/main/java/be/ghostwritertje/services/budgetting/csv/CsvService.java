@@ -7,6 +7,7 @@ import be.ghostwritertje.services.budgetting.BankAccountService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.form.Display;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,7 @@ public class CsvService {
                     statement.setDate(date);
 
 
-                    String toAccount = row[options.rowNumberToAccount];
+                    String toAccount = StringUtils.replaceChars(row[options.rowNumberToAccount], " ", "");
                     BankAccount to = bankAccountMap.get(toAccount);
 
                     if (to == null && toAccount != null && !"-".equalsIgnoreCase(toAccount)) {
@@ -102,7 +103,7 @@ public class CsvService {
 
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error(String.format("IO exception in uploadCsv: %s", e));
+            LOG.error(String.format("IO exception in uploadCsv:%s", e));
 
         }
     }
