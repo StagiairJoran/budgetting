@@ -18,6 +18,4 @@ public interface BankAccountDao extends CrudRepository<BankAccount, String> {
 
     List<BankAccount> findByOwner(Person owner);
 
-    @Override
-    <S extends BankAccount> Iterable<S> save(Iterable<S> entities);
 }
