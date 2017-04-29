@@ -2,9 +2,9 @@ package be.ghostwritertje.webapp.budgetting;
 
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Statement;
-import be.ghostwritertje.services.budgetting.CsvService;
-import be.ghostwritertje.services.budgetting.CsvService.BankType;
 import be.ghostwritertje.services.budgetting.StatementService;
+import be.ghostwritertje.services.budgetting.csv.CsvService;
+import be.ghostwritertje.services.budgetting.csv.CsvService.BankType;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
 import be.ghostwritertje.webapp.form.BaseForm;
