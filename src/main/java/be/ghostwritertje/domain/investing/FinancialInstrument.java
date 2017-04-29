@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "T_FINANCIAL_INSTRUMENT")
 public class FinancialInstrument extends DomainObject {
+    private static final long serialVersionUID = -7933375880348522811L;
+
     private static final Logger LOG = Logger.getLogger(FinancialInstrument.class);
 
     @Column(unique = true)
@@ -54,7 +56,7 @@ public class FinancialInstrument extends DomainObject {
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
                         .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(historicPrice.getPrice(), currentPrice, 1))
-                        .map(b-> String.format("%s %%", b.setScale(2, BigDecimal.ROUND_HALF_DOWN)))
+                        .map(b-> String.format("%s %%", b.setScale(2, RoundingMode.HALF_DOWN)))
                         .orElse(null))
                 .orElse(null);
         sw.stop();
@@ -73,7 +75,7 @@ public class FinancialInstrument extends DomainObject {
                 .findFirst()
                 .map(historicPrice -> Optional.ofNullable(this.getCurrentPrice())
                         .map(currentPrice -> CalculatorUtilities.calculateAnnualizedReturn(historicPrice.getPrice(), currentPrice, yearsToSubtract))
-                        .map(b-> String.format("%s %%", b.setScale(2, BigDecimal.ROUND_HALF_DOWN)))
+                        .map(b-> String.format("%s %%", b.setScale(2, RoundingMode.HALF_DOWN)))
                         .orElse(null))
                 .orElse(null);
         sw.stop();

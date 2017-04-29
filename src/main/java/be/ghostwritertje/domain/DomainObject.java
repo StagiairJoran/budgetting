@@ -14,6 +14,7 @@ import java.io.Serializable;
  */
 @MappedSuperclass
 public abstract class DomainObject implements Serializable, Cloneable, Display {
+    private static final long serialVersionUID = -7793260716425423013L;
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -21,7 +22,7 @@ public abstract class DomainObject implements Serializable, Cloneable, Display {
     private String uuid;
 
     public String getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public void setUuid(String uuid) {

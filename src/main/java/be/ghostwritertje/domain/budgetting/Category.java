@@ -15,6 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "T_CATEGORY")
 public class Category extends DomainObject {
+    private static final long serialVersionUID = -163498981511624588L;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "ADMINISTRATOR_UUID")
@@ -30,7 +31,7 @@ public class Category extends DomainObject {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {

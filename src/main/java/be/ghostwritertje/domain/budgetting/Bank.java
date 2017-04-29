@@ -12,10 +12,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "T_BANK")
 public class Bank extends DomainObject {
+    private static final long serialVersionUID = -3888386652005214793L;
+
     private String name;
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {

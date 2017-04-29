@@ -84,7 +84,7 @@ public class CsvService {
                     statement.setOriginatingAccount(originatingBankAccount);
                     statement.setDestinationAccount(to);
 
-                    statement.setCsv_line(line);
+                    statement.setCsvLine(line);
                     statementList.add(statement);
                 }
             }

@@ -53,7 +53,7 @@ public class FundPurchase extends DomainObject {
     }
 
     public Person getOwner() {
-        return owner;
+        return this.owner;
     }
 
     public void setOwner(Person owner) {
@@ -61,7 +61,7 @@ public class FundPurchase extends DomainObject {
     }
 
     public LocalDate getDate() {
-        return date;
+        return this.date;
     }
 
     public void setDate(LocalDate date) {
@@ -72,7 +72,7 @@ public class FundPurchase extends DomainObject {
         if (this.transactionCost == null) {
             this.transactionCost = 0.00;
         }
-        return transactionCost;
+        return this.transactionCost;
     }
 
     public void setTransactionCost(Double transactionCost) {
@@ -83,7 +83,7 @@ public class FundPurchase extends DomainObject {
         if (this.numberOfShares == null) {
             this.numberOfShares = 0;
         }
-        return numberOfShares;
+        return this.numberOfShares;
     }
 
     public void setNumberOfShares(Integer numberOfShares) {
@@ -94,7 +94,7 @@ public class FundPurchase extends DomainObject {
         if (this.sharePrice == null) {
             this.sharePrice = 0.00;
         }
-        return sharePrice;
+        return this.sharePrice;
     }
 
     public Double getTotalCost() {

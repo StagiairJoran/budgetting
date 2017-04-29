@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "T_PERSON")
 @Entity
 public class Person extends DomainObject {
+    private static final long serialVersionUID = 5264397082676105919L;
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -33,7 +34,7 @@ public class Person extends DomainObject {
         if (this.username == null) {
             this.username = "";
         }
-        return username;
+        return this.username;
     }
 
     public Car getFavouriteCar() {
@@ -49,7 +50,7 @@ public class Person extends DomainObject {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {

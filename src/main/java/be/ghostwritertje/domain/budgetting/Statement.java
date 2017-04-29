@@ -2,10 +2,7 @@ package be.ghostwritertje.domain.budgetting;
 
 import be.ghostwritertje.domain.DomainObject;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -16,6 +13,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "T_STATEMENT")
 public class Statement extends DomainObject {
+    private static final long serialVersionUID = -5710605280145439611L;
 
     @ManyToOne
     @JoinColumn(name = "ORIGINATINGACCOUNT_UUID")
@@ -32,7 +30,8 @@ public class Statement extends DomainObject {
 
     private String description;
 
-    private String csv_line;
+    @Column(name = "CSV_LINE")
+    private String csvLine;
 
     public BankAccount getOriginatingAccount() {
         return this.originatingAccount;
@@ -74,12 +73,12 @@ public class Statement extends DomainObject {
         this.description = description;
     }
 
-    public String getCsv_line() {
-        return this.csv_line;
+    public String getCsvLine() {
+        return this.csvLine;
     }
 
-    public void setCsv_line(String csv_line) {
-        this.csv_line = csv_line;
+    public void setCsvLine(String csvLine) {
+        this.csvLine = csvLine;
     }
 
     public Category getCategory() {

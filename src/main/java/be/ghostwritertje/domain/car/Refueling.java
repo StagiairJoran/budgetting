@@ -49,7 +49,7 @@ public class Refueling extends DomainObject {
     }
 
     public boolean isFuelTankFull() {
-        return fuelTankFull;
+        return this.fuelTankFull;
     }
 
     public void setFuelTankFull(boolean fuelTankFull) {
@@ -60,7 +60,7 @@ public class Refueling extends DomainObject {
         if (this.pricePerLiter == null) {
             this.pricePerLiter = BigDecimal.ZERO;
         }
-        return pricePerLiter;
+        return this.pricePerLiter;
     }
 
     public void setPricePerLiter(BigDecimal pricePerLiter) {
@@ -71,7 +71,7 @@ public class Refueling extends DomainObject {
         if (this.date == null) {
             this.date = LocalDate.now();
         }
-        return date;
+        return this.date;
     }
 
     public void setDate(LocalDate date) {
@@ -82,7 +82,7 @@ public class Refueling extends DomainObject {
         if (this.liters == null) {
             this.liters = BigDecimal.ZERO;
         }
-        return liters;
+        return this.liters;
     }
 
     public void setLiters(BigDecimal liters) {
@@ -113,7 +113,7 @@ public class Refueling extends DomainObject {
     }
 
     public Car getCar() {
-        return car;
+        return this.car;
     }
 
     public void setCar(Car car) {
@@ -124,7 +124,7 @@ public class Refueling extends DomainObject {
         if (this.kilometres == null) {
             this.kilometres = BigDecimal.ZERO;
         }
-        return kilometres;
+        return this.kilometres;
     }
 
     public void setKilometres(BigDecimal kilometres) {

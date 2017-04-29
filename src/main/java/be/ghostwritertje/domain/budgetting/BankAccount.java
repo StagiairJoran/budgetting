@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 })
 @Entity
 public class BankAccount extends DomainObject {
+    private static final long serialVersionUID = -4411985824034001947L;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "ADMINISTRATOR_UUID")
@@ -86,10 +87,6 @@ public class BankAccount extends DomainObject {
 
     public BigDecimal getBalance() {
         return this.balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
     }
 
     @Override

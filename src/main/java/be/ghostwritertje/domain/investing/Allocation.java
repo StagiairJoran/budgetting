@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "T_ALLOCATION")
 public class Allocation extends DomainObject{
+    private static final long serialVersionUID = -1356547908752078757L;
 
     @ManyToOne(optional = false, cascade = CascadeType.MERGE)
     @JoinColumn(name = "FINANCIAL_INSTRUMENT_UUID")
@@ -38,7 +39,7 @@ public class Allocation extends DomainObject{
         if(this.financialInstrument == null){
             this.financialInstrument = new FinancialInstrument();
         }
-        return financialInstrument;
+        return this.financialInstrument;
     }
 
     public void setFinancialInstrument(FinancialInstrument financialInstrument) {
@@ -46,7 +47,7 @@ public class Allocation extends DomainObject{
     }
 
     public BigDecimal getAllocation() {
-        return allocation;
+        return this.allocation;
     }
 
     public void setAllocation(BigDecimal allocation) {
