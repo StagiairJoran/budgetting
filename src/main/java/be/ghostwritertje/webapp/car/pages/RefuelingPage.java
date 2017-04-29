@@ -50,7 +50,6 @@ public class RefuelingPage extends BasePage<Refueling> {
     protected void onInitialize() {
         super.onInitialize();
 
-
         LinkBuilderFactory.pageLink(() -> LambdaModel.of(this.getModel(), Refueling::getCar), RefuelingListPage::new)
                 .usingDefaults()
                 .attach(this, "back");
@@ -83,9 +82,6 @@ public class RefuelingPage extends BasePage<Refueling> {
                 .usingDefaults()
                 .attach(form, "save");
 
-
-
-
         WebMarkupContainer savedinfoContainer = new WebMarkupContainer("result");
         savedinfoContainer.setOutputMarkupId(true);
         savedinfoContainer.add(new IModelBasedVisibilityBehavior<>(this.searchResultIModel, Objects::nonNull));
@@ -99,7 +95,6 @@ public class RefuelingPage extends BasePage<Refueling> {
                 .usingDefaults()
                 .body(new ResourceModel("average.distance.year"))
                 .attach(savedinfoContainer, "averageDistance", LambdaModel.of(this.searchResultIModel, RefuelingSearchResult::getKilometresPerYear));
-
 
         form.add(savedinfoContainer);
         this.add(form);
