@@ -13,7 +13,6 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.boot
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -22,6 +21,7 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -67,16 +67,16 @@ public class RefuelingPage extends BasePage<Refueling> {
         FormComponentBuilderFactory.number(BigDecimal.class)
                 .usingDefaults()
                 .body(new ResourceModel("kilometres"))
-                .attach(form, "kilometres", new LambdaModel<>(() -> this.getModelObject().getKilometres(), kilometres -> this.getModelObject().setKilometres(kilometres)))
+                .attach(form, "kilometres", LambdaModel.of(this.getModel(), Refueling::getKilometres, Refueling::setKilometres))
                 .body(new ResourceModel("liters"))
-                .attach(form, LITERS_ID, new LambdaModel<>(() -> this.getModelObject().getLiters(), liters -> this.getModelObject().setLiters(liters)))
+                .attach(form, LITERS_ID, LambdaModel.of(this.getModel(), Refueling::getLiters, Refueling::setLiters))
                 .behave(() -> new LambdaOnChangeBehavior(updateMissingField(this.getModel())))
                 .body(new ResourceModel("price"))
-                .attach(form, "price", new LambdaModel<>(() -> this.getModelObject().getPrice(), price -> this.getModelObject().setPrice(price)))
+                .attach(form, "price", LambdaModel.of(this.getModel(), Refueling::getPrice, Refueling::setPrice))
                 .body(new ResourceModel("liter.price"))
-                .attach(form, "literPrice", new LambdaModel<>(() -> this.getModelObject().getPricePerLiter(), kilometres -> this.getModelObject().setPricePerLiter(kilometres)));
+                .attach(form, "literPrice", LambdaModel.of(this.getModel(), Refueling::getPricePerLiter, Refueling::setPricePerLiter));
 
-        CheckBox checkBox = new BootstrapCheckBoxPicker("tankFull", new LambdaModel<>(() -> this.getModelObject().isFuelTankFull(), full -> this.getModelObject().setFuelTankFull(full)));
+        CheckBox checkBox = new BootstrapCheckBoxPicker("tankFull", LambdaModel.of(this.getModel(), Refueling::isFuelTankFull, Refueling::setFuelTankFull));
         form.add(checkBox);
 
         LinkBuilderFactory.submitLink(save())
@@ -105,7 +105,7 @@ public class RefuelingPage extends BasePage<Refueling> {
         this.add(form);
     }
 
-    private static WicketBiConsumer<AjaxRequestTarget, AjaxSubmitLink> save() {
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> save() {
         return (target, components) -> {
             RefuelingPage parent = components.findParent(RefuelingPage.class);
             Refueling saved = parent.refuelingService.save(parent.getModelObject());
@@ -118,7 +118,7 @@ public class RefuelingPage extends BasePage<Refueling> {
         return this.get("form").get(LITERS_ID);
     }
 
-    private static WicketBiConsumer<Component, AjaxRequestTarget> updateMissingField(IModel<Refueling> refuelingModel) {
+    private static SerializableBiConsumer<Component, AjaxRequestTarget> updateMissingField(IModel<Refueling> refuelingModel) {
         return (component, ajaxRequestTarget) -> {
             RefuelingPage parent = component.findParent(RefuelingPage.class);
             Refueling refueling = refuelingModel.getObject();

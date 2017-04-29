@@ -7,9 +7,7 @@ import be.ghostwritertje.webapp.UnAuthorizedAllowed;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.SubmitLink;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -45,13 +43,13 @@ public class RegisterPage extends BasePage<Person> implements UnAuthorizedAllowe
                 .usingDefaults()
                 .required()
                 .body(new ResourceModel("username"))
-                .attach(form, "username", new LambdaModel<>(() -> this.getModel().getObject().getUsername(), username -> this.getModel().getObject().setUsername(username)));
+                .attach(form, "username", LambdaModel.of(this.getModel(), Person::getUsername, Person::setUsername));
 
         FormComponentBuilderFactory.password()
                 .usingDefaults()
                 .required()
                 .body(new ResourceModel("password"))
-                .attach(form, "password", new LambdaModel<>(() -> this.getModelObject().getPassword(), password -> this.getModelObject().setPassword(password)));
+                .attach(form, "password", LambdaModel.of(this.getModel(), Person::getPassword, Person::setPassword));
 
         form.add(new SubmitLink("save"));
 

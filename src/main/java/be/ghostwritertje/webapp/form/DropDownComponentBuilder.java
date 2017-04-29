@@ -1,9 +1,9 @@
 package be.ghostwritertje.webapp.form;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,14 +14,14 @@ import java.util.List;
  */
 public class DropDownComponentBuilder<T extends Display & Serializable> extends FormComponentBuilder<DropDownChoice<T>, T, DropDownComponentBuilder<T>> {
 
-    private WicketSupplier<List<T>> listSupplier;
+    private SerializableSupplier<List<T>> listSupplier;
 
     @Override
     public DropDownComponentBuilder<T> attach(MarkupContainer initialParent, String id, IModel<T> model) {
         throw new IllegalArgumentException();
     }
 
-    public DropDownComponentBuilder<T> attach(MarkupContainer initialParent, String id, IModel<T> model, WicketSupplier<List<T>> listSupplier) {
+    public DropDownComponentBuilder<T> attach(MarkupContainer initialParent, String id, IModel<T> model, SerializableSupplier<List<T>> listSupplier) {
         this.listSupplier = listSupplier;
         super.attach(initialParent, id, model);
 

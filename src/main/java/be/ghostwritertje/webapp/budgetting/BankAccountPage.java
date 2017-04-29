@@ -9,11 +9,11 @@ import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 /**
  * Created by Jorandeboever
@@ -61,7 +61,7 @@ public class BankAccountPage extends BasePage<BankAccount> {
         this.add(form);
     }
 
-    private static WicketBiConsumer<AjaxRequestTarget, AjaxSubmitLink> save() {
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> save() {
         return (target, components) -> {
             BankAccountPage parent = components.findParent(BankAccountPage.class);
             parent.setModelObject(parent.bankAccountService.save(parent.getModelObject()));

@@ -57,12 +57,10 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
                 .body(new ResourceModel("name"))
-                .attach(form, "name", new LambdaModel<>(
-                        () -> this.getModelObject().getName(),
-                        s -> this.getModelObject().setName(s)));
+                .attach(form, "name", LambdaModel.of(this.getModel(),
+                      Portfolio::getName, Portfolio::setName));
 
-        form.add(new ListView<Allocation>("allocations", new LambdaModel<List<Allocation>>(() -> form.getModelObject().getAllocationList(), allocations -> {
-        })) {
+        form.add(new ListView<Allocation>("allocations", LambdaModel.of(form.getModel(), Portfolio::getAllocationList)) {
             @Override
             protected void populateItem(ListItem<Allocation> item) {
                 item.add(new Label("quote", item.getModelObject().getFinancialInstrument().getQuote()));
@@ -76,9 +74,7 @@ public class PortfolioDetailPage extends BasePage<Portfolio> {
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
                 .body(new ResourceModel("quote"))
-                .attach(allocationBaseForm, "quote", new LambdaModel<String>(() ->
-                        allocationBaseForm.getModelObject().getQuote(),
-                        s -> allocationBaseForm.getModelObject().setQuote(s)));
+                .attach(allocationBaseForm, "quote", LambdaModel.of(allocationBaseForm.getModel(), CustomAllocation::getQuote, CustomAllocation::setQuote));
 
         FormComponentBuilderFactory.number(BigDecimal.class)
                 .usingDefaults()

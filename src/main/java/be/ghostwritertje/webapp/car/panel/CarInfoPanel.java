@@ -11,13 +11,13 @@ import be.ghostwritertje.webapp.car.pages.RefuelingListPage;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -88,7 +88,7 @@ public class CarInfoPanel extends GenericPanel<Car> {
 
     }
 
-    private static WicketBiConsumer<AjaxRequestTarget, AjaxLink<Object>> getAjaxRequestTargetAjaxLinkSerializableBiConsumer() {
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> getAjaxRequestTargetAjaxLinkSerializableBiConsumer() {
         return (target, components) -> {
             CarInfoPanel parent = components.findParent(CarInfoPanel.class);
             Person loggedInPerson = CustomSession.get().getLoggedInPerson();
@@ -99,7 +99,7 @@ public class CarInfoPanel extends GenericPanel<Car> {
         };
     }
 
-    private static WicketBiConsumer<AjaxRequestTarget, AjaxLink<Object>> makeFavourite() {
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> makeFavourite() {
         return (target, components) -> {
             CarInfoPanel parent = components.findParent(CarInfoPanel.class);
             Person loggedInPerson = CustomSession.get().getLoggedInPerson();

@@ -16,6 +16,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 /**
  * Created by Ghostwritertje
@@ -46,13 +47,13 @@ public abstract class BasePage<T> extends GenericWebPage<T>  implements Authoriz
         this.add(new BookmarkablePageLink("loginLink", LoginPage.class)
                 .add(new VisibilityBehavior<>(component -> CustomSession.get().getLoggedInPerson() == null)));
 
-        this.add(new Link<Person>("dashboardLink", new LambdaModel<>(() -> CustomSession.get().getLoggedInPerson(), person -> CustomSession.get().setLoggedInPerson(person))) {
+        this.add(new Link<Person>("dashboardLink", LambdaModel.of(((SerializableSupplier<Person>)() -> CustomSession.get().getLoggedInPerson()), person -> CustomSession.get().setLoggedInPerson(person))) {
 
             @Override
             protected void onInitialize() {
                 super.onInitialize();
                 this.add(new VisibilityBehavior<>(component -> CustomSession.get().getLoggedInPerson() != null));
-                this.add(new Label("loggedInUsername", new LambdaModel<>(() -> this.getModelObject().getUsername(), s -> this.getModelObject().setUsername(s))));
+                this.add(new Label("loggedInUsername", LambdaModel.of(this.getModel(), Person::getUsername, Person::setUsername)));
             }
 
             @Override

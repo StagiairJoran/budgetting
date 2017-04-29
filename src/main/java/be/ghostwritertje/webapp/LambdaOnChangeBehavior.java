@@ -1,10 +1,9 @@
 package be.ghostwritertje.webapp;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
-import org.apache.wicket.lambda.WicketBiConsumer;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 /**
  * Created by Jorandeboever
@@ -12,9 +11,9 @@ import org.apache.wicket.lambda.WicketBiConsumer;
  */
 public class LambdaOnChangeBehavior extends OnChangeAjaxBehavior {
 
-    private final WicketBiConsumer<Component, AjaxRequestTarget> consumer;
+    private final SerializableBiConsumer<Component, AjaxRequestTarget> consumer;
 
-    public LambdaOnChangeBehavior(WicketBiConsumer<Component, AjaxRequestTarget> consumer) {
+    public LambdaOnChangeBehavior(SerializableBiConsumer<Component, AjaxRequestTarget> consumer) {
         this.consumer = consumer;
     }
 

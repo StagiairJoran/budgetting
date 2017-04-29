@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
@@ -22,6 +21,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.file.File;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 import java.util.Collection;
 import java.util.List;
@@ -83,7 +83,7 @@ public class StatementListPage extends BasePage<BankAccount> {
         this.add(form);
     }
 
-    private static WicketBiConsumer<AjaxRequestTarget, AjaxSubmitLink> upload() {
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> upload() {
         return (ajaxRequestTarget, components) -> {
             StatementListPage parent = components.findParent(StatementListPage.class);
             Collection<FileUpload> uploadedFiles = parent.fileUploadModel.getObject();

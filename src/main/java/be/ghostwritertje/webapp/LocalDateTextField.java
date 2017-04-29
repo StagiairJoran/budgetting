@@ -23,7 +23,7 @@ public class LocalDateTextField extends DateTextField {
     private static final Logger logger = Logger.getLogger(LocalDateTextField.class);
 
     public LocalDateTextField(String id, IModel<LocalDate> model) {
-        super(id, new LambdaModel<Date>(
+        super(id, LambdaModel.of(
                 () -> {
                     logger.debug(String.format("GETTER for dateTextField:"));
                     LocalDate localDate = model.getObject();

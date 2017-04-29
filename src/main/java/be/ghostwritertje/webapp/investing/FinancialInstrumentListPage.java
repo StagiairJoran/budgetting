@@ -14,13 +14,13 @@ import be.ghostwritertje.webapp.model.DomainObjectListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,7 +48,7 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
         BaseForm<FinancialInstrument> form = new BaseForm<FinancialInstrument>("form", new Model<>(new FinancialInstrument()));
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
-                .attach(form, "quote", new LambdaModel<>(() -> form.getModelObject().getQuote(), s -> form.getModelObject().setQuote(s)));
+                .attach(form, "quote", LambdaModel.of(form.getModel(), FinancialInstrument::getQuote, FinancialInstrument::setQuote));
 
         LinkBuilderFactory.submitLink( save(form.getModel()))
                 .usingDefaults()
@@ -129,7 +129,7 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
         return (TextField) this.getForm().get("quote");
     }
 
-    private static WicketBiConsumer<AjaxRequestTarget, AjaxSubmitLink> save(IModel<FinancialInstrument> model) {
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> save(IModel<FinancialInstrument> model) {
         return (target, components) -> {
             FinancialInstrumentListPage parent = components.findParent(FinancialInstrumentListPage.class);
             BaseForm<FinancialInstrument> form = parent.getForm();

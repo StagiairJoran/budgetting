@@ -1,9 +1,9 @@
 package be.ghostwritertje.webapp.datatable;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
-import org.apache.wicket.lambda.WicketFunction;
-import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.IModel;
+import org.danekja.java.util.function.serializable.SerializableFunction;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 import java.util.Optional;
 
@@ -13,10 +13,10 @@ import java.util.Optional;
  */
 public class DataColumnBuilder<T, S> extends ColumnBuilderSupport<T, S,DataColumnBuilder<T, S>, LambdaColumn<T,S>> {
 
-    private WicketSupplier<String> cssSupplier;
-    private final WicketFunction<T, ?>  dataFunction;
+    private SerializableSupplier<String> cssSupplier;
+    private final SerializableFunction<T, ?>  dataFunction;
 
-    public DataColumnBuilder(WicketFunction<T, ?> dataFunction) {
+    public DataColumnBuilder(SerializableFunction<T, ?> dataFunction) {
         this.dataFunction = dataFunction;
     }
 
@@ -38,13 +38,13 @@ public class DataColumnBuilder<T, S> extends ColumnBuilderSupport<T, S,DataColum
     }
 
     public static class MyColumn<T, S> extends LambdaColumn<T, S> {
-        private WicketSupplier<String> cssSupplier = () -> null;
+        private SerializableSupplier<String> cssSupplier = () -> null;
 
-        MyColumn(IModel<String> displayModel, WicketFunction<T, ?> function) {
+        MyColumn(IModel<String> displayModel, SerializableFunction<T, ?> function) {
             super(displayModel, function);
         }
 
-        MyColumn<T, S> setCssSupplier(WicketSupplier<String> cssSupplier) {
+        MyColumn<T, S> setCssSupplier(SerializableSupplier<String> cssSupplier) {
             this.cssSupplier = cssSupplier;
             return this;
         }

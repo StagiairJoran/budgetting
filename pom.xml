@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <wicket.version>8.0.0-M2</wicket.version>
+        <wicket.version>8.0.0-M5</wicket.version>
         <spring.version>4.3.7.RELEASE</spring.version>
         <postgres.version>9.4.1211.jre7</postgres.version>
         <hibernate.version>5.2.2.Final</hibernate.version>
@@ -57,6 +57,12 @@
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
+            <version>${wicket.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-extensions</artifactId>
             <version>${wicket.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -176,7 +182,7 @@
         <dependency>
             <groupId>com.yahoofinance-api</groupId>
             <artifactId>YahooFinanceAPI</artifactId>
-            <version>3.5.0</version>
+            <version>3.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>

@@ -36,7 +36,7 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
                 setResponsePage(new BankAccountListPage(BankAccountListInfoPanel.this.getModel()));
             }
         });
-        this.add(new Label("total", new LambdaModel<>(() -> this.statementService.getTotal(this.getModelObject()), a -> {
+        this.add(new Label("total", LambdaModel.of(() -> this.statementService.getTotal(this.getModelObject()), a -> {
         })));
 
 

@@ -1,8 +1,7 @@
 package be.ghostwritertje.webapp;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.lambda.WicketFunction;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 /**
  * Created by Jorandeboever
@@ -10,9 +9,9 @@ import org.apache.wicket.lambda.WicketFunction;
  */
 public class VisibilityBehavior<X extends Component> extends VisibilityBehaviorSupport {
 
-    private final WicketFunction<? super X, Boolean> visibilityLogic;
+    private final SerializableFunction<? super X, Boolean> visibilityLogic;
 
-    public VisibilityBehavior(WicketFunction<? super X, Boolean> visibilityLogic) {
+    public VisibilityBehavior(SerializableFunction<? super X, Boolean> visibilityLogic) {
         this.visibilityLogic = visibilityLogic;
     }
 

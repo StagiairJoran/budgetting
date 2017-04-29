@@ -70,14 +70,14 @@ public class LoginPage extends BasePage<Person> implements UnAuthorizedAllowed {
                     .usingDefaults()
                     .required()
                     .body(new ResourceModel("username"))
-                    .attach(this, "username", new LambdaModel<>(() -> this.getModel().getObject().getUsername(), username -> this.getModel().getObject().setUsername(username)));
+                    .attach(this, "username", LambdaModel.of(this.getModel(), Person::getUsername, Person::setUsername));
 
             FormComponentBuilderFactory.password()
                     .usingDefaults()
                     .switchable(false)
                     .required()
                     .body(new ResourceModel("password"))
-                    .attach(this, "password", new LambdaModel<>(() -> this.getModelObject().getPassword(), password -> this.getModelObject().setPassword(password)));
+                    .attach(this, "password", LambdaModel.of(this.getModel(), Person::getPassword, Person::setPassword));
 
             WebMarkupContainer rememberMeContainer = new WebMarkupContainer("rememberMeContainer");
             this.add(rememberMeContainer);

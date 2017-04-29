@@ -2,7 +2,7 @@ package be.ghostwritertje.webapp.model;
 
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.services.DomainObjectCrudService;
-import org.apache.wicket.lambda.WicketFunction;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,14 +13,14 @@ import java.util.Optional;
  */
 public class DomainObjectListModel<T extends DomainObject, S extends DomainObjectCrudService<T>> extends LoadableListModel<T> {
 
-    private final WicketFunction<S, List<T>> loadFunction;
+    private final SerializableFunction<S, List<T>> loadFunction;
     private final S service;
 
     public DomainObjectListModel(S service) {
         this(service, null);
     }
 
-    public DomainObjectListModel(S service, WicketFunction<S, List<T>> loadFunction) {
+    public DomainObjectListModel(S service, SerializableFunction<S, List<T>> loadFunction) {
         this.service = service;
         this.loadFunction = loadFunction;
     }

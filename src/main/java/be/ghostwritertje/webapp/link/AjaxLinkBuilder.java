@@ -3,9 +3,9 @@ package be.ghostwritertje.webapp.link;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.IModel;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 /**
  * Created by Jorandeboever
@@ -13,20 +13,20 @@ import org.apache.wicket.model.IModel;
  */
 public class AjaxLinkBuilder <X> extends AjaxLinkBuilderSupport<AjaxLinkBuilder<X>, AjaxLink<X>> {
 
-    AjaxLinkBuilder(WicketBiConsumer<AjaxRequestTarget, AjaxLink<X>> onClickConsumer) {
+    AjaxLinkBuilder(SerializableBiConsumer<AjaxRequestTarget, AjaxLink<X>> onClickConsumer) {
         super(onClickConsumer);
     }
-    private WicketSupplier<IModel<X>> modelSupplier = () -> null;
+    private SerializableSupplier<IModel<X>> modelSupplier = () -> null;
 
     @Override
-    AjaxLink<X> buildLink(String id, WicketBiConsumer<AjaxRequestTarget, AjaxLink<X>> onClickConsumer) {
+    AjaxLink<X> buildLink(String id, SerializableBiConsumer<AjaxRequestTarget, AjaxLink<X>> onClickConsumer) {
         return new MyAjaxLink<>(id, modelSupplier.get(), onClickConsumer);
     }
 
     private static class MyAjaxLink<X> extends AjaxLink<X>{
-        private final WicketBiConsumer<AjaxRequestTarget, AjaxLink<X>> consumer;
+        private final SerializableBiConsumer<AjaxRequestTarget, AjaxLink<X>> consumer;
 
-        private MyAjaxLink(String id, IModel<X> model, WicketBiConsumer<AjaxRequestTarget, AjaxLink<X>> consumer) {
+        private MyAjaxLink(String id, IModel<X> model, SerializableBiConsumer<AjaxRequestTarget, AjaxLink<X>> consumer) {
             super(id, model);
             this.consumer = consumer;
         }

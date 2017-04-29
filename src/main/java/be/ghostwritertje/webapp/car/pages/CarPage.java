@@ -15,8 +15,6 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import java.time.LocalDate;
-
 /**
  * Created by Jorandeboever
  * Date: 01-Oct-16.
@@ -40,18 +38,18 @@ public class CarPage extends BasePage<Car> {
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
                 .body(new ResourceModel("brand"))
-                .attach(form, "brand", new LambdaModel<String>(() -> this.getModelObject().getBrand(), brand -> this.getModelObject().setBrand(brand)))
+                .attach(form, "brand", LambdaModel.of(this.getModel(), Car::getBrand, Car::setBrand))
                 .body(new ResourceModel("model"))
-                .attach(form, "model", new LambdaModel<String>(() -> this.getModelObject().getModel(), model -> this.getModelObject().setModel(model)));
+                .attach(form, "model", LambdaModel.of(this.getModel(), Car::getModel, Car::setModel));
 
         form.add(new NumberTextField<Double>(
                 "price",
-                new LambdaModel<>(() -> this.getModelObject().getPurchasePrice(), model -> this.getModelObject().setPurchasePrice(model)),
+                LambdaModel.of(this.getModel(), Car::getPurchasePrice, Car::setPurchasePrice),
                 Double.class
         ));
         form.add(new LocalDateTextField(
                 "date",
-                new LambdaModel<LocalDate>(() -> this.getModelObject().getPurchaseDate(), date -> this.getModelObject().setPurchaseDate(date))
+                LambdaModel.of(this.getModel(), Car::getPurchaseDate, Car::setPurchaseDate)
         ));
 
         LinkBuilderFactory.submitLink((target, o) -> CarPage.this.carService.save(CarPage.this.getModelObject()))

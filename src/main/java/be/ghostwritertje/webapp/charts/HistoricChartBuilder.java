@@ -5,7 +5,7 @@ import com.googlecode.wickedcharts.highcharts.options.series.Coordinate;
 import com.googlecode.wickedcharts.highcharts.options.series.CustomCoordinatesSeries;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.lambda.WicketFunction;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -50,7 +50,7 @@ public class HistoricChartBuilder {
         return this.self();
     }
 
-    public <X> HistoricChartBuilder addLine(String name, Collection<X> coordinates, WicketFunction<X, LocalDate> dateFunction, WicketFunction<X, Number> numberFunction) {
+    public <X> HistoricChartBuilder addLine(String name, Collection<X> coordinates, SerializableFunction<X, LocalDate> dateFunction, SerializableFunction<X, Number> numberFunction) {
         this.options.addSeries(new CustomCoordinatesSeries<String, String>()
                 .setName(name)
                 .setData(coordinates.stream()
@@ -63,8 +63,8 @@ public class HistoricChartBuilder {
     public <X> HistoricChartBuilder addLine(
             String name,
             Collection<X> coordinates,
-            WicketFunction<X, LocalDate> dateFunction,
-            WicketFunction<X, Number> numberFunction,
+            SerializableFunction<X, LocalDate> dateFunction,
+            SerializableFunction<X, Number> numberFunction,
             int rounding,
             Number average
     ) {
@@ -81,8 +81,8 @@ public class HistoricChartBuilder {
     public <X> HistoricChartBuilder addLine(
             String name,
             Collection<X> coordinates,
-            WicketFunction<X, LocalDate> dateFunction,
-            WicketFunction<X, Number> numberFunction,
+            SerializableFunction<X, LocalDate> dateFunction,
+            SerializableFunction<X, Number> numberFunction,
             int rounding
     ) {
         this.options.addSeries(new CustomCoordinatesSeries<String, String>()
@@ -96,8 +96,8 @@ public class HistoricChartBuilder {
 
     public <X> HistoricChartBuilder addLines(
             Map<String, List<X>> coordinatesMap,
-            WicketFunction<X, LocalDate> dateFunction,
-            WicketFunction<X, Number> numberFunction,
+            SerializableFunction<X, LocalDate> dateFunction,
+            SerializableFunction<X, Number> numberFunction,
             int rounding
     ) {
         coordinatesMap.forEach((s, xes) -> this.addLine(s, xes, dateFunction, numberFunction, rounding));

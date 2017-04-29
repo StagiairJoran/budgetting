@@ -11,11 +11,11 @@ import be.ghostwritertje.webapp.model.DomainObjectListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 /**
  * Created by Jorandeboever
@@ -51,7 +51,7 @@ public class BankAccountListPage extends BasePage<Person> {
                 .build("bankAccounts", new DomainObjectListModel<BankAccount, BankAccountService>(this.bankAccountService,service ->  service.findByOwner(this.getModelObject()))));
     }
 
-    private static WicketBiConsumer<AjaxRequestTarget, AjaxLink<Person>> newBankAccount() {
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Person>> newBankAccount() {
         return (target, components) -> {
             Person person = components.getModelObject();
 
