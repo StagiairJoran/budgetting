@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 @Table(name = "T_BANKACCOUNT", uniqueConstraints = {
         @UniqueConstraint(
-                columnNames = {"number", "administrator_UUID"}
+                columnNames = {"number", "ADMINISTRATOR_UUID"}
         )
 })
 @Entity
