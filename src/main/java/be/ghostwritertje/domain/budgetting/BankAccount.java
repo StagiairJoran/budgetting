@@ -89,6 +89,10 @@ public class BankAccount extends DomainObject {
         return this.balance;
     }
 
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
     @Override
     public String toString() {
         return this.name != null ? this.name : this.number;
