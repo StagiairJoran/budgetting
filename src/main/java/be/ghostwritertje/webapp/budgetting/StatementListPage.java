@@ -136,16 +136,16 @@ public class StatementListPage extends BasePage<BankAccount> {
                     try {
                         newFile.createNewFile();
                         uploadedFile.writeTo(newFile);
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        LOG.error(String.format("Error uploading file %s", e));
+                    }
                         components.info("saved file: " + uploadedFile.getClientFileName());
                         parent.csvService.uploadCSVFile(newFile.getAbsolutePath(), parent.getModelObject(), parent.bankTypeIModel.getObject());
                         parent.statementListModel.setObject(null);
                         parent.getForm().getFormModeModel().setObject(BaseForm.FormMode.EDIT);
                         ajaxRequestTarget.add(parent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        LOG.error(String.format("Error uploading file %s", e));
-                    }
+
                 }
 
             }

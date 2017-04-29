@@ -89,11 +89,11 @@ public class CsvService {
                         bankAccountMap.put(toAccount, to);
                     }
 
-                    statement.setDescription(row[options.rowNumberDescription]);
+                    statement.setDescription(StringUtils.abbreviate(row[options.rowNumberDescription], 2000));
                     statement.setOriginatingAccount(originatingBankAccount);
                     statement.setDestinationAccount(to);
 
-                    statement.setCsvLine(line);
+                    statement.setCsvLine(StringUtils.abbreviate(line, 8000));
                     statementList.add(statement);
                 }
             }
