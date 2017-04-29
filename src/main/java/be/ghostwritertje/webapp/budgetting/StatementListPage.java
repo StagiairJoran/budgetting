@@ -3,10 +3,12 @@ package be.ghostwritertje.webapp.budgetting;
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.budgetting.CsvService;
+import be.ghostwritertje.services.budgetting.CsvService.BankType;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
 import be.ghostwritertje.webapp.form.BaseForm;
+import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.model.DomainObjectListModel;
 import org.apache.logging.log4j.LogManager;
@@ -17,12 +19,14 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.file.File;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +36,7 @@ import java.util.UUID;
  * Date: 01-Oct-16.
  */
 public class StatementListPage extends BasePage<BankAccount> {
+    public static final String FORM_ID = "form";
     @SpringBean
     private StatementService statementService;
 
@@ -42,6 +47,7 @@ public class StatementListPage extends BasePage<BankAccount> {
 
 
     private final IModel<List<FileUpload>> fileUploadModel;
+    private final IModel<CsvService.BankType> bankTypeIModel = new Model<>();
     private final IModel<List<Statement>> statementListModel;
 
     private static final String UPLOAD_FOLDER = "csvFiles";
@@ -71,8 +77,12 @@ public class StatementListPage extends BasePage<BankAccount> {
         FileUploadField fileUpload = new FileUploadField("fileUpload", this.fileUploadModel);
 
 
-        BaseForm<BankAccount> form = new BaseForm<>("form", this.getModel());
+        BaseForm<BankAccount> form = new BaseForm<>(FORM_ID, this.getModel());
 
+        FormComponentBuilderFactory.<BankType>dropDown()
+                .usingDefaults()
+                .body(new ResourceModel("bank"))
+                .attach(form, "bankType", this.bankTypeIModel, () -> Arrays.asList(BankType.KEYTRADE, BankType.BELFIUS));
 
         LinkBuilderFactory.<List<FileUpload>>submitLink(upload())
                 .usingDefaults()
@@ -81,6 +91,11 @@ public class StatementListPage extends BasePage<BankAccount> {
         form.add(fileUpload);
 
         this.add(form);
+    }
+
+    @SuppressWarnings("unchecked")
+    public BaseForm<BankAccount> getForm(){
+        return (BaseForm<BankAccount>) this.get(FORM_ID);
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> upload() {
@@ -104,8 +119,9 @@ public class StatementListPage extends BasePage<BankAccount> {
                         uploadedFile.writeTo(newFile);
 
                         components.info("saved file: " + uploadedFile.getClientFileName());
-                        parent.csvService.uploadCSVFile(newFile.getAbsolutePath(), parent.getModelObject(), "keytrade");
+                        parent.csvService.uploadCSVFile(newFile.getAbsolutePath(), parent.getModelObject(),parent.bankTypeIModel.getObject());
                         parent.statementListModel.setObject(null);
+                        parent.getForm().getFormModeModel().setObject(BaseForm.FormMode.EDIT);
                         ajaxRequestTarget.add(parent);
                     } catch (Exception e) {
                         e.printStackTrace();

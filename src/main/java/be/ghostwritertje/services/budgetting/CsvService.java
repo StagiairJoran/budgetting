@@ -3,6 +3,7 @@ package be.ghostwritertje.services.budgetting;
 
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Statement;
+import be.ghostwritertje.webapp.form.Display;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,11 +37,11 @@ public class CsvService {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    public void uploadCSVFile(String fileUrl, BankAccount bankAccount, String bank) {
+    public void uploadCSVFile(String fileUrl, BankAccount bankAccount, BankType bank) {
 
-        if(bank.toLowerCase().contains("belfius")){
+        if (bank == BankType.BELFIUS) {
             this.uploadCsvBelfius(fileUrl, bankAccount);
-        }else {
+        } else if (bank == BankType.KEYTRADE) {
             this.uploadCsvKeytrade(fileUrl, bankAccount);
         }
 
@@ -74,7 +76,7 @@ public class CsvService {
                     String toAccount = row[3];
                     BankAccount to = bankAccountMap.get(toAccount);
 
-                    if(to == null && toAccount != null && !"-".equalsIgnoreCase(toAccount)){
+                    if (to == null && toAccount != null && !"-".equalsIgnoreCase(toAccount)) {
                         to = new BankAccount();
                         to.setNumber(toAccount);
                         to.setAdministrator(originatingBankAccount.getAdministrator());
@@ -161,6 +163,22 @@ public class CsvService {
                     LOG.error(String.format("Error importing csv data %s", e));
                 }
             }
+        }
+    }
+
+    public enum BankType implements Display, Serializable {
+        KEYTRADE, BELFIUS;
+
+        private static final long serialVersionUID = 5475356075454193997L;
+
+        @Override
+        public String getId() {
+            return this.name();
+        }
+
+        @Override
+        public String getDisplayValue() {
+            return this.name();
         }
     }
 }

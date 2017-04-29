@@ -12,6 +12,7 @@ import java.io.Serializable;
  * Date: 23-Dec-16.
  */
 public class BaseForm<T extends Serializable> extends Form<T> {
+    private static final long serialVersionUID = 227213741181309036L;
 
     private final IModel<FormMode> formModeModel;
 
@@ -21,7 +22,7 @@ public class BaseForm<T extends Serializable> extends Form<T> {
     }
 
     public IModel<FormMode> getFormModeModel() {
-        return formModeModel;
+        return this.formModeModel;
     }
 
     @Override
