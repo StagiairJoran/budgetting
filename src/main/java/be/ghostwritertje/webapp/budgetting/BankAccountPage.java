@@ -15,6 +15,8 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
+import java.util.Arrays;
+
 /**
  * Created by Jorandeboever
  * Date: 15-Apr-17.
@@ -49,11 +51,10 @@ public class BankAccountPage extends BasePage<BankAccount> {
                 .body(new ResourceModel("number"))
                 .attach(form, "number", LambdaModel.of(this.getModel(), BankAccount::getNumber, BankAccount::setNumber));
 
-        FormComponentBuilderFactory.textField()
+        FormComponentBuilderFactory.<Bank>dropDown()
                 .usingDefaults()
                 .body(new ResourceModel("bank"))
-                .attach(form, "bank", LambdaModel.of(LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), Bank::getName, Bank::setName));
-
+                .attach(form, "bank", LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), () -> Arrays.asList(Bank.KEYTRADE, Bank.BELFIUS));
 
         LinkBuilderFactory.submitLink(save())
                 .usingDefaults()

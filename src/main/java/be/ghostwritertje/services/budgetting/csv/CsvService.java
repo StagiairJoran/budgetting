@@ -1,11 +1,11 @@
 package be.ghostwritertje.services.budgetting.csv;
 
 
+import be.ghostwritertje.domain.budgetting.Bank;
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.budgetting.BankAccountService;
 import be.ghostwritertje.services.budgetting.StatementService;
-import be.ghostwritertje.webapp.form.Display;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -46,13 +45,13 @@ public class CsvService {
         this.bankAccountService = bankAccountService;
     }
 
-    private static final Map<BankType, Options> SUPPORTED_BANKS = ImmutableMap.of(
-            BankType.KEYTRADE, new Options(";", s -> s.endsWith("EUR"), "dd.MM.yyyy", 5, 1, 3, 4),
-            BankType.BELFIUS, new Options(";", s -> s.startsWith("BE"), "dd/MM/yyyy", 10, 1, 4, 8)
+    private static final Map<Bank, Options> SUPPORTED_BANKS = ImmutableMap.of(
+            Bank.KEYTRADE, new Options(";", s -> s.endsWith("EUR"), "dd.MM.yyyy", 5, 1, 3, 4),
+            Bank.BELFIUS, new Options(";", s -> s.startsWith("BE"), "dd/MM/yyyy", 10, 1, 4, 8)
     );
 
-    public void uploadCSVFile(String fileUrl, BankAccount originatingBankAccount, BankType bankType) {
-        this.uploadCsv(fileUrl, originatingBankAccount, SUPPORTED_BANKS.get(bankType));
+    public void uploadCSVFile(String fileUrl, BankAccount originatingBankAccount) {
+        this.uploadCsv(fileUrl, originatingBankAccount, SUPPORTED_BANKS.get(originatingBankAccount.getBank()));
     }
 
     private void uploadCsv(String fileUrl, BankAccount originatingBankAccount, Options options) {
@@ -106,23 +105,6 @@ public class CsvService {
             LOG.error(String.format("IO exception in uploadCsv:%s", e));
 
         }
-    }
-
-    public enum BankType implements Display, Serializable {
-        KEYTRADE, BELFIUS;
-
-        private static final long serialVersionUID = 5475356075454193997L;
-
-        @Override
-        public String getId() {
-            return this.name();
-        }
-
-        @Override
-        public String getDisplayValue() {
-            return this.name();
-        }
-
     }
 
     private static class Options {

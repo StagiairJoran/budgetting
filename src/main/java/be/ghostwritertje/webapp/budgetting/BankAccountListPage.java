@@ -47,7 +47,7 @@ public class BankAccountListPage extends BasePage<Person> {
                                 .usingDefaults()
                                 .body(LambdaModel.of(bankAccountIModel, BankAccount::getName))
                                 .build(s)))
-                .addColumn(new LambdaColumn<>(new ResourceModel("bank"), bankAccount -> bankAccount.getBank().getName()))
+//                .addColumn(new LambdaColumn<>(new ResourceModel("bank"), bankAccount -> bankAccount.getBank().getName()))I02_BANKACCOUNT
                 .addColumn(new LambdaColumn<>(new ResourceModel("username"),  b -> b.getAdministrator().getUsername()))
                 .addColumn(new LambdaColumn<>(new ResourceModel("balance"), BankAccount::getBalance))
                 .addColumn(ColumnBuilderFactory.actions(new ResourceModel("actions"), (target, link) -> this.setResponsePage(new StatementListPage(link.getModel())),

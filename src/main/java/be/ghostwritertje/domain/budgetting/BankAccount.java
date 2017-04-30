@@ -28,8 +28,6 @@ public class BankAccount extends DomainObject {
     @JoinColumn(name = "OWNER_UUID")
     private Person owner;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "BANK_UUID")
     private Bank bank;
 
     @Column(nullable = false)
@@ -59,9 +57,6 @@ public class BankAccount extends DomainObject {
     }
 
     public Bank getBank() {
-        if(this.bank == null){
-            this.bank = new Bank();
-        }
         return this.bank;
     }
 

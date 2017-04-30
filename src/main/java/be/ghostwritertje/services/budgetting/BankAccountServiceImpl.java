@@ -46,7 +46,7 @@ public class BankAccountServiceImpl extends DomainObjectCrudServiceSupport<BankA
     @Override
     public Iterable<BankAccount> save(Iterable<BankAccount> bankAccounts) {
         bankAccounts.forEach(bankAccount -> {
-            LOG.error("Bankaccount with UUID: %S | name: %s | number: %s | Owner: %s | Administrator: %s | Bank: %s", bankAccount.getUuid(), bankAccount.getName(), bankAccount.getNumber(), bankAccount.getOwner(), bankAccount.getAdministrator(), bankAccount.getBank());
+            LOG.error("Bankaccount with UUID: %S | name: %s | number: %s | Owner: %s | Administrator: %s", bankAccount.getUuid(), bankAccount.getName(), bankAccount.getNumber(), bankAccount.getOwner(), bankAccount.getAdministrator());
         });
 
         return this.dao.save(bankAccounts);

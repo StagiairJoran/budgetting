@@ -1,26 +1,24 @@
 package be.ghostwritertje.domain.budgetting;
 
-import be.ghostwritertje.domain.DomainObject;
+import be.ghostwritertje.webapp.form.Display;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * Created by Jorandeboever
- * Date: 01-Oct-16.
+ * Date: 30-Apr-17.
  */
-@Entity
-@Table(name = "T_BANK")
-public class Bank extends DomainObject {
-    private static final long serialVersionUID = -3888386652005214793L;
+public enum Bank implements Display, Serializable {
+    KEYTRADE, BELFIUS;
 
-    private String name;
-
-    public String getName() {
-        return this.name;
+    @Override
+    public String getId() {
+        return this.name();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public String getDisplayValue() {
+        return this.name();
     }
+
 }
