@@ -36,6 +36,7 @@ public abstract class DomainObject implements Serializable, Cloneable, Display {
         return clone;
     }
 
+    @Override
     public String getDisplayValue(){
         return this.getUuid();
     }

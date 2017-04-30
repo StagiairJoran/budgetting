@@ -7,6 +7,7 @@ import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.services.budgetting.csv.CsvService;
 import be.ghostwritertje.webapp.BasePage;
+import be.ghostwritertje.webapp.datatable.ColumnBuilderFactory;
 import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
@@ -76,7 +77,7 @@ public class StatementListPage extends BasePage<BankAccount> {
                 .addColumn(new LambdaColumn<>(new ResourceModel("amount"), Statement::getAmount))
                 .addColumn(new LambdaColumn<>(new ResourceModel("description"), Statement::getDescription))
                 .addColumn(new LambdaColumn<>(new ResourceModel("to"), Statement::getDestinationAccount))
-                .addColumn(new LambdaColumn<>(new ResourceModel("category"), Statement::getCategory))
+                .addColumn(ColumnBuilderFactory.custom(new ResourceModel("category"), CategoryPanel::new))
                 .build("statements", this.statementListModel));
 
 
@@ -139,11 +140,11 @@ public class StatementListPage extends BasePage<BankAccount> {
                         e.printStackTrace();
                         LOG.error(String.format("Error uploading file %s", e));
                     }
-                        components.info("saved file: " + uploadedFile.getClientFileName());
-                        parent.csvService.uploadCSVFile(newFile.getAbsolutePath(), parent.getModelObject());
-                        parent.statementListModel.setObject(null);
-                        parent.getForm().getFormModeModel().setObject(BaseForm.FormMode.EDIT);
-                        ajaxRequestTarget.add(parent);
+                    components.info("saved file: " + uploadedFile.getClientFileName());
+                    parent.csvService.uploadCSVFile(newFile.getAbsolutePath(), parent.getModelObject());
+                    parent.statementListModel.setObject(null);
+                    parent.getForm().getFormModeModel().setObject(BaseForm.FormMode.EDIT);
+                    ajaxRequestTarget.add(parent);
 
                 }
 

@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "T_CATEGORY")
-public class Category extends DomainObject {
+public class Category extends DomainObject{
     private static final long serialVersionUID = -163498981511624588L;
 
     @ManyToOne(optional = false)
@@ -44,6 +44,11 @@ public class Category extends DomainObject {
 
     public void setAdministrator(Person administrator) {
         this.administrator = administrator;
+    }
+
+    @Override
+    public String getDisplayValue() {
+        return this.name;
     }
 
     @Override
