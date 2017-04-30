@@ -6,6 +6,7 @@ import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.repository.StatementDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
+import com.google.common.base.CharMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
     }
 
     @Override
-    public Long findNumberOfStatementsForCategory(Category category, Person administrator){
+    public Long findNumberOfStatementsForCategory(Category category, Person administrator) {
         return this.dao.findNumberOfStatementsForCategory(category, administrator);
     }
 
@@ -46,6 +47,10 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
 
     @Override
     public Iterable<Statement> save(Iterable<Statement> statements) {
+        statements.forEach(statement -> {
+            statement.setDescription(CharMatcher.whitespace().trimFrom(statement.getDescription()));
+            statement.setCsvLine(CharMatcher.whitespace().trimFrom(statement.getCsvLine()));
+        });
         return this.dao.save(statements);
     }
 
