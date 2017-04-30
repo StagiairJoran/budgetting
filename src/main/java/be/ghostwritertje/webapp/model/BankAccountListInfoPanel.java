@@ -49,7 +49,8 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
 
 
         ChartBuilderFactory.pieChart()
-                .name("Categories")
+                .title("Categories")
+                .name("Statements")
                 .addPoints(this.categoryService.findCountByAdministrator(this.getModelObject()), Category::getName, aLong -> aLong)
                 .attach(this, "pieChart");
 

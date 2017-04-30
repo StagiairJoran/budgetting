@@ -7,6 +7,7 @@ import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.repository.CategoryDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
@@ -91,11 +92,16 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
 
     @Override
     public Map<Category, Long> findCountByAdministrator(Person administrator) {
-        return this.findByAdministrator(administrator).stream()
+        Map<Category, Long> result = this.findByAdministrator(administrator).stream()
                 .collect(Collectors.toMap(
                         category -> category,
                         category -> this.statementService.findNumberOfStatementsForCategory(category, administrator)
                 ));
+
+        result.put(new Category("None"), this.statementService.findNumberOfStatementsWithoutCategory(administrator));
+
+        return Maps.filterValues(result, count -> count != null && count != 0);
+
     }
 
     @Override

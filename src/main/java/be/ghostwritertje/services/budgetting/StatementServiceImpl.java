@@ -40,6 +40,11 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
     }
 
     @Override
+    public Long findNumberOfStatementsWithoutCategory(Person administrator) {
+        return this.dao.findNumberOfStatementsWithoutCategory(administrator);
+    }
+
+    @Override
     public Iterable<Statement> save(Iterable<Statement> statements) {
         return this.dao.save(statements);
     }

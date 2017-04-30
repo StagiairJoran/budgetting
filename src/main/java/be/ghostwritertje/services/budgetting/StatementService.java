@@ -23,6 +23,8 @@ public interface StatementService extends DomainObjectCrudService<Statement> {
 
     Long findNumberOfStatementsForCategory(Category category, Person administrator);
 
+    Long findNumberOfStatementsWithoutCategory(Person administrator);
+
     BigDecimal getTotal(BankAccount bankAccount);
 
     BigDecimal getTotal(Person owner);
