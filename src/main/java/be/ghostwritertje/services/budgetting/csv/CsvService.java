@@ -6,12 +6,13 @@ import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.budgetting.BankAccountService;
 import be.ghostwritertje.services.budgetting.StatementService;
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableMap;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -71,14 +72,14 @@ public class CsvService {
                 if (row.length > 0 && options.identifyStatementPredicate.test(line)) {
 
                     Statement statement = new Statement();
-                    statement.setAmount(BigDecimal.valueOf(Double.parseDouble(PATTERN.matcher(row[options.rowNumberAmount])
+                    statement.setAmount(BigDecimal.valueOf(Double.parseDouble(PATTERN.matcher(this.getValueFromStringArrayAtPosition(row, options.rowNumberAmount))
                             .replaceAll(Matcher.quoteReplacement(".")))));
 
-                    LocalDate date = LocalDate.parse(row[options.rowNumberDate], DateTimeFormatter.ofPattern(options.datePattern));
+                    LocalDate date = LocalDate.parse(this.getValueFromStringArrayAtPosition(row, options.rowNumberDate), DateTimeFormatter.ofPattern(options.datePattern));
                     statement.setDate(date);
 
 
-                    String toAccount = StringUtils.replaceChars(row[options.rowNumberToAccount], " ", "");
+                    String toAccount = StringUtils.replace(this.getValueFromStringArrayAtPosition(row, options.rowNumberToAccount), " ", "");
                     BankAccount to = bankAccountMap.get(toAccount);
 
                     if (to == null && toAccount != null && !"-".equalsIgnoreCase(toAccount)) {
@@ -88,11 +89,11 @@ public class CsvService {
                         bankAccountMap.put(toAccount, to);
                     }
 
-                    statement.setDescription(StringUtils.abbreviate(row[options.rowNumberDescription], 2000));
+                    statement.setDescription(this.getValueFromStringArrayAtPosition(row, options.rowNumberDescription));
                     statement.setOriginatingAccount(originatingBankAccount);
                     statement.setDestinationAccount(to);
 
-                    statement.setCsvLine(StringUtils.abbreviate(line, 8000));
+                    statement.setCsvLine(line);
                     statementList.add(statement);
                 }
             }
@@ -105,6 +106,11 @@ public class CsvService {
             LOG.error(String.format("IO exception in uploadCsv:%s", e));
 
         }
+    }
+
+    private String getValueFromStringArrayAtPosition(String[] stringArray, int position) {
+        //Trims ALL WHITESPACE (e.g.: also specials characters as found in KEYTRADE-csv files)
+        return CharMatcher.whitespace().trimFrom(stringArray[position]);
     }
 
     private static class Options {
