@@ -3,6 +3,9 @@ package be.ghostwritertje.domain.budgetting;
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinColumnsOrFormulas;
+import org.hibernate.annotations.JoinFormula;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -39,6 +42,13 @@ public class BankAccount extends DomainObject {
     @Formula(value = "(SELECT SUM(statement.AMOUNT) FROM T_STATEMENT statement WHERE statement.ORIGINATINGACCOUNT_UUID = UUID)")
     @Access(AccessType.FIELD)
     private BigDecimal balance;
+
+    @ManyToOne
+    @JoinColumnsOrFormulas({
+            @JoinColumnOrFormula(formula=@JoinFormula(value="(SELECT MAX(statement.CATEGORY_UUID) FROM T_STATEMENT statement WHERE statement.DESTINATIONACCOUNT_UUID = UUID)", referencedColumnName="UUID")),
+    })
+    @Access(AccessType.FIELD)
+    private Category category;
 
     public Person getOwner() {
         return this.owner;
@@ -86,6 +96,14 @@ public class BankAccount extends DomainObject {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public Category getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override

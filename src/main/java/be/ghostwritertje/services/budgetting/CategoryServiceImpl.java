@@ -109,6 +109,12 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
                             .forEach(statement -> statement.setCategory(category));
                 });
 
+        statements.stream()
+                .filter(statement -> Optional.ofNullable(statement.getDestinationAccount())
+                        .map(bankAccount -> bankAccountMap.containsKey(bankAccount.getUuid()) && bankAccountMap.get(bankAccount.getUuid()).getCategory() != null)
+                        .orElse(false))
+                .forEach(statement -> statement.setCategory(bankAccountMap.get(statement.getDestinationAccount().getUuid()).getCategory()));
+
         this.statementService.save(statements);
     }
 

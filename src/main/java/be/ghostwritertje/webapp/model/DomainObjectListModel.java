@@ -12,8 +12,9 @@ import java.util.Optional;
  * Date: 27-Dec-16.
  */
 public class DomainObjectListModel<T extends DomainObject, S extends DomainObjectCrudService<T>> extends LoadableListModel<T> {
-
+    private static final long serialVersionUID = -8362218176857848881L;
     private final SerializableFunction<S, List<T>> loadFunction;
+
     private final S service;
 
     public DomainObjectListModel(S service) {

@@ -14,7 +14,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
@@ -42,13 +41,14 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
         super.onInitialize();
 
         this.add(new Link<Person>("budgettingLink") {
+            private static final long serialVersionUID = 8047491203097068280L;
+
             @Override
             public void onClick() {
                 setResponsePage(new BankAccountListPage(BankAccountListInfoPanel.this.getModel()));
             }
         });
-        this.add(new Label("total", LambdaModel.of(() -> this.statementService.getTotal(this.getModelObject()), a -> {
-        })));
+        this.add(new Label("total",  this.statementService.getTotal(this.getModelObject())));
 
         this.categoryService.findCountByAdministrator(this.getModelObject());
 
