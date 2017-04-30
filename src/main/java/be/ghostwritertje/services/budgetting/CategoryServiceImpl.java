@@ -4,6 +4,7 @@ import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Category;
+import be.ghostwritertje.domain.budgetting.CategoryGroup;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.repository.CategoryDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
@@ -25,12 +26,19 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
     private final CategoryDao categoryDao;
     private final BankAccountService bankAccountService;
     private final StatementService statementService;
+    private final CategoryGroupService categoryGroupService;
 
     @Autowired
-    public CategoryServiceImpl(CategoryDao categoryDao, BankAccountService bankAccountService, StatementService statementService) {
+    public CategoryServiceImpl(
+            CategoryDao categoryDao,
+            BankAccountService bankAccountService,
+            StatementService statementService,
+            CategoryGroupService categoryGroupService
+    ) {
         this.categoryDao = categoryDao;
         this.bankAccountService = bankAccountService;
         this.statementService = statementService;
+        this.categoryGroupService = categoryGroupService;
     }
 
     @Override
@@ -48,7 +56,7 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
         categories.add(new Category("Taxes"));
         categories.add(new Category("Energy"));
 
-        categories.forEach(category -> category.setAdministrator(person));
+//        categories.forEach(category -> category.setAdministrator(person));
 
         this.save(categories);
     }
@@ -85,8 +93,15 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
     }
 
     @Override
+    public List<Category> findByCategoryGroup(CategoryGroup categoryGroup) {
+        return this.categoryDao.findByCategoryGroup(categoryGroup);
+    }
+
     public List<Category> findByAdministrator(Person administrator) {
-        return this.categoryDao.findByAdministrator(administrator);
+        return this.categoryGroupService.findByAdministrator(administrator).stream()
+                .map(this::findByCategoryGroup)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     @Override
