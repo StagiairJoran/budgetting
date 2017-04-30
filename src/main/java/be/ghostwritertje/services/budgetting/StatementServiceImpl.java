@@ -48,8 +48,25 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
     @Override
     public Iterable<Statement> save(Iterable<Statement> statements) {
         statements.forEach(statement -> {
-            statement.setDescription(CharMatcher.whitespace().trimFrom(statement.getDescription()));
-            statement.setCsvLine(CharMatcher.whitespace().trimFrom(statement.getCsvLine()));
+            String newDescription = CharMatcher.whitespace().trimFrom(statement.getDescription());
+            if(newDescription.startsWith("?")){
+                newDescription = newDescription.substring(1);
+            }
+            if(newDescription.endsWith("?")){
+                newDescription = newDescription.substring(0, newDescription.length() - 1);
+            }
+            statement.setDescription(newDescription);
+
+
+            String newCsvLine = CharMatcher.whitespace().trimFrom(statement.getCsvLine());
+            if(newCsvLine.startsWith("?")){
+                newCsvLine = newCsvLine.substring(1);
+            }
+
+            if(newCsvLine.endsWith("?")){
+                newCsvLine = newCsvLine.substring(0, newCsvLine.length() - 1);
+            }
+            statement.setCsvLine(newCsvLine);
         });
         return this.dao.save(statements);
     }
