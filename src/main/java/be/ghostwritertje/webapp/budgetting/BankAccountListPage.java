@@ -3,6 +3,7 @@ package be.ghostwritertje.webapp.budgetting;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.services.budgetting.BankAccountService;
+import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.datatable.ColumnBuilderFactory;
 import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
@@ -26,6 +27,9 @@ public class BankAccountListPage extends BasePage<Person> {
 
     @SpringBean
     private BankAccountService bankAccountService;
+
+    @SpringBean
+    private CategoryService categoryService;
 
     public BankAccountListPage(IModel<Person> model) {
         super(model);
@@ -57,6 +61,18 @@ public class BankAccountListPage extends BasePage<Person> {
                         }
                 ))
                 .build("bankAccounts", new DomainObjectListModel<BankAccount, BankAccountService>(this.bankAccountService,service ->  service.findByOwner(this.getModelObject()))));
+
+        LinkBuilderFactory.ajaxLink(initCategories())
+                .usingDefaults()
+                .body(new ResourceModel("init.categories"))
+                .attach(this, "initCategories");
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> initCategories() {
+        return (ajaxRequestTarget, components) -> {
+            BankAccountListPage parent = components.findParent(BankAccountListPage.class);
+            parent.categoryService.initForNewPerson(parent.getModelObject());
+        };
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Person>> newBankAccount() {

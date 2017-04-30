@@ -7,12 +7,17 @@ import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.budgetting.BankAccountListPage;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
+import be.ghostwritertje.webapp.link.LinkBuilderFactory;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 /**
  * Created by Jorandeboever
@@ -47,6 +52,10 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
 
         this.categoryService.findCountByAdministrator(this.getModelObject());
 
+        LinkBuilderFactory.ajaxLink(assignCategories())
+                .usingDefaults()
+                .body(new ResourceModel("assign.categories.automatically"))
+                .attach(this, "assignCategories");
 
         ChartBuilderFactory.pieChart()
                 .title("Categories")
@@ -54,5 +63,13 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
                 .addPoints(this.categoryService.findCountByAdministrator(this.getModelObject()), Category::getName, aLong -> aLong)
                 .attach(this, "pieChart");
 
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> assignCategories() {
+        return (ajaxRequestTarget, components) -> {
+            BankAccountListInfoPanel parent = components.findParent(BankAccountListInfoPanel.class);
+            parent.categoryService.attemptToAssignCategoriesAutomaticallyForPerson(parent.getModelObject());
+            ajaxRequestTarget.add(parent);
+        };
     }
 }

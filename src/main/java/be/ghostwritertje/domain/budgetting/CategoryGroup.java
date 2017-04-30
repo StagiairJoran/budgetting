@@ -4,6 +4,7 @@ import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,8 +22,8 @@ public class CategoryGroup extends DomainObject {
 
     private String name;
 
-    @OneToMany(mappedBy = "categoryGroup", fetch = FetchType.EAGER)
-    private List<Category> categoryList;
+    @OneToMany(mappedBy = "categoryGroup", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private final List<Category> categoryList = new ArrayList<>();
 
     public CategoryGroup() {
     }
@@ -43,11 +44,8 @@ public class CategoryGroup extends DomainObject {
         return this.categoryList;
     }
 
-    public void setCategoryList(List<Category> categoryList) {
-        this.categoryList = categoryList;
-    }
-
     public void addCategory(Category category){
+        category.setCategoryGroup(this);
         this.categoryList.add(category);
     }
 
