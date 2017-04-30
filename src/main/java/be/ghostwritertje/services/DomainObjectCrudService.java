@@ -16,4 +16,7 @@ public interface DomainObjectCrudService<T extends DomainObject> {
     T save(T object);
 
     List<T> findAll();
+
+    Iterable<T> save(Iterable<T> objects);
+
 }

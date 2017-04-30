@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -43,22 +46,49 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
 
     @Override
     public void initForNewPerson(Person person) {
-        Collection<Category> categories = new ArrayList<>();
-        categories.add(new Category("Saving"));
-        categories.add(new Category("Car & Transport"));
-        categories.add(new Category("Housing"));
-        categories.add(new Category("Groceries"));
-        categories.add(new Category("Entertainment"));
-        categories.add(new Category("Internal"));
-        categories.add(new Category("Medical"));
-        categories.add(new Category("Telecom"));
-        categories.add(new Category("Insurance"));
-        categories.add(new Category("Taxes"));
-        categories.add(new Category("Energy"));
+        CategoryGroup car = new CategoryGroup("Car & Transport");
+        car.addCategory(new Category("Fuel"));
+        car.addCategory(new Category("Taxes"));
+        car.addCategory(new Category("Insurance"));
+        car.addCategory(new Category("Upkeep"));
 
-//        categories.forEach(category -> category.setAdministrator(person));
+        CategoryGroup household = new CategoryGroup("Household");
+        household.addCategory(new Category("Food"));
 
-        this.save(categories);
+        CategoryGroup healthcare = new CategoryGroup("Healthcare");
+        healthcare.addCategory(new Category("Docter"));
+        healthcare.addCategory(new Category("Pharmacy"));
+        healthcare.addCategory(new Category("Mutuality"));
+
+        CategoryGroup clothingAndPersonal = new CategoryGroup("Clothing & Personal Care");
+        clothingAndPersonal.addCategory(new Category("Hairdresser"));
+        clothingAndPersonal.addCategory(new Category("Clothing"));
+
+        CategoryGroup entertainment = new CategoryGroup("Entertainment");
+        entertainment.addCategory(new Category("Games"));
+        entertainment.addCategory(new Category("Movies"));
+
+        CategoryGroup telecom = new CategoryGroup("Telecom");
+        telecom.addCategory(new Category("Phone"));
+        telecom.addCategory(new Category("Subscription"));
+
+        CategoryGroup other = new CategoryGroup("Other");
+        other.addCategory(new Category("Internal"));
+
+        List<CategoryGroup> categoryGroupList = Arrays.asList(
+                car,
+                new CategoryGroup("Housing"),
+                telecom,
+                clothingAndPersonal,
+                healthcare,
+                entertainment,
+                household,
+                other
+        );
+
+        categoryGroupList.forEach(categoryGroup -> categoryGroup.setAdministrator(person));
+
+        this.categoryGroupService.save(categoryGroupList);
     }
 
     @Override

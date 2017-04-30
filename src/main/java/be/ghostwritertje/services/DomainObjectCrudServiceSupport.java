@@ -15,10 +15,12 @@ public abstract class DomainObjectCrudServiceSupport<T extends DomainObject> imp
 
     protected abstract CrudRepository<T, String> getDao();
 
+    @Override
     public T findOne(String id) {
         return this.getDao().findOne(id);
     }
 
+    @Override
     public List<T> findAll() {
         return Lists.newArrayList(this.getDao().findAll());
     }
@@ -28,11 +30,13 @@ public abstract class DomainObjectCrudServiceSupport<T extends DomainObject> imp
         this.getDao().delete(object);
     }
 
+    @Override
     public T save(T object) {
         return this.getDao().save(object);
     }
 
-    protected Iterable<T> save(Iterable<T> objects) {
+    @Override
+    public Iterable<T> save(Iterable<T> objects) {
         return this.getDao().save(objects);
     }
 }

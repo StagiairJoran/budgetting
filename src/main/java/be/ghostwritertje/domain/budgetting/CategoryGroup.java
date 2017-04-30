@@ -3,10 +3,8 @@ package be.ghostwritertje.domain.budgetting;
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Jorandeboever
@@ -23,12 +21,34 @@ public class CategoryGroup extends DomainObject {
 
     private String name;
 
+    @OneToMany(mappedBy = "categoryGroup", fetch = FetchType.EAGER)
+    private List<Category> categoryList;
+
+    public CategoryGroup() {
+    }
+
+    public CategoryGroup(String name) {
+        this.name = name;
+    }
+
     public Person getAdministrator() {
         return this.administrator;
     }
 
     public void setAdministrator(Person administrator) {
         this.administrator = administrator;
+    }
+
+    public List<Category> getCategoryList() {
+        return this.categoryList;
+    }
+
+    public void setCategoryList(List<Category> categoryList) {
+        this.categoryList = categoryList;
+    }
+
+    public void addCategory(Category category){
+        this.categoryList.add(category);
     }
 
     public String getName() {
