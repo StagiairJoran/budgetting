@@ -26,26 +26,29 @@ public class DataTablebuilder<T extends Serializable, S> {
     }
 
     public DataTable<T, S> build(String id, IModel<List<T>> data) {
-        MySortableDataProvicer<T, S> dataProvicer = new MySortableDataProvicer<>(data);
-        return new BootstrapDefaultDataTable<>(id, columns, dataProvicer, 20);
+        MySortableDataProvider<T, S> dataProvider = new MySortableDataProvider<>(data);
+        BootstrapDefaultDataTable<T, S> components = new BootstrapDefaultDataTable<>(id, this.columns, dataProvider, 100);
+        components.striped();
+        return components;
     }
 
-    public static class MySortableDataProvicer<T extends Serializable, S> extends SortableDataProvider<T, S> {
+    public static class MySortableDataProvider<T extends Serializable, S> extends SortableDataProvider<T, S>  {
+        private static final long serialVersionUID = 3440280114446729862L;
         private final IModel<List<T>> data;
 
-        MySortableDataProvicer(IModel<List<T>> data) {
+        MySortableDataProvider(IModel<List<T>> data) {
             this.data = data;
         }
 
         @Override
         public Iterator<? extends T> iterator(long first, long count) {
-            List<T> list = data.getObject();
+            List<T> list = this.data.getObject().subList((int)first, (int)(first + count));
             return list.listIterator();
         }
 
         @Override
         public long size() {
-            return data.getObject().size();
+            return this.data.getObject().size();
         }
 
         @Override
