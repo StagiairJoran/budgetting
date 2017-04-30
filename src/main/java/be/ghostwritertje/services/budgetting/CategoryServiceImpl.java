@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -68,7 +65,9 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
                 .findFirst()
                 .ifPresent(category -> {
                     statements.stream()
-                            .filter(statement -> bankAccountMap.containsKey(statement.getDestinationAccount().getUuid()))
+                            .filter(statement -> Optional.ofNullable(statement.getDestinationAccount())
+                                    .map(bankAccount -> bankAccountMap.containsKey(bankAccount.getUuid()))
+                                    .orElse(false))
                             .forEach(statement -> statement.setCategory(category));
                 });
 
