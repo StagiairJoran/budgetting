@@ -1,6 +1,6 @@
 package be.ghostwritertje.webapp.budgetting;
 
-import be.ghostwritertje.domain.Person;
+import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.budgetting.StatementService;
@@ -13,8 +13,9 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.form.CheckGroup;
-import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -27,7 +28,7 @@ import java.util.List;
  * Created by Jorandeboever
  * Date: 01-May-17.
  */
-public class StatementListPanel extends GenericPanel<Person> {
+public class StatementListPanel extends Panel {
     private static final long serialVersionUID = -7870855479329092357L;
 
     @SpringBean
@@ -35,14 +36,15 @@ public class StatementListPanel extends GenericPanel<Person> {
     @SpringBean
     private CategoryService categoryService;
 
-    private final IModel<List<Statement>> statementListModel;
     private final IModel<List<Statement>> selectedStatementsModel = new ListModel<>(new ArrayList<>());
+    private final IModel<Category> categoryToAssignModel = new Model<>();
 
-    public StatementListPanel(String id, IModel<Person> personIModel, IModel<List<Statement>> statementListModel) {
-        super(id, personIModel);
+    private final StatementListContext statementListContext;
 
+    StatementListPanel(String id, StatementListContext statementListContext) {
+        super(id);
 
-        this.statementListModel = statementListModel;
+        this.statementListContext = statementListContext;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class StatementListPanel extends GenericPanel<Person> {
                 .addColumn(new LambdaColumn<>(new ResourceModel("description"), Statement::getDescription))
                 .addColumn(new LambdaColumn<>(new ResourceModel("to"), Statement::getDestinationAccount))
                 .addColumn(ColumnBuilderFactory.custom(new ResourceModel("category"), CategoryPanel::new))
-                .build("statements", this.statementListModel));
+                .build("statements", this.statementListContext.getStatementListModel()));
 
         dataTableForm.add(checkGroup);
         LinkBuilderFactory.submitLink(submit())
@@ -78,15 +80,18 @@ public class StatementListPanel extends GenericPanel<Person> {
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> submit() {
         return (ajaxRequestTarget, components) -> {
             StatementListPanel parent = components.findParent(StatementListPanel.class);
-            parent.selectedStatementsModel.getObject().forEach(System.out::println);
+            List<Statement> statements = parent.selectedStatementsModel.getObject();
+            statements.forEach(statement -> statement.setCategory(parent.categoryToAssignModel.getObject()));
+            parent.statementService.save(statements);
+            ajaxRequestTarget.add(parent);
         };
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> assignCategories() {
         return (ajaxRequestTarget, components) -> {
             StatementListPanel parent = components.findParent(StatementListPanel.class);
-            parent.categoryService.attemptToAssignCategoriesAutomaticallyForPerson(parent.getModelObject());
-            parent.statementListModel.setObject(null);
+            parent.categoryService.attemptToAssignCategoriesAutomaticallyForPerson(parent.statementListContext.getPersonModel().getObject());
+            parent.statementListContext.getStatementListModel().setObject(null);
             ajaxRequestTarget.add(parent);
         };
     }
