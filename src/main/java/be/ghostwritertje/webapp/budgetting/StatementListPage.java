@@ -29,7 +29,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.file.File;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -92,7 +91,7 @@ public class StatementListPage extends BasePage<BankAccount> {
         FormComponentBuilderFactory.<Bank>dropDown()
                 .usingDefaults()
                 .body(new ResourceModel("bank"))
-                .attach(form, "bankType", LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), () -> Arrays.asList(Bank.KEYTRADE, Bank.BELFIUS));
+                .attach(form, "bankType", LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), () -> CsvService.SUPPORTED_BANKS);
 
         LinkBuilderFactory.<List<FileUpload>>submitLink(upload())
                 .usingDefaults()

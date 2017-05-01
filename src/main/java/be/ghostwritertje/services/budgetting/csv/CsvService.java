@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -46,13 +47,16 @@ public class CsvService {
         this.bankAccountService = bankAccountService;
     }
 
-    private static final Map<Bank, Options> SUPPORTED_BANKS = ImmutableMap.of(
+    private static final Map<Bank, Options> SUPPORTED_BANKS_OPTIONS = ImmutableMap.of(
             Bank.KEYTRADE, new Options(";", s -> s.endsWith("EUR"), "dd.MM.yyyy", 5, 1, 3, 4),
-            Bank.BELFIUS, new Options(";", s -> s.startsWith("BE"), "dd/MM/yyyy", 10, 1, 4, 8)
+            Bank.BELFIUS, new Options(";", s -> s.startsWith("BE"), "dd/MM/yyyy", 10, 1, 4, 8),
+            Bank.ING, new Options(";", s -> Character.isDigit(s.charAt(0)), "dd/MM/yyyy", 6, 4, 2, 8)
     );
 
+    public static final List<Bank> SUPPORTED_BANKS = new ArrayList<>(SUPPORTED_BANKS_OPTIONS.keySet());
+
     public void uploadCSVFile(String fileUrl, BankAccount originatingBankAccount) {
-        this.uploadCsv(fileUrl, originatingBankAccount, SUPPORTED_BANKS.get(originatingBankAccount.getBank()));
+        this.uploadCsv(fileUrl, originatingBankAccount, SUPPORTED_BANKS_OPTIONS.get(originatingBankAccount.getBank()));
     }
 
     private void uploadCsv(String fileUrl, BankAccount originatingBankAccount, Options options) {
@@ -72,8 +76,8 @@ public class CsvService {
                 if (row.length > 0 && options.identifyStatementPredicate.test(line)) {
 
                     Statement statement = new Statement();
-                    statement.setAmount(BigDecimal.valueOf(Double.parseDouble(PATTERN.matcher(this.getValueFromStringArrayAtPosition(row, options.rowNumberAmount))
-                            .replaceAll(Matcher.quoteReplacement(".")))));
+                    statement.setAmount(new BigDecimal(PATTERN.matcher(this.getValueFromStringArrayAtPosition(row, options.rowNumberAmount))
+                            .replaceAll(Matcher.quoteReplacement("."))));
 
                     LocalDate date = LocalDate.parse(this.getValueFromStringArrayAtPosition(row, options.rowNumberDate), DateTimeFormatter.ofPattern(options.datePattern));
                     statement.setDate(date);

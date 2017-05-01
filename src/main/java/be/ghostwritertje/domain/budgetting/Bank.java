@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Date: 30-Apr-17.
  */
 public enum Bank implements Display, Serializable {
-    KEYTRADE, BELFIUS;
+    KEYTRADE, BELFIUS, ING;
 
     @Override
     public String getId() {

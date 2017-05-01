@@ -3,6 +3,7 @@ package be.ghostwritertje.webapp.budgetting;
 import be.ghostwritertje.domain.budgetting.Bank;
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.services.budgetting.BankAccountService;
+import be.ghostwritertje.services.budgetting.csv.CsvService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
@@ -14,8 +15,6 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
-
-import java.util.Arrays;
 
 /**
  * Created by Jorandeboever
@@ -54,7 +53,7 @@ public class BankAccountPage extends BasePage<BankAccount> {
         FormComponentBuilderFactory.<Bank>dropDown()
                 .usingDefaults()
                 .body(new ResourceModel("bank"))
-                .attach(form, "bank", LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), () -> Arrays.asList(Bank.KEYTRADE, Bank.BELFIUS));
+                .attach(form, "bank", LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), () -> CsvService.SUPPORTED_BANKS);
 
         LinkBuilderFactory.submitLink(save())
                 .usingDefaults()
