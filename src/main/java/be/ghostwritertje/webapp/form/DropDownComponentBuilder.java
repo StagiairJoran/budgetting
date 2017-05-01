@@ -28,6 +28,13 @@ public class DropDownComponentBuilder<T extends Display & Serializable> extends 
         return this.self();
     }
 
+    public DropDownComponentBuilder<T> attach(MarkupContainer initialParent, String id, IModel<T> model, IModel<List<T>> listIModel) {
+        this.listSupplier = listIModel::getObject;
+        super.attach(initialParent, id, model);
+
+        return this.self();
+    }
+
     @Override
     DropDownChoice<T> buildFormComponent(String id, IModel<T> model) {
         return new DropDownChoice<>(

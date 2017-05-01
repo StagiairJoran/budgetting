@@ -1,9 +1,10 @@
 package be.ghostwritertje.webapp.budgetting;
 
-import be.ghostwritertje.domain.budgetting.Bank;
+import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.Statement;
+import be.ghostwritertje.services.budgetting.BankAccountService;
 import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.services.budgetting.csv.CsvService;
@@ -16,11 +17,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
@@ -36,10 +35,13 @@ import java.util.UUID;
  * Created by Jorandeboever
  * Date: 01-Oct-16.
  */
-public class StatementListPage extends BasePage<BankAccount> {
+public class StatementListPage extends BasePage<Person> {
     public static final String FORM_ID = "form";
     @SpringBean
     private StatementService statementService;
+
+    @SpringBean
+    private BankAccountService bankAccountService;
 
     @SpringBean
     private CategoryService categoryService;
@@ -53,16 +55,23 @@ public class StatementListPage extends BasePage<BankAccount> {
     private final IModel<List<Statement>> statementListModel;
 
     private final IModel<Category> categoryToAssignModel = new Model<>();
+    private final IModel<BankAccount> selectedBankAccountModel = new Model<>();
+    private final IModel<List<BankAccount>> bankAccountsByPersonModel ;
 
     private static final String UPLOAD_FOLDER = "csvFiles";
 
-    public StatementListPage(IModel<BankAccount> model) {
+    public StatementListPage(IModel<Person> model) {
         super(model);
         this.fileUploadModel = new ListModel<>();
 
         this.statementListModel = new DomainObjectListModel<>(
                 this.statementService,
-                service -> service.findByOriginatingAccount(this.getModelObject())
+                service -> service.findByAdministrator(this.getModelObject())
+        );
+
+        this.bankAccountsByPersonModel = new DomainObjectListModel<BankAccount, BankAccountService>(
+                this.bankAccountService,
+                service-> service.findByOwner(this.getModelObject())
         );
 
     }
@@ -70,18 +79,18 @@ public class StatementListPage extends BasePage<BankAccount> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        this.add(new Label("titel", LambdaModel.of(this.getModel(), BankAccount::getName)));
-
+        this.setOutputMarkupId(true);
 
 
-        BaseForm<BankAccount> form = new BaseForm<>(FORM_ID, this.getModel());
+
+        BaseForm<Person> form = new BaseForm<>(FORM_ID, this.getModel());
         FileUploadField fileUpload = new FileUploadField("fileUpload", this.fileUploadModel);
 
-        FormComponentBuilderFactory.<Bank>dropDown()
+        FormComponentBuilderFactory.<BankAccount>dropDown()
                 .usingDefaults()
                 .body(new ResourceModel("bank"))
-                .attach(form, "bankType", LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), () -> CsvService.SUPPORTED_BANKS);
+                .required()
+                .attach(form, "bankType", this.selectedBankAccountModel, this.bankAccountsByPersonModel);
 
         LinkBuilderFactory.<List<FileUpload>>submitLink(upload())
                 .usingDefaults()
@@ -126,7 +135,7 @@ public class StatementListPage extends BasePage<BankAccount> {
                         LOG.error(String.format("Error uploading file %s", e));
                     }
                     components.info("saved file: " + uploadedFile.getClientFileName());
-                    parent.csvService.uploadCSVFile(newFile.getAbsolutePath(), parent.getModelObject());
+                    parent.csvService.uploadCSVFile(newFile.getAbsolutePath(), parent.selectedBankAccountModel.getObject());
                     parent.statementListModel.setObject(null);
                     parent.getForm().getFormModeModel().setObject(BaseForm.FormMode.EDIT);
                     ajaxRequestTarget.add(parent);

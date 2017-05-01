@@ -11,7 +11,7 @@ import java.util.Optional;
  * Created by Jorandeboever
  * Date: 05-Jan-17.
  */
-public class DataColumnBuilder<T, S> extends ColumnBuilderSupport<T, S,DataColumnBuilder<T, S>, LambdaColumn<T,S>> {
+public class DataColumnBuilder<T, S> extends ColumnBuilderSupport<T, S, LambdaColumn<T,S>> {
 
     private SerializableSupplier<String> cssSupplier;
     private final SerializableFunction<T, ?>  dataFunction;

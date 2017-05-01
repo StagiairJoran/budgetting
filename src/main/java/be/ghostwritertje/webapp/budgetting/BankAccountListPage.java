@@ -43,6 +43,10 @@ public class BankAccountListPage extends BasePage<Person> {
                 .usingDefaults()
                 .attach(this, "new", this.getModel());
 
+        LinkBuilderFactory.pageLink(this::getModel, StatementListPage::new)
+                .usingDefaults()
+                .attach(this, "statements");
+
         this.add(DataTableBuilderFactory.<BankAccount, String>simple()
                 .addColumn(ColumnBuilderFactory.custom(new ResourceModel(
                                 "name"),
@@ -54,7 +58,7 @@ public class BankAccountListPage extends BasePage<Person> {
 //                .addColumn(new LambdaColumn<>(new ResourceModel("bank"), bankAccount -> bankAccount.getBank().getName()))I02_BANKACCOUNT
                 .addColumn(new LambdaColumn<>(new ResourceModel("username"),  b -> b.getAdministrator().getUsername()))
                 .addColumn(new LambdaColumn<>(new ResourceModel("balance"), BankAccount::getBalance))
-                .addColumn(ColumnBuilderFactory.actions(new ResourceModel("actions"), (target, link) -> this.setResponsePage(new StatementListPage(link.getModel())),
+                .addColumn(ColumnBuilderFactory.actions(new ResourceModel("actions"), (target, link) -> this.setResponsePage(new BankAccountPage(link.getModel())),
                         (target, link) -> {
                             this.bankAccountService.delete(link.getModelObject());
                             link.setResponsePage(new BankAccountListPage(BankAccountListPage.this.getModel()));

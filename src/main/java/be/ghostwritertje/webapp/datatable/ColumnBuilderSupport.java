@@ -7,6 +7,6 @@ import org.apache.wicket.model.IModel;
  * Created by Jorandeboever
  * Date: 12-Jan-17.
  */
-public abstract class ColumnBuilderSupport<T, S,L extends ColumnBuilderSupport<T, S, L, C>, C extends IColumn<T, ?>> {
+public abstract class ColumnBuilderSupport<T, S, C extends IColumn<T, ?>> {
     public abstract C build(IModel<String> headerModel);
 }

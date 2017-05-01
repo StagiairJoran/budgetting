@@ -1,6 +1,6 @@
 package be.ghostwritertje.webapp.budgetting;
 
-import be.ghostwritertje.domain.budgetting.BankAccount;
+import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.budgetting.StatementService;
@@ -27,7 +27,7 @@ import java.util.List;
  * Created by Jorandeboever
  * Date: 01-May-17.
  */
-public class StatementListPanel extends GenericPanel<BankAccount> {
+public class StatementListPanel extends GenericPanel<Person> {
     private static final long serialVersionUID = -7870855479329092357L;
 
     @SpringBean
@@ -38,12 +38,8 @@ public class StatementListPanel extends GenericPanel<BankAccount> {
     private final IModel<List<Statement>> statementListModel;
     private final IModel<List<Statement>> selectedStatementsModel = new ListModel<>(new ArrayList<>());
 
-    public StatementListPanel(
-            String id,
-            IModel<BankAccount> model,
-            IModel<List<Statement>> statementListModel
-    ) {
-        super(id, model);
+    public StatementListPanel(String id, IModel<Person> personIModel, IModel<List<Statement>> statementListModel) {
+        super(id, personIModel);
 
 
         this.statementListModel = statementListModel;
@@ -60,6 +56,7 @@ public class StatementListPanel extends GenericPanel<BankAccount> {
 
         checkGroup.add(DataTableBuilderFactory.<Statement, String>simple()
                 .addColumn(ColumnBuilderFactory.<Statement, String>check().build(new ResourceModel("empty")))
+                .addColumn(new LambdaColumn<>(new ResourceModel("from"), Statement::getOriginatingAccount))
                 .addColumn(new LambdaColumn<>(new ResourceModel("date"), Statement::getDate))
                 .addColumn(new LambdaColumn<>(new ResourceModel("amount"), Statement::getAmount))
                 .addColumn(new LambdaColumn<>(new ResourceModel("description"), Statement::getDescription))
@@ -88,7 +85,7 @@ public class StatementListPanel extends GenericPanel<BankAccount> {
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> assignCategories() {
         return (ajaxRequestTarget, components) -> {
             StatementListPanel parent = components.findParent(StatementListPanel.class);
-            parent.categoryService.attemptToAssignCategoriesAutomaticallyForPerson(parent.getModelObject().getOwner());
+            parent.categoryService.attemptToAssignCategoriesAutomaticallyForPerson(parent.getModelObject());
             parent.statementListModel.setObject(null);
             ajaxRequestTarget.add(parent);
         };

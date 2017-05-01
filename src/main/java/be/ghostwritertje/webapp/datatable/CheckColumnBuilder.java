@@ -12,7 +12,7 @@ import org.apache.wicket.model.IModel;
  * Created by Jorandeboever
  * Date: 01-May-17.
  */
-public class CheckColumnBuilder<T, S> extends ColumnBuilderSupport<T, S, CheckColumnBuilder<T, S>, CheckColumn<T,S>> {
+public class CheckColumnBuilder<T, S> extends ColumnBuilderSupport<T, S, CheckColumn<T,S>> {
     @Override
     public CheckColumn<T, S> build(IModel<String> headerModel) {
         return new CheckColumn<>(headerModel);

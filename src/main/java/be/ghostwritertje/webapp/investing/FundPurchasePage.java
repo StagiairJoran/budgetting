@@ -2,6 +2,7 @@ package be.ghostwritertje.webapp.investing;
 
 import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.domain.investing.FundPurchase;
+import be.ghostwritertje.services.DomainObjectCrudService;
 import be.ghostwritertje.services.investing.FinanceService;
 import be.ghostwritertje.services.investing.FinancialInstrumentService;
 import be.ghostwritertje.services.investing.FundPurchaseService;
@@ -9,6 +10,7 @@ import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
+import be.ghostwritertje.webapp.model.DomainObjectListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.model.IModel;
@@ -53,7 +55,7 @@ public class FundPurchasePage extends BasePage<FundPurchase> {
                 .attach(form,
                         "quote",
                         LambdaModel.of(this.getModel(), FundPurchase::getFinancialInstrument, FundPurchase::setFinancialInstrument),
-                        () -> this.financialInstrumentService.findAll());
+                       new DomainObjectListModel<FinancialInstrument, FinancialInstrumentService>(this.financialInstrumentService, DomainObjectCrudService::findAll));
 
         FormComponentBuilderFactory.number(Double.class)
                 .usingDefaults()

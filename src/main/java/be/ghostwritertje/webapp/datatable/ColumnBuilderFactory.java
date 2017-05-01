@@ -14,6 +14,7 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
  */
 public class ColumnBuilderFactory {
 
+
     public static <T, S> ActiesColumn<T, S> actions(IModel<String> displayModel, SerializableBiConsumer<AjaxRequestTarget, AjaxLink<T>> editConsumer, SerializableBiConsumer<AjaxRequestTarget, AjaxLink<T>> deleteConsumer) {
         return new ActiesColumn<>(displayModel, editConsumer, deleteConsumer);
     }

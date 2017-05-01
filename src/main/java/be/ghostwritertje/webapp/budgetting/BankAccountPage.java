@@ -15,6 +15,9 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
+
+import java.util.List;
 
 /**
  * Created by Jorandeboever
@@ -53,7 +56,7 @@ public class BankAccountPage extends BasePage<BankAccount> {
         FormComponentBuilderFactory.<Bank>dropDown()
                 .usingDefaults()
                 .body(new ResourceModel("bank"))
-                .attach(form, "bank", LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), () -> CsvService.SUPPORTED_BANKS);
+                .attach(form, "bank", LambdaModel.of(this.getModel(), BankAccount::getBank, BankAccount::setBank), (SerializableSupplier<List<Bank>>) () -> CsvService.SUPPORTED_BANKS);
 
         LinkBuilderFactory.submitLink(save())
                 .usingDefaults()
