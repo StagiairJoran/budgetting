@@ -27,7 +27,7 @@ public class DataTablebuilder<T extends Serializable, S> {
 
     public DataTable<T, S> build(String id, IModel<List<T>> data) {
         MySortableDataProvider<T, S> dataProvider = new MySortableDataProvider<>(data);
-        BootstrapDefaultDataTable<T, S> components = new BootstrapDefaultDataTable<>(id, this.columns, dataProvider, 100);
+        BootstrapDefaultDataTable<T, S> components = new BootstrapDefaultDataTable<>(id, this.columns, dataProvider, 25);
         components.striped();
         return components;
     }

@@ -2,13 +2,12 @@ package be.ghostwritertje.webapp.budgetting;
 
 import be.ghostwritertje.domain.budgetting.Bank;
 import be.ghostwritertje.domain.budgetting.BankAccount;
+import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.services.budgetting.csv.CsvService;
 import be.ghostwritertje.webapp.BasePage;
-import be.ghostwritertje.webapp.datatable.ColumnBuilderFactory;
-import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
@@ -16,21 +15,19 @@ import be.ghostwritertje.webapp.model.DomainObjectListModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
-import org.apache.wicket.markup.html.form.CheckGroup;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.file.File;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -52,10 +49,10 @@ public class StatementListPage extends BasePage<BankAccount> {
     @SpringBean
     private CsvService csvService;
 
-
     private final IModel<List<FileUpload>> fileUploadModel;
     private final IModel<List<Statement>> statementListModel;
-    private final IModel<List<Statement>> selectedStatementsModel = new ListModel<>(new ArrayList<>());
+
+    private final IModel<Category> categoryToAssignModel = new Model<>();
 
     private static final String UPLOAD_FOLDER = "csvFiles";
 
@@ -67,34 +64,15 @@ public class StatementListPage extends BasePage<BankAccount> {
                 this.statementService,
                 service -> service.findByOriginatingAccount(this.getModelObject())
         );
+
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        CheckGroup<Statement> checkGroup = new CheckGroup<Statement>("checkGroup", this.selectedStatementsModel);
+        this.add(new Label("titel", LambdaModel.of(this.getModel(), BankAccount::getName)));
 
-        BaseForm<List<Statement>> dataTableForm = new BaseForm<>("dataTableForm", this.selectedStatementsModel);
-
-        checkGroup.add(DataTableBuilderFactory.<Statement, String>simple()
-                .addColumn(ColumnBuilderFactory.<Statement, String>check().build(new ResourceModel("empty")))
-                .addColumn(new LambdaColumn<>(new ResourceModel("date"), Statement::getDate))
-                .addColumn(new LambdaColumn<>(new ResourceModel("amount"), Statement::getAmount))
-                .addColumn(new LambdaColumn<>(new ResourceModel("description"), Statement::getDescription))
-                .addColumn(new LambdaColumn<>(new ResourceModel("to"), Statement::getDestinationAccount))
-                .addColumn(ColumnBuilderFactory.custom(new ResourceModel("category"), CategoryPanel::new))
-                .build("statements", this.statementListModel));
-
-        dataTableForm.add(checkGroup);
-        LinkBuilderFactory.submitLink(submit())
-                .usingDefaults()
-                .attach(dataTableForm, "submit");
-        this.add(dataTableForm);
-
-        LinkBuilderFactory.ajaxLink(assignCategories())
-                .usingDefaults()
-                .attach(this, "assignCategories");
 
 
         BaseForm<BankAccount> form = new BaseForm<>(FORM_ID, this.getModel());
@@ -112,23 +90,12 @@ public class StatementListPage extends BasePage<BankAccount> {
         form.add(fileUpload);
 
         this.add(form);
+
+
+        this.add(new StatementListPanel("statementList", this.getModel(), this.statementListModel));
     }
 
-    private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> submit() {
-        return (ajaxRequestTarget, components) -> {
-            StatementListPage parent = components.findParent(StatementListPage.class);
-            parent.selectedStatementsModel.getObject().forEach(System.out::println);
-        };
-    }
 
-    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> assignCategories() {
-        return (ajaxRequestTarget, components) -> {
-            StatementListPage parent = components.findParent(StatementListPage.class);
-            parent.categoryService.attemptToAssignCategoriesAutomaticallyForPerson(parent.getModelObject().getOwner());
-            parent.statementListModel.setObject(null);
-            ajaxRequestTarget.add(parent);
-        };
-    }
 
     @SuppressWarnings("unchecked")
     public BaseForm<BankAccount> getForm() {

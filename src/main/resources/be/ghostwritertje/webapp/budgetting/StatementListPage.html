@@ -3,6 +3,8 @@
 <body>
 <wicket:extend>
 
+    <h1 wicket:id="titel"></h1>
+
     <h2>New Statements</h2>
     <form wicket:id="form" class="form-horizontal">
         <div class="form-group">
@@ -25,18 +27,8 @@
         </div>
     </form>
 
-    <button wicket:id="assignCategories">Assign categories</button>
 
-    <h2>Statements</h2>
-
-    <form wicket:id="dataTableForm">
-    <div wicket:id="checkGroup">
-
-            <table wicket:id="statements"></table>
-
-    </div>
-        <button wicket:id="submit">Submit</button>
-    </form>
+    <div wicket:id="statementList"></div>
 
 
 </wicket:extend>
