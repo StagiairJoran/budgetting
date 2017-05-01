@@ -74,31 +74,34 @@ public class CsvService {
                 String[] row = line.split(options.cvsSplitBy);
 
                 if (row.length > 0 && options.identifyStatementPredicate.test(line)) {
+                    String bedragString = this.getValueFromStringArrayAtPosition(row, options.rowNumberAmount);
+                    if (!StringUtils.isEmpty(bedragString)) {
 
-                    Statement statement = new Statement();
-                    statement.setAmount(new BigDecimal(PATTERN.matcher(this.getValueFromStringArrayAtPosition(row, options.rowNumberAmount))
-                            .replaceAll(Matcher.quoteReplacement("."))));
+                        Statement statement = new Statement();
+                        statement.setAmount(new BigDecimal(PATTERN.matcher(bedragString).replaceAll(Matcher.quoteReplacement("."))));
 
-                    LocalDate date = LocalDate.parse(this.getValueFromStringArrayAtPosition(row, options.rowNumberDate), DateTimeFormatter.ofPattern(options.datePattern));
-                    statement.setDate(date);
+                        LocalDate date = LocalDate.parse(this.getValueFromStringArrayAtPosition(row, options.rowNumberDate), DateTimeFormatter.ofPattern(options.datePattern));
+                        statement.setDate(date);
 
 
-                    String toAccount = StringUtils.replace(this.getValueFromStringArrayAtPosition(row, options.rowNumberToAccount), " ", "");
-                    BankAccount to = bankAccountMap.get(toAccount);
+                        String toAccount = StringUtils.replace(this.getValueFromStringArrayAtPosition(row, options.rowNumberToAccount), " ", "");
+                        BankAccount to = bankAccountMap.get(toAccount);
 
-                    if (to == null && toAccount != null && !"-".equalsIgnoreCase(toAccount)) {
-                        to = new BankAccount();
-                        to.setNumber(toAccount);
-                        to.setAdministrator(originatingBankAccount.getAdministrator());
-                        bankAccountMap.put(toAccount, to);
+                        if (to == null && toAccount != null && !"-".equalsIgnoreCase(toAccount)) {
+                            to = new BankAccount();
+                            to.setNumber(toAccount);
+                            to.setAdministrator(originatingBankAccount.getAdministrator());
+                            bankAccountMap.put(toAccount, to);
+                        }
+
+                        statement.setDescription(this.getValueFromStringArrayAtPosition(row, options.rowNumberDescription));
+                        statement.setOriginatingAccount(originatingBankAccount);
+                        statement.setDestinationAccount(to);
+
+                        statement.setCsvLine(line);
+                        statementList.add(statement);
                     }
 
-                    statement.setDescription(this.getValueFromStringArrayAtPosition(row, options.rowNumberDescription));
-                    statement.setOriginatingAccount(originatingBankAccount);
-                    statement.setDestinationAccount(to);
-
-                    statement.setCsvLine(line);
-                    statementList.add(statement);
                 }
             }
 
