@@ -70,6 +70,8 @@ public class BankAccountListPage extends BasePage<Person> {
                 .usingDefaults()
                 .body(new ResourceModel("init.categories"))
                 .attach(this, "initCategories");
+
+        this.add(new BankAccountsGraph("graph", this.getModel()));
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> initCategories() {

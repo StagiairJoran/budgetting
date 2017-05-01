@@ -29,4 +29,7 @@ public interface StatementDao extends CrudRepository<Statement, String> {
             "WHERE CATEGORY_UUID IS NULL AND b.ADMINISTRATOR_UUID = ?1", nativeQuery = true)
     Long findNumberOfStatementsWithoutCategory(Person administrator);
 
+
+    List<Statement> findByOriginatingAccount_Administrator(Person administrator);
+
 }

@@ -28,4 +28,6 @@ public interface StatementService extends DomainObjectCrudService<Statement> {
     BigDecimal getTotal(BankAccount bankAccount);
 
     BigDecimal getTotal(Person owner);
+
+    BankAccountsHistoricData getBankAccountsHistoricDataForPersonByMonth(Person person);
 }

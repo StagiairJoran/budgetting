@@ -15,4 +15,9 @@ public class ChartBuilderFactory {
     public static PieChartBuilder pieChart() {
         return new PieChartBuilder();
     }
+
+    public static AreaChartBuilder area() {
+        return new AreaChartBuilder();
+    }
+
 }
