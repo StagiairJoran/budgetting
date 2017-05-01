@@ -19,6 +19,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
+import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
@@ -29,6 +30,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.file.File;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -53,6 +55,7 @@ public class StatementListPage extends BasePage<BankAccount> {
 
     private final IModel<List<FileUpload>> fileUploadModel;
     private final IModel<List<Statement>> statementListModel;
+    private final IModel<List<Statement>> selectedStatementsModel = new ListModel<>(new ArrayList<>());
 
     private static final String UPLOAD_FOLDER = "csvFiles";
 
@@ -70,8 +73,12 @@ public class StatementListPage extends BasePage<BankAccount> {
     protected void onInitialize() {
         super.onInitialize();
 
+        CheckGroup<Statement> checkGroup = new CheckGroup<Statement>("checkGroup", this.selectedStatementsModel);
 
-        this.add(DataTableBuilderFactory.<Statement, String>simple()
+        BaseForm<List<Statement>> dataTableForm = new BaseForm<>("dataTableForm", this.selectedStatementsModel);
+
+        checkGroup.add(DataTableBuilderFactory.<Statement, String>simple()
+                .addColumn(ColumnBuilderFactory.<Statement, String>check().build(new ResourceModel("empty")))
                 .addColumn(new LambdaColumn<>(new ResourceModel("date"), Statement::getDate))
                 .addColumn(new LambdaColumn<>(new ResourceModel("amount"), Statement::getAmount))
                 .addColumn(new LambdaColumn<>(new ResourceModel("description"), Statement::getDescription))
@@ -79,6 +86,11 @@ public class StatementListPage extends BasePage<BankAccount> {
                 .addColumn(ColumnBuilderFactory.custom(new ResourceModel("category"), CategoryPanel::new))
                 .build("statements", this.statementListModel));
 
+        dataTableForm.add(checkGroup);
+        LinkBuilderFactory.submitLink(submit())
+                .usingDefaults()
+                .attach(dataTableForm, "submit");
+        this.add(dataTableForm);
 
         LinkBuilderFactory.ajaxLink(assignCategories())
                 .usingDefaults()
@@ -100,6 +112,13 @@ public class StatementListPage extends BasePage<BankAccount> {
         form.add(fileUpload);
 
         this.add(form);
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> submit() {
+        return (ajaxRequestTarget, components) -> {
+            StatementListPage parent = components.findParent(StatementListPage.class);
+            parent.selectedStatementsModel.getObject().forEach(System.out::println);
+        };
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> assignCategories() {

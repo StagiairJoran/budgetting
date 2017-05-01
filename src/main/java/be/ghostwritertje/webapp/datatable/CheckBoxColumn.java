@@ -13,14 +13,14 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 public class CheckBoxColumn<T, S> extends AbstractColumn<T, S> {
     private final SerializableFunction<T, Boolean> booleanFunction;
 
+
     public CheckBoxColumn(IModel<String> displayModel, SerializableFunction<T, Boolean> booleanFunction) {
         super(displayModel);
         this.booleanFunction = booleanFunction;
     }
 
     public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId, IModel<T> rowModel) {
-        cellItem.add(new CheckPanel(componentId, LambdaModel.of(() -> booleanFunction.apply(rowModel.getObject()), aBoolean -> {
-        })));
+        cellItem.add(new CheckPanel(componentId, LambdaModel.of(rowModel, this.booleanFunction::apply)));
     }
 
     private CheckBox newCheckBox(String id, IModel<Boolean> checkModel) {
@@ -33,7 +33,7 @@ public class CheckBoxColumn<T, S> extends AbstractColumn<T, S> {
     private class CheckPanel extends Panel {
         public CheckPanel(String id, IModel<Boolean> checkModel) {
             super(id);
-            this.add(newCheckBox("check", checkModel));
+            this.add(CheckBoxColumn.this.newCheckBox("check", checkModel));
         }
     }
 }

@@ -33,6 +33,13 @@ public class Statement extends DomainObject {
     @Column(name = "CSV_LINE")
     private String csvLine;
 
+    public Statement() {
+    }
+
+    public Statement(String description) {
+        this.description = description;
+    }
+
     public BankAccount getOriginatingAccount() {
         return this.originatingAccount;
     }

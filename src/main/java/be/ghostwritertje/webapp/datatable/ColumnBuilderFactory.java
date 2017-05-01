@@ -26,4 +26,8 @@ public class ColumnBuilderFactory {
         return new DataColumnBuilder<T,S>(dataFunction);
     }
 
+
+    public static <T, S> CheckColumnBuilder<T, S> check(){
+        return new CheckColumnBuilder<T,S>();
+    }
 }
