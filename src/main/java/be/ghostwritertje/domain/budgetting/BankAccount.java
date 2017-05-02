@@ -107,6 +107,11 @@ public class BankAccount extends DomainObject {
     }
 
     @Override
+    public String getDisplayValue() {
+        return this.toString();
+    }
+
+    @Override
     public String toString() {
         return this.name != null ? this.name : this.number;
     }

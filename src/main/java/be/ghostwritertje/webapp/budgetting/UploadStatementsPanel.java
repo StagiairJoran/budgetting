@@ -8,12 +8,12 @@ import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.model.DomainObjectListModel;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.fileinput.BootstrapFileInput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -24,6 +24,7 @@ import org.apache.wicket.util.file.File;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +64,10 @@ public class UploadStatementsPanel extends Panel {
         this.setOutputMarkupId(true);
 
         BaseForm<Person> form = new BaseForm<>(FORM_ID, this.statementListContext.getPersonModel());
-        FileUploadField fileUpload = new FileUploadField("fileUpload", this.fileUploadModel);
+        BootstrapFileInput fileUpload = new BootstrapFileInput("fileUpload", this.fileUploadModel);
+        fileUpload.getConfig().maxFileCount(10);
+        fileUpload.getConfig().allowedFileTypes(Collections.singletonList(".csv"));
+        fileUpload.getConfig().showUpload(false);
 
         FormComponentBuilderFactory.<BankAccount>dropDown()
                 .usingDefaults()
