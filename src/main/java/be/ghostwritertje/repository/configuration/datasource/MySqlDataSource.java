@@ -34,7 +34,7 @@ public class MySqlDataSource {
     }
 
     @Bean
-    @Profile("openshift")
+    @Profile("openshift-old")
     public DataSource oldOpenshiftDataSource(
             @Value("${OPENSHIFT_MYSQL_DB_HOST}") String host,
             @Value("${OPENSHIFT_MYSQL_DB_PORT}") String port,
@@ -54,7 +54,7 @@ public class MySqlDataSource {
     }
 
     @Bean
-    @Profile("openshiftv3")
+    @Profile("openshift")
     public DataSource openshiftDataSource(
             @Value("${MYSQL_SERVICE_HOST}") String host,
             @Value("${MYSQL_SERVICE_PORT}") String port,
@@ -63,6 +63,8 @@ public class MySqlDataSource {
             @Value("${MYSQL_DATABASE}") String appname
 
     ) {
+        System.out.println("MYSQL_USER" + username);
+        logger.info("MYSQL_PASSWORD" + password);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + appname + "?user=" + username + "&password=" + password);
