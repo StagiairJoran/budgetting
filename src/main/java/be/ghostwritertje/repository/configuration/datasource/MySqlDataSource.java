@@ -27,7 +27,7 @@ public class MySqlDataSource {
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/saving");
         dataSource.setUsername("root");
-        dataSource.setPassword("root");
+        dataSource.setPassword("iiii");
 
         logger.info("Using mysql local DataSource");
         return dataSource;
@@ -54,7 +54,7 @@ public class MySqlDataSource {
     }
 
     @Bean
-    @Profile("openshiftv2")
+    @Profile("openshiftv3")
     public DataSource openshiftDataSource(
             @Value("${MYSQL_SERVICE_HOST}") String host,
             @Value("${MYSQL_SERVICE_PORT}") String port,
