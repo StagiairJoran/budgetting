@@ -56,20 +56,12 @@ public class MySqlDataSource {
 
     @Bean
     @Profile("openshift")
-    public String someBean(@Value("${database-password}") String host    ) {
-        logger.info("database-password" + host);
-        return "";
-    }
-
-    @Bean
-    @DependsOn("someBean")
-    @Profile("openshift")
     public DataSource openshiftDataSource(
             @Value("${MYSQL_SERVICE_HOST}") String host,
             @Value("${MYSQL_SERVICE_PORT}") String port,
-            @Value("${MYSQL_SERVICE_MYSQL_USER}") String username,
-            @Value("${MYSQL_SERVICE_MYSQL_PASSWORD}") String password,
-            @Value("${MYSQL_SERVICE_MYSQL_DATABASE}") String appname
+            @Value("${MYSQL_USER}") String username,
+            @Value("${MYSQL_PASSWORD}") String password,
+            @Value("${MYSQL_DATABASE}") String appname
 
     ) {
         logger.info("MYSQL_PASSWORD" + password);
