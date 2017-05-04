@@ -55,8 +55,9 @@ public class MySqlDataSource {
     }
 
     @Bean
-    public String someBean(@Value("${DATABASE-PASSWORD}") String host    ) {
-        logger.info("DATABASE-PASSWORD" + host);
+    @Profile("openshift")
+    public String someBean(@Value("${database-password}") String host    ) {
+        logger.info("database-password" + host);
         return "";
     }
 
