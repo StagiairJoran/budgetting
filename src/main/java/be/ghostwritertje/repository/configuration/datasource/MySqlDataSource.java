@@ -5,6 +5,7 @@ import org.hibernate.dialect.MySQLDialect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -21,6 +22,7 @@ public class MySqlDataSource {
     private static final Logger logger = Logger.getLogger(H2DataSource.class);
 
     @Bean
+    @DependsOn("someBean")
     @Profile("local")
     public DataSource localDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -54,13 +56,21 @@ public class MySqlDataSource {
     }
 
     @Bean
+    public String someBean(@Value("${MYSQL_SERVICE_HOST}") String host    ) {
+        logger.info("MYSQL_SERVICE_HOST" + host);
+        System.out.println("System.out: MYSQL_SERVICE_HOST" + host);
+        return "";
+    }
+
+    @Bean
+    @DependsOn("someBean")
     @Profile("openshift")
     public DataSource openshiftDataSource(
             @Value("${MYSQL_SERVICE_HOST}") String host,
             @Value("${MYSQL_SERVICE_PORT}") String port,
-            @Value("${MYSQL_USER}") String username,
-            @Value("${MYSQL_PASSWORD}") String password,
-            @Value("${MYSQL_DATABASE}") String appname
+            @Value("${MYSQL_SERVICE_MYSQL_USER}") String username,
+            @Value("${MYSQL_SERVICE_MYSQL_PASSWORD}") String password,
+            @Value("${MYSQL_SERVICE_MYSQL_DATABASE}") String appname
 
     ) {
         System.out.println("MYSQL_USER" + username);
