@@ -22,7 +22,6 @@ public class MySqlDataSource {
     private static final Logger logger = Logger.getLogger(H2DataSource.class);
 
     @Bean
-    @DependsOn("someBean")
     @Profile("local")
     public DataSource localDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -56,9 +55,8 @@ public class MySqlDataSource {
     }
 
     @Bean
-    public String someBean(@Value("${MYSQL_SERVICE_HOST}") String host    ) {
-        logger.info("MYSQL_SERVICE_HOST" + host);
-        System.out.println("System.out: MYSQL_SERVICE_HOST" + host);
+    public String someBean(@Value("${DATABASE-PASSWORD}") String host    ) {
+        logger.info("DATABASE-PASSWORD" + host);
         return "";
     }
 
@@ -73,7 +71,6 @@ public class MySqlDataSource {
             @Value("${MYSQL_SERVICE_MYSQL_DATABASE}") String appname
 
     ) {
-        System.out.println("MYSQL_USER" + username);
         logger.info("MYSQL_PASSWORD" + password);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
