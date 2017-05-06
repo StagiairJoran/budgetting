@@ -19,12 +19,12 @@ public interface StatementDao extends CrudRepository<Statement, String> {
 
     List<Statement> findByOriginatingAccount(BankAccount from);
 
-    @Query(value = "SELECT COUNT(AMOUNT), b.NAME FROM T_STATEMENT s " +
+    @Query(value = "SELECT COUNT(AMOUNT) FROM T_STATEMENT s " +
             "INNER JOIN T_BANKACCOUNT b ON s.ORIGINATINGACCOUNT_UUID = b.UUID " +
             "WHERE CATEGORY_UUID = ?1 AND b.ADMINISTRATOR_UUID = ?2", nativeQuery = true)
     Long findNumberOfStatementsForCategory(Category category, Person administrator);
 
-    @Query(value = "SELECT COUNT(AMOUNT), b.NAME FROM T_STATEMENT s " +
+    @Query(value = "SELECT COUNT(AMOUNT) FROM T_STATEMENT s " +
             "INNER JOIN T_BANKACCOUNT b ON s.ORIGINATINGACCOUNT_UUID = b.UUID " +
             "WHERE CATEGORY_UUID IS NULL AND b.ADMINISTRATOR_UUID = ?1", nativeQuery = true)
     Long findNumberOfStatementsWithoutCategory(Person administrator);
