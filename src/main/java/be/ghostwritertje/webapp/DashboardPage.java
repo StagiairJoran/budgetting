@@ -2,7 +2,6 @@ package be.ghostwritertje.webapp;
 
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.car.Car;
-import be.ghostwritertje.services.FlywayService;
 import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.car.CarService;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
@@ -30,9 +29,6 @@ public class DashboardPage extends BasePage<Person> {
     @SpringBean
     private CategoryService categoryService;
 
-    @SpringBean
-    private FlywayService flywayService;
-
     public DashboardPage() {
         super(new Model<>(CustomSession.get().getLoggedInPerson()));
     }
@@ -56,20 +52,7 @@ public class DashboardPage extends BasePage<Person> {
 
         this.add(new BankAccountListInfoPanel("bankAccountView", this.getModel()));
 
-        LinkBuilderFactory.ajaxLink(resetDatabase())
-                .usingDefaults()
-                .attach(this, "resetDatabase");
     }
 
-    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> resetDatabase() {
-        return (ajaxRequestTarget, components) -> {
-            DashboardPage parent = components.findParent(DashboardPage.class);
-
-            parent.flywayService.reset();
-
-            ajaxRequestTarget.add(parent);
-
-        };
-    }
 
 }
