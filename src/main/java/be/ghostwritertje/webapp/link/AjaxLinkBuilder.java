@@ -37,6 +37,11 @@ public class AjaxLinkBuilder <X> extends AjaxLinkBuilderSupport<AjaxLinkBuilder<
         }
     }
 
+    public AjaxLink<X> build(String id, IModel<X> model){
+        this.modelSupplier = () -> model;
+       return this.build(id);
+    }
+
     public AjaxLinkBuilder<X> attach(MarkupContainer initialParent, String id, IModel<X> model) {
         this.modelSupplier = () -> model;
         return super.attach(initialParent, id);

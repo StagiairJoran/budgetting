@@ -22,7 +22,7 @@ public class CategoryGroup extends DomainObject {
 
     private String name;
 
-    @OneToMany(mappedBy = "categoryGroup", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "categoryGroup", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Category> categoryList = new ArrayList<>();
 
     public CategoryGroup() {

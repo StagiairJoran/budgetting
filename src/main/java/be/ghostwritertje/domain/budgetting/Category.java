@@ -2,10 +2,7 @@ package be.ghostwritertje.domain.budgetting;
 
 import be.ghostwritertje.domain.DomainObject;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by Jorandeboever

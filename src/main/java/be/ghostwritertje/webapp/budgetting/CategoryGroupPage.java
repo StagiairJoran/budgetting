@@ -3,6 +3,7 @@ package be.ghostwritertje.webapp.budgetting;
 import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.CategoryGroup;
 import be.ghostwritertje.services.budgetting.CategoryGroupService;
+import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.IModelBasedVisibilityBehavior;
 import be.ghostwritertje.webapp.datatable.ColumnBuilderFactory;
@@ -11,6 +12,7 @@ import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.*;
@@ -23,11 +25,15 @@ import java.util.Objects;
  * Created by Jorandeboever on 5/6/2017.
  */
 public class CategoryGroupPage extends BasePage<CategoryGroup> {
+    private static final long serialVersionUID = 7180944468528176393L;
 
     private static final String FORM_ID = "form";
     private static final String CATEGORY_FORM_ID = "categoryForm";
     @SpringBean
     private CategoryGroupService categoryGroupService;
+
+    @SpringBean
+    private CategoryService categoryService;
 
     private final IModel<Category> toeTeVoegenCategoryModel = new Model<>();
 
@@ -72,6 +78,12 @@ public class CategoryGroupPage extends BasePage<CategoryGroup> {
 
         DataTableBuilderFactory.<Category, String>simple()
                 .addColumn(ColumnBuilderFactory.<Category, String>simple(Category::getName).build(new ResourceModel("name")))
+                .addColumn(ColumnBuilderFactory.custom(
+                        new ResourceModel("delete"),
+                        (s, categoryIModel) -> LinkBuilderFactory.ajaxLink(deleteCategory())
+                                .usingDefaults()
+                                .body(new ResourceModel("delete"))
+                                .build(s, categoryIModel)))
                 .attach(form, "categories", LambdaModel.of(this.getModel(), CategoryGroup::getCategoryList));
 
         LinkBuilderFactory.submitLink(saveCategoryGroup())
@@ -80,6 +92,14 @@ public class CategoryGroupPage extends BasePage<CategoryGroup> {
                 .attach(form, "save");
 
         this.add(form);
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Category>> deleteCategory() {
+        return (ajaxRequestTarget, components) -> {
+            CategoryGroupPage parent = components.findParent(CategoryGroupPage.class);
+            parent.getModelObject().getCategoryList().remove(components.getModelObject());
+            ajaxRequestTarget.add(parent);
+        };
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> saveCategoryGroup() {
@@ -91,12 +111,12 @@ public class CategoryGroupPage extends BasePage<CategoryGroup> {
     }
 
     @SuppressWarnings("unchecked")
-    private BaseForm<Category> getCategoryForm(){
+    private BaseForm<Category> getCategoryForm() {
         return (BaseForm<Category>) this.getForm().get(CATEGORY_FORM_ID);
     }
 
     @SuppressWarnings("unchecked")
-    public BaseForm<Category> getForm(){
+    public BaseForm<Category> getForm() {
         return (BaseForm<Category>) this.get(FORM_ID);
     }
 
