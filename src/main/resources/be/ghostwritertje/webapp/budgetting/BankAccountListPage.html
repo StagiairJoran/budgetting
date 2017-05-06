@@ -5,13 +5,17 @@
 
 
     <h2>BankAccounts</h2>
-    <a wicket:id="new">New</a>
-    <a wicket:id="statements">Statements</a>
+    <div class="col-lg-12" wicket:id="graph"></div>
 
-    <table wicket:id="bankAccounts"></table>
+    <div class="col-lg-12">
+        <a wicket:id="new">New</a>
+        <a wicket:id="statements">Statements</a>
 
-    <button wicket:id="initCategories"></button>
-    <div wicket:id="graph"></div>
+        <table wicket:id="bankAccounts"></table>
+    </div>
+    <div class="col-lg-12">
+        <div wicket:id="categories"></div>
+    </div>
 </wicket:extend>
 </body>
 </html>

@@ -29,9 +29,6 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
     @SpringBean
     private BankAccountService bankAccountService;
 
-    @SpringBean
-    private CategoryService categoryService;
-
     public BankAccountListInfoPanel(String id, IModel<Person> model) {
         super(id, model);
     }
@@ -45,31 +42,10 @@ public class BankAccountListInfoPanel extends GenericPanel<Person> {
 
             @Override
             public void onClick() {
-                setResponsePage(new BankAccountListPage(BankAccountListInfoPanel.this.getModel()));
+                this.setResponsePage(new BankAccountListPage(BankAccountListInfoPanel.this.getModel()));
             }
         });
         this.add(new Label("total",  this.statementService.getTotal(this.getModelObject())));
 
-        this.categoryService.findCountByAdministrator(this.getModelObject());
-
-        LinkBuilderFactory.ajaxLink(assignCategories())
-                .usingDefaults()
-                .body(new ResourceModel("assign.categories.automatically"))
-                .attach(this, "assignCategories");
-
-        ChartBuilderFactory.pieChart()
-                .title("Categories")
-                .name("Statements")
-                .addPoints(this.categoryService.findCountByAdministrator(this.getModelObject()), Category::getName, aLong -> aLong)
-                .attach(this, "pieChart");
-
-    }
-
-    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> assignCategories() {
-        return (ajaxRequestTarget, components) -> {
-            BankAccountListInfoPanel parent = components.findParent(BankAccountListInfoPanel.class);
-            parent.categoryService.attemptToAssignCategoriesAutomaticallyForPerson(parent.getModelObject());
-            ajaxRequestTarget.add(parent);
-        };
     }
 }

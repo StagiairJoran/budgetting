@@ -4,6 +4,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.table.BootstrapDef
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -31,6 +32,11 @@ public class DataTablebuilder<T extends Serializable, S> {
         components.striped();
         return components;
     }
+
+    public void attach(WebMarkupContainer parent, String id, IModel<List<T>> data) {
+        parent.add(this.build(id, data));
+    }
+
 
     public static class MySortableDataProvider<T extends Serializable, S> extends SortableDataProvider<T, S>  {
         private static final long serialVersionUID = 3440280114446729862L;

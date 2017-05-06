@@ -66,20 +66,11 @@ public class BankAccountListPage extends BasePage<Person> {
                 ))
                 .build("bankAccounts", new DomainObjectListModel<BankAccount, BankAccountService>(this.bankAccountService,service ->  service.findByOwner(this.getModelObject()))));
 
-        LinkBuilderFactory.ajaxLink(initCategories())
-                .usingDefaults()
-                .body(new ResourceModel("init.categories"))
-                .attach(this, "initCategories");
-
         this.add(new BankAccountsGraph("graph", this.getModel()));
+
+        this.add(new CategoryListPanel("categories", this.getModel()));
     }
 
-    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> initCategories() {
-        return (ajaxRequestTarget, components) -> {
-            BankAccountListPage parent = components.findParent(BankAccountListPage.class);
-            parent.categoryService.initForNewPerson(parent.getModelObject());
-        };
-    }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Person>> newBankAccount() {
         return (target, components) -> {

@@ -23,6 +23,7 @@ import java.util.List;
  * Date: 02-Oct-16.
  */
 public class DashboardPage extends BasePage<Person> {
+    private static final long serialVersionUID = 6853976853312706117L;
     @SpringBean
     private CarService carService;
 
