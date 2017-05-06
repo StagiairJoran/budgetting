@@ -3,6 +3,7 @@ package be.ghostwritertje.domain;
 import be.ghostwritertje.domain.car.Car;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * Created by Ghostwritertje
