@@ -67,7 +67,7 @@ public class MySqlDataSource {
         logger.info("MYSQL_PASSWORD" + password);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + appname + "?sessionVariables=sql_mode='only_full_group_by'" + "&user=" + username + "&password=" + password);
+        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + appname + "?user=" + username + "&password=" + password);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
