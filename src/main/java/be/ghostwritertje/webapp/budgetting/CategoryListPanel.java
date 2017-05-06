@@ -48,6 +48,7 @@ public class CategoryListPanel extends GenericPanel<Person> {
 
         DataTableBuilderFactory.<CategoryGroup, String>simple()
                 .addColumn(ColumnBuilderFactory.<CategoryGroup, String>simple(CategoryGroup::getName).build(new ResourceModel("category")))
+                .addColumn(ColumnBuilderFactory.actions(new ResourceModel("actions"), editCategoryGroup(), deleteCategoryGroup()))
                 .attach(this, "dataTable", this.categoryGroupListModel);
 
 
@@ -62,6 +63,21 @@ public class CategoryListPanel extends GenericPanel<Person> {
                 .addPoints(this.categoryService.findCountByAdministrator(this.getModelObject()), Category::getName, aLong -> aLong)
                 .attach(this, "pieChart");
 
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<CategoryGroup>> deleteCategoryGroup() {
+        return (ajaxRequestTarget, components) -> {
+            CategoryListPanel parent = components.findParent(CategoryListPanel.class);
+            parent.categoryGroupService.delete(components.getModelObject());
+            parent.categoryGroupListModel.setObject(null);
+            ajaxRequestTarget.add(parent);
+        };
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<CategoryGroup>> editCategoryGroup() {
+        return (ajaxRequestTarget, components) -> {
+            components.setResponsePage(new CategoryGroupPage(components.getModel()));
+        };
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> assignCategories() {
