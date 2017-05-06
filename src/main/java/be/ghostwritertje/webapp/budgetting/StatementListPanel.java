@@ -39,10 +39,12 @@ public class StatementListPanel extends Panel {
     private final IModel<List<Statement>> selectedStatementsModel = new ListModel<>(new ArrayList<>());
     private final IModel<Category> categoryToAssignModel = new Model<>();
 
+
     private final StatementListContext statementListContext;
 
     StatementListPanel(String id, StatementListContext statementListContext) {
         super(id);
+        this.setOutputMarkupId(true);
 
         this.statementListContext = statementListContext;
     }
@@ -64,7 +66,7 @@ public class StatementListPanel extends Panel {
                 .addColumn(new LambdaColumn<>(new ResourceModel("description"), Statement::getDescription))
                 .addColumn(new LambdaColumn<>(new ResourceModel("to"), Statement::getDestinationAccount))
                 .addColumn(ColumnBuilderFactory.custom(new ResourceModel("category"), CategoryPanel::new))
-                .build("statements", this.statementListContext.getStatementListModel()));
+                .build("statements", this.statementListContext.getFilteredStatementListModel()));
 
         dataTableForm.add(checkGroup);
         LinkBuilderFactory.submitLink(submit())
@@ -72,9 +74,18 @@ public class StatementListPanel extends Panel {
                 .attach(dataTableForm, "submit");
         this.add(dataTableForm);
 
+        this.add(new StatementCriteriaPanel("criteriaPanel", this.statementListContext.getStatementCriteriaIModel(), this.statementListContext.getPersonModel(), filterStatements()));
+
         LinkBuilderFactory.ajaxLink(assignCategories())
                 .usingDefaults()
                 .attach(this, "assignCategories");
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> filterStatements() {
+        return (ajaxRequestTarget, components) -> {
+            StatementListPanel parent = components.findParent(StatementListPanel.class);
+            ajaxRequestTarget.add(parent);
+        };
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> submit() {

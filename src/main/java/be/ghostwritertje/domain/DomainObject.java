@@ -45,4 +45,12 @@ public abstract class DomainObject implements Serializable, Cloneable, Display {
     public String getId() {
         return this.getUuid();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof DomainObject){
+            return this.getUuid().equals(((DomainObject) obj).getUuid());
+        }
+        return super.equals(obj);
+    }
 }
