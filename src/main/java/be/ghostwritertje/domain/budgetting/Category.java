@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "T_CATEGORY")
-public class Category extends DomainObject{
+public class Category extends DomainObject {
     private static final long serialVersionUID = -163498981511624588L;
 
 
@@ -45,11 +45,11 @@ public class Category extends DomainObject{
 
     @Override
     public String getDisplayValue() {
-        return this.name;
+        return this.toString();
     }
 
     @Override
     public String toString() {
-        return this.name;
+        return String.format("%s - %s", this.categoryGroup.getName(), this.name);
     }
 }
