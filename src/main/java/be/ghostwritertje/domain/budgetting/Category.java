@@ -2,7 +2,10 @@ package be.ghostwritertje.domain.budgetting;
 
 import be.ghostwritertje.domain.DomainObject;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Created by Jorandeboever
@@ -12,7 +15,6 @@ import javax.persistence.*;
 @Table(name = "T_CATEGORY")
 public class Category extends DomainObject {
     private static final long serialVersionUID = -163498981511624588L;
-
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "CATEGORY_GROUP_UUID")

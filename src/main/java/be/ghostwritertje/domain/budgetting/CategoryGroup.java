@@ -22,6 +22,12 @@ public class CategoryGroup extends DomainObject {
 
     private String name;
 
+
+    @Column(nullable = false, name = "CATEGORY_TYPE")
+    @Enumerated(EnumType.STRING)
+    private CategoryType categoryType;
+
+
     @OneToMany(mappedBy = "categoryGroup", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Category> categoryList = new ArrayList<>();
 
@@ -51,6 +57,14 @@ public class CategoryGroup extends DomainObject {
     public void addCategory(Category category){
         category.setCategoryGroup(this);
         this.categoryList.add(category);
+    }
+
+    public CategoryType getCategoryType() {
+        return this.categoryType;
+    }
+
+    public void setCategoryType(CategoryType categoryType) {
+        this.categoryType = categoryType;
     }
 
     public String getName() {
