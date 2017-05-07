@@ -42,6 +42,10 @@ public class BankAccountServiceImpl extends DomainObjectCrudServiceSupport<BankA
         return this.dao.findByOwner(owner);
     }
 
+    @Override
+    public void delete(BankAccount object) {
+        super.delete(object);
+    }
 
     @Override
     public Iterable<BankAccount> save(Iterable<BankAccount> bankAccounts) {

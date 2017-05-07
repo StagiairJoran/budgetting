@@ -2,6 +2,7 @@ package be.ghostwritertje.webapp.charts;
 
 import com.googlecode.wickedcharts.highcharts.options.*;
 import com.googlecode.wickedcharts.highcharts.options.series.SimpleSeries;
+import org.apache.wicket.model.IModel;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,27 +26,20 @@ public class AreaChartBuilder extends ChartBuilderSupport<AreaChartBuilder> {
         );
     }
 
-    public AreaChartBuilder addSeries(String name, Collection<? extends Number> numbers){
-        this.getOptions().addSeries(
-                new SimpleSeries()
-                .setName(name)
-                .setData(numbers.stream()
+
+    public AreaChartBuilder addSeries(IModel<Map<String, Collection<? extends Number>>> mapModel) {
+        this.consume(options -> options.setSeries(mapModel.getObject().entrySet().stream().map(entrySet -> new SimpleSeries()
+                .setName(entrySet.getKey())
+                .setData(entrySet.getValue().stream()
                         .map(o -> (Number) o)
-                        .collect(Collectors.toList()))
-        );
+                        .collect(Collectors.toList()))).collect(Collectors.toList())));
         return this.self();
     }
 
-    public AreaChartBuilder addSeries(Map<String, Collection<? extends Number>> map){
-        map.forEach(this::addSeries);
-        return this.self();
-    }
-
-    public AreaChartBuilder setxAxis(List<String> data){
-        this.getOptions().setxAxis(
+    public AreaChartBuilder setxAxis(IModel<List<String>> data) {
+        this.consume(options -> options.setxAxis(
                 new Axis()
-                .setCategories(data)
-        );
+                        .setCategories(data.getObject())));
         return this.self();
     }
 }
