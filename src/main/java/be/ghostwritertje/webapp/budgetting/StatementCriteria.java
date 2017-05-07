@@ -13,6 +13,7 @@ public class StatementCriteria implements Serializable {
 
     private BankAccount originatingAccount;
     private String description;
+    private boolean filterByCategory;
     private Category category;
     private BigDecimal minimum;
     private BigDecimal maximum;
@@ -55,5 +56,13 @@ public class StatementCriteria implements Serializable {
 
     public void setMaximum(BigDecimal maximum) {
         this.maximum = maximum;
+    }
+
+    public boolean isFilterByCategory() {
+        return this.filterByCategory;
+    }
+
+    public void setFilterByCategory(boolean filterByCategory) {
+        this.filterByCategory = filterByCategory;
     }
 }

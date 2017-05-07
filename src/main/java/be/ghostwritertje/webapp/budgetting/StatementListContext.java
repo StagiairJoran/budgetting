@@ -67,9 +67,9 @@ public class StatementListContext implements Serializable {
             StatementCriteria criteria = this.criteriaIModel.getObject();
 
             return this.statementListModel.getObject().stream()
-                    .filter(statement -> Optional.ofNullable(criteria.getCategory()).map(category -> Objects.equals(statement.getCategory(), category)).orElse(true))
+                    .filter(statement -> !criteria.isFilterByCategory() || Optional.ofNullable(criteria.getCategory()).map(category -> Objects.equals(statement.getCategory(), category)).orElseGet(() -> statement.getCategory() == null))
                     .filter(statement -> Optional.ofNullable(criteria.getOriginatingAccount()).map(account -> Objects.equals(statement.getOriginatingAccount(), account)).orElse(true))
-                    .filter(statement -> Optional.ofNullable(criteria.getDescription()).map(category ->  statement.getDescription().contains(category)).orElse(true))
+                    .filter(statement -> Optional.ofNullable(criteria.getDescription()).map(category -> statement.getDescription().contains(category)).orElse(true))
                     .collect(Collectors.toList());
         }
     }

@@ -7,6 +7,9 @@ import java.io.Serializable;
  * Date: 23-Dec-16.
  */
 public class FormComponentBuilderFactory {
+    private FormComponentBuilderFactory() {
+    }
+
     public static TextFieldComponentBuilder textField(){
         return new TextFieldComponentBuilder();
     }
@@ -16,7 +19,7 @@ public class FormComponentBuilderFactory {
     }
 
     public static <X extends Number & Comparable<X>> NumberTextFieldComponentBuilder<X> number(Class<X> xClass){
-        return new NumberTextFieldComponentBuilder();
+        return new NumberTextFieldComponentBuilder<X>();
     }
 
     public static LocalDateTextFieldComponentBuilder date(){
@@ -25,5 +28,9 @@ public class FormComponentBuilderFactory {
 
     public static <X extends Serializable & Display> DropDownComponentBuilder<X> dropDown(){
         return new DropDownComponentBuilder<>();
+    }
+
+    public static CheckBoxComponentBuilder checkBox() {
+        return new CheckBoxComponentBuilder();
     }
 }

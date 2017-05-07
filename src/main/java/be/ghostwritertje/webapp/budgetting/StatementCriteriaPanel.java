@@ -5,10 +5,13 @@ import be.ghostwritertje.domain.budgetting.BankAccount;
 import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.services.budgetting.BankAccountService;
 import be.ghostwritertje.services.budgetting.CategoryService;
+import be.ghostwritertje.webapp.IModelBasedVisibilityBehavior;
+import be.ghostwritertje.webapp.LambdaOnChangeBehavior;
 import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.model.DomainObjectListModel;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -59,8 +62,15 @@ public class StatementCriteriaPanel extends GenericPanel<StatementCriteria> {
                 .body(new ResourceModel("description"))
                 .attach(form, "description", LambdaModel.of(this.getModel(), StatementCriteria::getDescription, StatementCriteria::setDescription));
 
+        FormComponentBuilderFactory.checkBox()
+                .usingDefaults()
+                .body(new ResourceModel("filter.by.category"))
+                .behave(() -> new LambdaOnChangeBehavior(reloadForm()))
+                .attach(form, "hasCategory", LambdaModel.of(this.getModel(), StatementCriteria::isFilterByCategory, StatementCriteria::setFilterByCategory));
+
         FormComponentBuilderFactory.<Category>dropDown()
                 .usingDefaults()
+                .container(components -> components.add(new IModelBasedVisibilityBehavior<StatementCriteria>(this.getModel(), StatementCriteria::isFilterByCategory)))
                 .body(new ResourceModel("category"))
                 .attach(form, "category", LambdaModel.of(this.getModel(), StatementCriteria::getCategory, StatementCriteria::setCategory), this.categoryListModel);
 
@@ -77,8 +87,17 @@ public class StatementCriteriaPanel extends GenericPanel<StatementCriteria> {
         this.add(form);
     }
 
+    private static SerializableBiConsumer<Component, AjaxRequestTarget> reloadForm() {
+        return (component, ajaxRequestTarget) -> {
+
+            StatementCriteriaPanel parent = component.findParent(StatementCriteriaPanel.class);
+            parent.getModelObject().setCategory(null);
+            ajaxRequestTarget.add(parent.getForm());
+        };
+    }
+
     @SuppressWarnings("unchecked")
-    public BaseForm<StatementCriteria> getForm(){
+    public BaseForm<StatementCriteria> getForm() {
         return (BaseForm<StatementCriteria>) this.get(FORM_ID);
     }
 
