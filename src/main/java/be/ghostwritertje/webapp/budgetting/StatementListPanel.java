@@ -7,7 +7,9 @@ import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.datatable.ColumnBuilderFactory;
 import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
 import be.ghostwritertje.webapp.form.BaseForm;
+import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
+import be.ghostwritertje.webapp.model.DomainObjectListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -15,6 +17,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
@@ -38,6 +41,7 @@ public class StatementListPanel extends Panel {
 
     private final IModel<List<Statement>> selectedStatementsModel = new ListModel<>(new ArrayList<>());
     private final IModel<Category> categoryToAssignModel = new Model<>();
+    private final IModel<List<Category>> categoryListModel;
 
 
     private final StatementListContext statementListContext;
@@ -47,16 +51,27 @@ public class StatementListPanel extends Panel {
         this.setOutputMarkupId(true);
 
         this.statementListContext = statementListContext;
+
+        this.categoryListModel = new DomainObjectListModel<Category, CategoryService>(
+                this.categoryService,
+                service -> service.findByAdministrator(statementListContext.getPersonModel().getObject())
+        );
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-
         CheckGroup<Statement> checkGroup = new CheckGroup<Statement>("checkGroup", this.selectedStatementsModel);
 
         BaseForm<List<Statement>> dataTableForm = new BaseForm<>("dataTableForm", this.selectedStatementsModel);
+
+        FormComponentBuilderFactory.<Category>dropDown()
+                .usingDefaults()
+                .body(new ResourceModel("category"))
+                .attach(dataTableForm, "category", this.categoryToAssignModel, this.categoryListModel);
+
+
 
         checkGroup.add(DataTableBuilderFactory.<Statement, String>simple()
                 .addColumn(ColumnBuilderFactory.<Statement, String>check().build(new ResourceModel("empty")))
@@ -76,9 +91,7 @@ public class StatementListPanel extends Panel {
 
         this.add(new StatementCriteriaPanel("criteriaPanel", this.statementListContext.getStatementCriteriaIModel(), this.statementListContext.getPersonModel(), filterStatements()));
 
-        LinkBuilderFactory.ajaxLink(assignCategories())
-                .usingDefaults()
-                .attach(this, "assignCategories");
+
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> filterStatements() {
@@ -98,12 +111,4 @@ public class StatementListPanel extends Panel {
         };
     }
 
-    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> assignCategories() {
-        return (ajaxRequestTarget, components) -> {
-            StatementListPanel parent = components.findParent(StatementListPanel.class);
-            parent.categoryService.attemptToAssignCategoriesAutomaticallyForPerson(parent.statementListContext.getPersonModel().getObject());
-            parent.statementListContext.getStatementListModel().setObject(null);
-            ajaxRequestTarget.add(parent);
-        };
-    }
 }
