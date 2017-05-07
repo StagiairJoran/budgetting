@@ -67,9 +67,7 @@ public class StatementCriteriaPanel extends GenericPanel<StatementCriteria> {
         FormComponentBuilderFactory.<BankAccount>dropDown()
                 .usingDefaults()
                 .body(new ResourceModel("bank"))
-                .required()
                 .attach(form, "bankType", LambdaModel.of(this.getModel(), StatementCriteria::getOriginatingAccount, StatementCriteria::setOriginatingAccount), this.bankAccountsByPersonModel);
-
 
         LinkBuilderFactory.submitLink(setFormModeEdit().andThen(this.onSubmitBiConsumer))
                 .usingDefaults()

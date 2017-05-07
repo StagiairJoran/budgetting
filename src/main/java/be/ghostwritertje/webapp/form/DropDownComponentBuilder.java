@@ -1,5 +1,6 @@
 package be.ghostwritertje.webapp.form;
 
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.select.BootstrapSelect;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
@@ -37,7 +38,7 @@ public class DropDownComponentBuilder<T extends Display & Serializable> extends 
 
     @Override
     DropDownChoice<T> buildFormComponent(String id, IModel<T> model) {
-        return new DropDownChoice<>(
+        return new BootstrapSelect<T>(
                 id,
                 model,
                 this.listSupplier.get(),
