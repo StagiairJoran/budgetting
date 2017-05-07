@@ -72,7 +72,6 @@ public class UploadStatementsPanel extends Panel {
         FormComponentBuilderFactory.<BankAccount>dropDown()
                 .usingDefaults()
                 .body(new ResourceModel("bank"))
-                .required()
                 .attach(form, "bankType", this.selectedBankAccountModel, this.bankAccountsByPersonModel);
 
         LinkBuilderFactory.<List<FileUpload>>submitLink(upload())

@@ -112,16 +112,10 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
         while (dateToMap.isBefore(LocalDate.now())) {
             datesToMap.add(dateToMap);
 
-            LocalDate newDate = LocalDate.from(dateToMap);
-
-            theMap.forEach((bankAccount, numbers) -> {
-                numbers.add(map.get(bankAccount).stream()
-                        .filter(statement -> statement.getDate().isBefore(newDate))
-                        .map(Statement::getAmount)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add));
-            });
+            this.makeListForEveryBankAccount(map, theMap, dateToMap);
 
             dateToMap = dateToMap.plusMonths(1);
+            dateToMap = LocalDate.of(dateToMap.getYear(), dateToMap.getMonth(), dateToMap.lengthOfMonth());
         }
 
         List<String> dateStrings = datesToMap.stream().map(date -> String.format("%s %s", date.getMonth(), date.getYear())).collect(Collectors.toList());
@@ -130,6 +124,15 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
         LOG.info(stopWatch.prettyPrint());
         System.out.println(stopWatch.prettyPrint());
         return new BankAccountsHistoricData(dateStrings, theMap);
+    }
+
+    private void makeListForEveryBankAccount(Map<BankAccount, List<Statement>> map, Map<BankAccount, List<Number>> theMap, LocalDate newDate) {
+        theMap.forEach((bankAccount, numbers) -> {
+            numbers.add(map.get(bankAccount).stream()
+                    .filter(statement -> statement.getDate().isBefore(newDate))
+                    .map(Statement::getAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add));
+        });
     }
 
 }

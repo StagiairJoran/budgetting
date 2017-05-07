@@ -38,7 +38,7 @@ public class DropDownComponentBuilder<T extends Display & Serializable> extends 
 
     @Override
     DropDownChoice<T> buildFormComponent(String id, IModel<T> model) {
-        return new BootstrapSelect<T>(
+        return new DropDownChoice<T>(
                 id,
                 model,
                 this.listSupplier.get(),
