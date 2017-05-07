@@ -28,6 +28,10 @@ public class CategoryGroup extends DomainObject {
     public CategoryGroup() {
     }
 
+    public CategoryGroup(Person administrator) {
+        this.administrator = administrator;
+    }
+
     public CategoryGroup(String name) {
         this.name = name;
     }

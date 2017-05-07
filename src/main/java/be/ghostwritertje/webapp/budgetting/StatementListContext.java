@@ -4,6 +4,7 @@ import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.model.LoadableListModel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
@@ -69,7 +70,7 @@ public class StatementListContext implements Serializable {
             return this.statementListModel.getObject().stream()
                     .filter(statement -> !criteria.isFilterByCategory() || Optional.ofNullable(criteria.getCategory()).map(category -> Objects.equals(statement.getCategory(), category)).orElseGet(() -> statement.getCategory() == null))
                     .filter(statement -> Optional.ofNullable(criteria.getOriginatingAccount()).map(account -> Objects.equals(statement.getOriginatingAccount(), account)).orElse(true))
-                    .filter(statement -> Optional.ofNullable(criteria.getDescription()).map(category -> statement.getDescription().contains(category)).orElse(true))
+                    .filter(statement -> Optional.ofNullable(criteria.getDescription()).map(category -> StringUtils.containsIgnoreCase(statement.getDescription(),category)).orElse(true))
                     .collect(Collectors.toList());
         }
     }

@@ -14,6 +14,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
@@ -46,16 +47,17 @@ public class CategoryListPanel extends GenericPanel<Person> {
     protected void onInitialize() {
         super.onInitialize();
 
+        LinkBuilderFactory.ajaxLink(newCategoryGroup())
+                .usingDefaults()
+                .body(new ResourceModel("new"))
+                .attach(this, "new");
+
         DataTableBuilderFactory.<CategoryGroup, String>simple()
                 .addColumn(ColumnBuilderFactory.<CategoryGroup, String>simple(CategoryGroup::getName).build(new ResourceModel("category")))
                 .addColumn(ColumnBuilderFactory.actions(new ResourceModel("actions"), editCategoryGroup(), deleteCategoryGroup()))
                 .attach(this, "dataTable", this.categoryGroupListModel);
 
 
-        LinkBuilderFactory.ajaxLink(assignCategories())
-                .usingDefaults()
-                .body(new ResourceModel("assign.categories.automatically"))
-                .attach(this, "assignCategories");
 
         ChartBuilderFactory.pieChart()
                 .title("Categories")
@@ -63,6 +65,14 @@ public class CategoryListPanel extends GenericPanel<Person> {
                 .addPoints(this.categoryService.findCountByAdministrator(this.getModelObject()), Category::getName, aLong -> aLong)
                 .attach(this, "pieChart");
 
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> newCategoryGroup() {
+        return (ajaxRequestTarget, components) -> {
+            CategoryListPanel parent = components.findParent(CategoryListPanel.class);
+            components.setResponsePage(new CategoryGroupPage(new Model<>(new CategoryGroup(parent.getModelObject()))));
+
+        };
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<CategoryGroup>> deleteCategoryGroup() {

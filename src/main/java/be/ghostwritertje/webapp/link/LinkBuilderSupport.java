@@ -2,6 +2,7 @@ package be.ghostwritertje.webapp.link;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
@@ -26,9 +27,14 @@ public abstract class LinkBuilderSupport<L extends LinkBuilderSupport<L, F>, F e
     }
 
     public L usingDefaults() {
+        this.behave(() -> new AttributeAppender("class", "btn btn-default"));
         return (L) this.self();
     }
 
+    public L small() {
+        this.behave(() -> new AttributeAppender("class", " btn-sm"));
+        return (L) this.self();
+    }
     public L icon(SerializableFunction<String, Component> iconSupplier) {
         //TODO should do .andThen() -> Custom wicketconsumer?
         this.iconProvider = iconSupplier;

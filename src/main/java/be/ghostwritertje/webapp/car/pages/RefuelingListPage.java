@@ -77,7 +77,6 @@ public class RefuelingListPage extends BasePage<Car> {
         ChartBuilderFactory.splineChart()
                 .title("Dieselprijs")
                 .addLine("Kostprijs diesel", someModel.getObject(), Refueling::getDate, Refueling::getPricePerLiter, 3)
-
                 .setYAxis("Price/liter")
                 .attach(this, "chart");
 
