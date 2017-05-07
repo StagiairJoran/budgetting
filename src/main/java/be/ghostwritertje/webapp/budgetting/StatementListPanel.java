@@ -33,6 +33,7 @@ import java.util.List;
  */
 public class StatementListPanel extends Panel {
     private static final long serialVersionUID = -7870855479329092357L;
+    public static final String DATA_TABLE_FORM_ID = "dataTableForm";
 
     @SpringBean
     private StatementService statementService;
@@ -69,7 +70,7 @@ public class StatementListPanel extends Panel {
 
         CheckGroup<Statement> checkGroup = new CheckGroup<Statement>("checkGroup", this.selectedStatementsModel);
 
-        BaseForm<List<Statement>> dataTableForm = new BaseForm<>("dataTableForm", this.selectedStatementsModel);
+        BaseForm<List<Statement>> dataTableForm = new BaseForm<>(DATA_TABLE_FORM_ID, this.selectedStatementsModel);
 
         FormComponentBuilderFactory.<Category>dropDown()
                 .usingDefaults()
@@ -97,6 +98,12 @@ public class StatementListPanel extends Panel {
 
     }
 
+    @SuppressWarnings("unchecked")
+    public BaseForm<List<Statement>> getForm() {
+        return (BaseForm<List<Statement>>) this.get(DATA_TABLE_FORM_ID);
+    }
+
+
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> filterStatements() {
         return (ajaxRequestTarget, components) -> {
             StatementListPanel parent = components.findParent(StatementListPanel.class);
@@ -110,6 +117,7 @@ public class StatementListPanel extends Panel {
             List<Statement> statements = parent.selectedStatementsModel.getObject();
             statements.forEach(statement -> statement.setCategory(parent.categoryToAssignModel.getObject()));
             parent.statementService.save(statements);
+            parent.getForm().getFormModeModel().setObject(BaseForm.FormMode.EDIT);
             ajaxRequestTarget.add(parent);
         };
     }
