@@ -3,6 +3,7 @@ package be.ghostwritertje.webapp.budgetting;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.CategoryGroup;
+import be.ghostwritertje.domain.budgetting.CategoryType;
 import be.ghostwritertje.services.budgetting.CategoryGroupService;
 import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
@@ -59,12 +60,18 @@ public class CategoryListPanel extends GenericPanel<Person> {
 
 
 
-        ChartBuilderFactory.pieChart()
-                .title("Categories")
-                .name("Statements")
-                .addPoints(this.categoryService.findCountByAdministrator(this.getModelObject()), Category::getName, aLong -> aLong)
-                .attach(this, "pieChart");
 
+        ChartBuilderFactory.pieChart()
+                .title("Expenses")
+                .name("Statements")
+                .addPoints(this.categoryService.findSumByAdministrator(this.getModelObject(), CategoryType.EXPENSE), Category::getName, aLong -> aLong)
+                .attach(this, "expenses");
+
+        ChartBuilderFactory.pieChart()
+                .title("Income")
+                .name("Statements")
+                .addPoints(this.categoryService.findSumByAdministrator(this.getModelObject(), CategoryType.INCOME), Category::getName, aLong -> aLong)
+                .attach(this, "income");
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> newCategoryGroup() {

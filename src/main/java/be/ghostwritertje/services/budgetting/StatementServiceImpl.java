@@ -15,10 +15,7 @@ import org.springframework.util.StopWatch;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +42,11 @@ public class StatementServiceImpl extends DomainObjectCrudServiceSupport<Stateme
     @Override
     public Long findNumberOfStatementsForCategory(Category category, Person administrator) {
         return this.dao.findNumberOfStatementsForCategory(category, administrator);
+    }
+
+    @Override
+    public BigDecimal findSumOfStatementsByCategoryBetweenDates(Category category, Person administrator, LocalDate beginDate, LocalDate endDate) {
+        return Optional.ofNullable(this.dao.findSumOfStatementsByCategoryBetweenDates(category, administrator, beginDate, endDate)).map(aDouble -> BigDecimal.valueOf(aDouble)).orElseGet(() -> BigDecimal.ZERO);
     }
 
     @Override

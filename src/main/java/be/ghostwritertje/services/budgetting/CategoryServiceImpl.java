@@ -2,10 +2,7 @@ package be.ghostwritertje.services.budgetting;
 
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
-import be.ghostwritertje.domain.budgetting.BankAccount;
-import be.ghostwritertje.domain.budgetting.Category;
-import be.ghostwritertje.domain.budgetting.CategoryGroup;
-import be.ghostwritertje.domain.budgetting.Statement;
+import be.ghostwritertje.domain.budgetting.*;
 import be.ghostwritertje.repository.CategoryDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
 import com.google.common.collect.Maps;
@@ -13,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -151,6 +150,24 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
         result.put(new Category("None"), this.statementService.findNumberOfStatementsWithoutCategory(administrator));
 
         return Maps.filterValues(result, count -> count != null && count != 0);
+
+    }
+
+    @Override
+    public Map<Category, BigDecimal> findSumByAdministrator(Person administrator, CategoryType categoryType) {
+        LocalDate beginDate = LocalDate.of(LocalDate.now().getYear() - 1, 1, 1);
+        LocalDate endDate = beginDate.plusYears(1);
+
+        Map<Category, BigDecimal> result = this.findByAdministrator(administrator).stream()
+                .filter(category -> category.getCategoryGroup().getCategoryType() == categoryType)
+                .collect(Collectors.toMap(
+                        category -> category,
+                        category -> this.statementService.findSumOfStatementsByCategoryBetweenDates(category, administrator, beginDate, endDate).abs()
+                ));
+
+//        result.put(new Category("None"), this.statementService.findNumberOfStatementsWithoutCategory(administrator));
+
+        return Maps.filterValues(result, count -> count != null && count.compareTo(BigDecimal.ZERO) != 0);
 
     }
 

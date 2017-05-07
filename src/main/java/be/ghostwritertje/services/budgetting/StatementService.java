@@ -7,6 +7,7 @@ import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.services.DomainObjectCrudService;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -22,6 +23,8 @@ public interface StatementService extends DomainObjectCrudService<Statement> {
     List<Statement> findByOriginatingAccount(BankAccount bankAccount);
 
     Long findNumberOfStatementsForCategory(Category category, Person administrator);
+
+    BigDecimal findSumOfStatementsByCategoryBetweenDates(Category category, Person administrator, LocalDate beginDate, LocalDate endDate);
 
     Long findNumberOfStatementsWithoutCategory(Person administrator);
 
