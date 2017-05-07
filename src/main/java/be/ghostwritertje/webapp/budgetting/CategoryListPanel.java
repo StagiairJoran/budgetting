@@ -64,11 +64,13 @@ public class CategoryListPanel extends GenericPanel<Person> {
         ChartBuilderFactory.pieChart()
                 .title("Expenses")
                 .name("Statements")
+                .subTitle("2016")
                 .addPoints(this.categoryService.findSumByAdministrator(this.getModelObject(), CategoryType.EXPENSE), Category::getName, aLong -> aLong)
                 .attach(this, "expenses");
 
         ChartBuilderFactory.pieChart()
                 .title("Income")
+                .subTitle("2016")
                 .name("Statements")
                 .addPoints(this.categoryService.findSumByAdministrator(this.getModelObject(), CategoryType.INCOME), Category::getName, aLong -> aLong)
                 .attach(this, "income");
