@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <form wicket:id="form" class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="date" wicket:id="date-label">Name</label>
+            <div class="col-sm-10">
+                <input type="date" class="form-control" id="date" placeholder="date" wicket:id="date"/>
+                <label wicket:id="date-read"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="description" wicket:id="description-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="description" placeholder="description" wicket:id="description"/>
+                <label wicket:id="description-read"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="amount" wicket:id="amount-label">Name</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" id="amount"  wicket:id="amount">
+                <label wicket:id="amount-read"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="from" wicket:id="from-label">Name</label>
+            <div class="col-sm-10">
+                <select  class="form-control" id="from" placeholder="from" wicket:id="from"></select>
+                <label wicket:id="from-read"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="to" wicket:id="to-label">Name</label>
+            <div class="col-sm-10">
+                <select  class="form-control" id="to" placeholder="to" wicket:id="to"></select>
+                <label wicket:id="to-read"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="category" wicket:id="category-label">Name</label>
+            <div class="col-sm-10">
+                <select  class="form-control" id="category" placeholder="category" wicket:id="category"></select>
+                <label wicket:id="category-read"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <button wicket:id="save"></button>
+        </div>
+    </form>
+</wicket:extend>
+</body>
+</html>

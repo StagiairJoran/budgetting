@@ -62,6 +62,11 @@ public class StatementListPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
+        LinkBuilderFactory.pageLink(() -> new StatementPage(new Model<>(new Statement()), this.statementListContext.getPersonModel()))
+                .usingDefaults()
+                .body(new ResourceModel("new"))
+                .attach(this, "new");
+
         CheckGroup<Statement> checkGroup = new CheckGroup<Statement>("checkGroup", this.selectedStatementsModel);
 
         BaseForm<List<Statement>> dataTableForm = new BaseForm<>("dataTableForm", this.selectedStatementsModel);
@@ -70,8 +75,6 @@ public class StatementListPanel extends Panel {
                 .usingDefaults()
                 .body(new ResourceModel("category"))
                 .attach(dataTableForm, "category", this.categoryToAssignModel, this.categoryListModel);
-
-
 
         checkGroup.add(DataTableBuilderFactory.<Statement, String>simple()
                 .addColumn(ColumnBuilderFactory.<Statement, String>check().build(new ResourceModel("empty")))

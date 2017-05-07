@@ -65,6 +65,9 @@ public class Statement extends DomainObject {
     }
 
     public BigDecimal getAmount() {
+        if (this.amount == null) {
+            this.amount = BigDecimal.ZERO;
+        }
         return this.amount;
     }
 

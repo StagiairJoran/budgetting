@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Created by Jorandeboever
@@ -26,11 +27,13 @@ public class LocalDateTextField extends DateTextField {
         super(id, LambdaModel.of(
                 () -> {
                     logger.debug(String.format("GETTER for dateTextField:"));
-                    LocalDate localDate = model.getObject();
-                    logger.debug(String.format("Date in localDate format: %s", localDate.toString()));
-                    Date utilDate = DateUtilities.toUtilDate(localDate);
-                    logger.debug(String.format("Date in util format: %s", utilDate.toString()));
-                    return utilDate;
+                   return Optional.ofNullable(model.getObject())
+                            .map(localDate -> {
+                                logger.debug(String.format("Date in localDate format: %s", localDate.toString()));
+                                Date utilDate = DateUtilities.toUtilDate(localDate);
+                                logger.debug(String.format("Date in util format: %s", utilDate.toString()));
+                                return utilDate;
+                            }).orElse(null);
                 },
                 date -> {
                     logger.debug(String.format("SETTER for dateTextField:"));
