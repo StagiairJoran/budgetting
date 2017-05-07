@@ -55,6 +55,7 @@ public class CategoryGroupPage extends BasePage<CategoryGroup> {
 
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
+                .body(new ResourceModel("name"))
                 .attach(form, "name", LambdaModel.of(this.getModel(), CategoryGroup::getName, CategoryGroup::setName));
 
         IModel<CategoryType> categoryTypeIModel = LambdaModel.<CategoryGroup, CategoryType>of(this.getModel(), CategoryGroup::getCategoryType, CategoryGroup::setCategoryType);
@@ -65,7 +66,7 @@ public class CategoryGroupPage extends BasePage<CategoryGroup> {
                         form,
                         "categoryType",
                         categoryTypeIModel,
-                        new ListModel<>(Arrays.asList(CategoryType.EXPENSE, CategoryType.INCOME))
+                        new ListModel<>(Arrays.asList(CategoryType.EXPENSE, CategoryType.INCOME, CategoryType.UNTRACKED))
                 );
 
 
