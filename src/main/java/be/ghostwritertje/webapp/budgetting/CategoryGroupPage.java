@@ -2,6 +2,7 @@ package be.ghostwritertje.webapp.budgetting;
 
 import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.CategoryGroup;
+import be.ghostwritertje.domain.budgetting.CategoryType;
 import be.ghostwritertje.services.budgetting.CategoryGroupService;
 import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.webapp.BasePage;
@@ -16,9 +17,11 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.*;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -53,6 +56,17 @@ public class CategoryGroupPage extends BasePage<CategoryGroup> {
         FormComponentBuilderFactory.textField()
                 .usingDefaults()
                 .attach(form, "name", LambdaModel.of(this.getModel(), CategoryGroup::getName, CategoryGroup::setName));
+
+        IModel<CategoryType> categoryTypeIModel = LambdaModel.<CategoryGroup, CategoryType>of(this.getModel(), CategoryGroup::getCategoryType, CategoryGroup::setCategoryType);
+        FormComponentBuilderFactory.<CategoryType>dropDown()
+                .usingDefaults()
+                .body(new ResourceModel("category.type"))
+                .attach(
+                        form,
+                        "categoryType",
+                        categoryTypeIModel,
+                        new ListModel<>(Arrays.asList(CategoryType.EXPENSE, CategoryType.INCOME))
+                );
 
 
         LinkBuilderFactory.submitLink(addCategory())
