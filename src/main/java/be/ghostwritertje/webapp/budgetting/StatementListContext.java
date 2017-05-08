@@ -6,12 +6,12 @@ import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.model.LoadableListModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -71,6 +71,7 @@ public class StatementListContext implements Serializable {
                     .filter(statement -> !criteria.isFilterByCategory() || Optional.ofNullable(criteria.getCategory()).map(category -> Objects.equals(statement.getCategory(), category)).orElseGet(() -> statement.getCategory() == null))
                     .filter(statement -> Optional.ofNullable(criteria.getOriginatingAccount()).map(account -> Objects.equals(statement.getOriginatingAccount(), account)).orElse(true))
                     .filter(statement -> Optional.ofNullable(criteria.getDescription()).map(category -> StringUtils.containsIgnoreCase(statement.getDescription(),category)).orElse(true))
+                    .sorted(Comparator.comparing(Statement::getDate))
                     .collect(Collectors.toList());
         }
     }
