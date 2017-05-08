@@ -2,7 +2,11 @@ package be.ghostwritertje.services.budgetting;
 
 import be.ghostwritertje.domain.DomainObject;
 import be.ghostwritertje.domain.Person;
-import be.ghostwritertje.domain.budgetting.*;
+import be.ghostwritertje.domain.budgetting.BankAccount;
+import be.ghostwritertje.domain.budgetting.Category;
+import be.ghostwritertje.domain.budgetting.CategoryGroup;
+import be.ghostwritertje.domain.budgetting.CategoryType;
+import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.repository.CategoryDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
 import com.google.common.collect.Maps;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -160,6 +165,7 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
 
         Map<Category, BigDecimal> result = this.findByAdministrator(administrator).stream()
                 .filter(category -> category.getCategoryGroup().getCategoryType() == categoryType)
+                .sorted(Comparator.comparing(category -> category.getCategoryGroup().getName()))
                 .collect(Collectors.toMap(
                         category -> category,
                         category -> this.statementService.findSumOfStatementsByCategoryBetweenDates(category, administrator, beginDate, endDate).abs()
