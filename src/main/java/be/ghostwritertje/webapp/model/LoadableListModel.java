@@ -18,15 +18,10 @@ public abstract class LoadableListModel<T extends Serializable> extends ListMode
         Injector.get().inject(this);
     }
 
-    protected LoadableListModel(List<T> object) {
-        super(object);
-        Injector.get().inject(this);
-    }
-
     @Override
     public List<T> getObject() {
         if (super.getObject() == null) {
-            this.setObject(this.load());
+            super.setObject(this.load());
         }
         return super.getObject();
     }

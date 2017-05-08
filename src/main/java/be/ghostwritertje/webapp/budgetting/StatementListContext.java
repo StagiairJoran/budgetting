@@ -7,7 +7,6 @@ import be.ghostwritertje.webapp.model.LoadableListModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
@@ -52,7 +51,7 @@ public class StatementListContext implements Serializable {
         return this.statementCriteriaIModel;
     }
 
-    private final class FilteredStatementListModel extends ListModel<Statement> {
+    private final class FilteredStatementListModel extends LoadableListModel<Statement> {
         private static final long serialVersionUID = 6182710252359471798L;
 
         private final IModel<StatementCriteria> criteriaIModel;
@@ -64,7 +63,7 @@ public class StatementListContext implements Serializable {
         }
 
         @Override
-        public List<Statement> getObject() {
+        protected List<Statement> load() {
             StatementCriteria criteria = this.criteriaIModel.getObject();
 
             return this.statementListModel.getObject().stream()

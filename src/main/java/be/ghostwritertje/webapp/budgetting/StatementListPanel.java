@@ -10,14 +10,13 @@ import be.ghostwritertje.webapp.form.BaseForm;
 import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.model.DomainObjectListModel;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
@@ -34,6 +33,8 @@ import java.util.List;
 public class StatementListPanel extends Panel {
     private static final long serialVersionUID = -7870855479329092357L;
     public static final String DATA_TABLE_FORM_ID = "dataTableForm";
+    public static final String DATATABLE_ID = "statements";
+    public static final String CHECK_GROUP_ID = "checkGroup";
 
     @SpringBean
     private StatementService statementService;
@@ -68,7 +69,7 @@ public class StatementListPanel extends Panel {
                 .body(new ResourceModel("new"))
                 .attach(this, "new");
 
-        CheckGroup<Statement> checkGroup = new CheckGroup<Statement>("checkGroup", this.selectedStatementsModel);
+        CheckGroup<Statement> checkGroup = new CheckGroup<Statement>(CHECK_GROUP_ID, this.selectedStatementsModel);
 
         BaseForm<List<Statement>> dataTableForm = new BaseForm<>(DATA_TABLE_FORM_ID, this.selectedStatementsModel);
 
@@ -84,8 +85,9 @@ public class StatementListPanel extends Panel {
                 .addColumn(new LambdaColumn<>(new ResourceModel("amount"), Statement::getAmount))
                 .addColumn(new LambdaColumn<>(new ResourceModel("description"), Statement::getDescription))
                 .addColumn(new LambdaColumn<>(new ResourceModel("to"), Statement::getDestinationAccount))
-                .addColumn(ColumnBuilderFactory.custom(new ResourceModel("category"), CategoryPanel::new))
-                .build("statements", this.statementListContext.getFilteredStatementListModel()));
+                .addColumn(ColumnBuilderFactory.custom(new ResourceModel("category"), (s, statementIModel) -> new CategoryPanel(s, statementIModel, this.categoryListModel)))
+                .build(DATATABLE_ID, this.statementListContext.getFilteredStatementListModel())
+                .setOutputMarkupId(true));
 
         dataTableForm.add(checkGroup);
         LinkBuilderFactory.submitLink(submit())
@@ -103,10 +105,18 @@ public class StatementListPanel extends Panel {
         return (BaseForm<List<Statement>>) this.get(DATA_TABLE_FORM_ID);
     }
 
+    public Component getCheckGroup() {
+        return this.getForm().get(CHECK_GROUP_ID);
+    }
+
+    public Component getDataTable() {
+        return this.getCheckGroup().get(DATATABLE_ID);
+    }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> filterStatements() {
         return (ajaxRequestTarget, components) -> {
             StatementListPanel parent = components.findParent(StatementListPanel.class);
+            parent.statementListContext.getFilteredStatementListModel().setObject(null);
             ajaxRequestTarget.add(parent);
         };
     }

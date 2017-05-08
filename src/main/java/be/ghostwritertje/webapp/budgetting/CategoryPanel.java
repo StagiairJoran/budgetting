@@ -18,7 +18,6 @@ import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
-import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,11 +38,13 @@ public class CategoryPanel extends GenericPanel<Category> {
 
     private final IModel<Person> administratorModel;
     private final IModel<Statement> statementModel;
+    private final IModel<List<Category>> categoriesByAdministratorModel;
 
-    public CategoryPanel(String id, IModel<Statement> model) {
+    public CategoryPanel(String id, IModel<Statement> model, IModel<List<Category>> categoriesByAdministratorModel) {
         super(id, LambdaModel.of(model, Statement::getCategory, Statement::setCategory));
         this.statementModel = model;
         this.administratorModel = LambdaModel.of(model, statement -> statement.getOriginatingAccount().getAdministrator());
+        this.categoriesByAdministratorModel = categoriesByAdministratorModel;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class CategoryPanel extends GenericPanel<Category> {
                 .usingDefaults()
                 .switchable(false)
                 .behave(() -> new IModelBasedVisibilityBehavior<>(form.getFormModeModel(), formMode -> formMode == BaseForm.FormMode.EDIT))
-                .attach(form, "category", this.getModel(), (SerializableSupplier<List<Category>>) () -> this.categoryService.findByAdministrator(this.administratorModel.getObject()));
+                .attach(form, "category", this.getModel(), this.categoriesByAdministratorModel);
 
         LinkBuilderFactory.ajaxLink(edit(form.getFormModeModel()))
                 .usingDefaults()
