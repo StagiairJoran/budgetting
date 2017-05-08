@@ -70,7 +70,7 @@ public class StatementListContext implements Serializable {
                     .filter(statement -> !criteria.isFilterByCategory() || Optional.ofNullable(criteria.getCategory()).map(category -> Objects.equals(statement.getCategory(), category)).orElseGet(() -> statement.getCategory() == null))
                     .filter(statement -> Optional.ofNullable(criteria.getOriginatingAccount()).map(account -> Objects.equals(statement.getOriginatingAccount(), account)).orElse(true))
                     .filter(statement -> Optional.ofNullable(criteria.getDescription()).map(category -> StringUtils.containsIgnoreCase(statement.getDescription(),category)).orElse(true))
-                    .sorted(Comparator.comparing(Statement::getDate))
+                    .sorted(Comparator.comparing(Statement::getDate).reversed())
                     .collect(Collectors.toList());
         }
     }
