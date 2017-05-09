@@ -19,7 +19,11 @@ public class CategoryView extends DomainObject implements NumberDisplay {
 
     private BigDecimal amount;
     private String name;
+
     public BigDecimal getAmount() {
+        if (this.amount == null) {
+            this.amount = BigDecimal.ZERO;
+        }
         return this.amount;
     }
 
@@ -31,6 +35,6 @@ public class CategoryView extends DomainObject implements NumberDisplay {
 
     @Override
     public BigDecimal getNumberDisplayValue() {
-        return this.amount;
+        return this.getAmount().abs();
     }
 }

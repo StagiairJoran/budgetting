@@ -1,5 +1,6 @@
 package be.ghostwritertje.webapp.charts;
 
+import be.ghostwritertje.webapp.model.LoadableModel;
 import com.googlecode.wickedcharts.highcharts.options.Options;
 import com.googlecode.wickedcharts.highcharts.options.Title;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
@@ -48,23 +49,39 @@ public abstract class ChartBuilderSupport<X extends ChartBuilderSupport<X>> {
     }
 
     protected Chart build(String id) {
-        return new CustomChart(id, Model.of(this.getOptions()), this.optionsConsumer);
+        return new CustomChart(id, new OptionsModel(Model.of(this.getOptions()), this.optionsConsumer));
     }
 
     public void consume(SerializableConsumer<Options> optionsConsumer) {
         this.optionsConsumer = this.optionsConsumer.andThen(optionsConsumer);
     }
 
-    private static final class CustomChart extends Chart implements Serializable {
-        private static final long serialVersionUID = -8779295808983399888L;
+    private static final class OptionsModel extends LoadableModel<Options> {
 
         private final IModel<Options> optionsIModel;
         private final SerializableConsumer<Options> optionsConsumer;
 
-        public CustomChart(String id, IModel<Options> optionsIModel, SerializableConsumer<Options> optionsConsumer) {
-            super(id, optionsIModel.getObject());
+        private OptionsModel(IModel<Options> optionsIModel, SerializableConsumer<Options> optionsConsumer) {
             this.optionsIModel = optionsIModel;
             this.optionsConsumer = optionsConsumer;
+        }
+
+        @Override
+        protected Options load() {
+            Options options = optionsIModel.getObject();
+            optionsConsumer.accept(options);
+            return options;
+        }
+    }
+
+    private static final class CustomChart extends Chart implements Serializable {
+        private static final long serialVersionUID = -8779295808983399888L;
+
+        private final IModel<Options> optionsIModel;
+
+        public CustomChart(String id, IModel<Options> optionsIModel) {
+            super(id, optionsIModel.getObject());
+            this.optionsIModel = optionsIModel;
         }
 
         @Override
@@ -75,8 +92,6 @@ public abstract class ChartBuilderSupport<X extends ChartBuilderSupport<X>> {
         @Override
         protected void onConfigure() {
             super.onConfigure();
-            this.optionsConsumer.accept(this.getOptions());
-
             super.setOptions(this.optionsIModel.getObject());
         }
     }
