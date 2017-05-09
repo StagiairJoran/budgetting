@@ -1,6 +1,7 @@
 package be.ghostwritertje.views.budgetting;
 
 import be.ghostwritertje.domain.DomainObject;
+import be.ghostwritertje.services.NumberDisplay;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Entity;
@@ -13,12 +14,23 @@ import java.math.BigDecimal;
 @Entity
 @Immutable
 @Table(name = "V_CATEGORY")
-public class CategoryView extends DomainObject {
+public class CategoryView extends DomainObject implements NumberDisplay {
     private static final long serialVersionUID = 114706258813996614L;
 
     private BigDecimal amount;
-
+    private String name;
     public BigDecimal getAmount() {
+        return this.amount;
+    }
+
+
+    @Override
+    public String getDisplayValue() {
+        return this.name;
+    }
+
+    @Override
+    public BigDecimal getNumberDisplayValue() {
         return this.amount;
     }
 }

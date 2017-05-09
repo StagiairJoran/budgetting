@@ -1,5 +1,6 @@
 package be.ghostwritertje.webapp.charts;
 
+import be.ghostwritertje.services.NumberDisplay;
 import com.googlecode.wickedcharts.highcharts.options.ChartOptions;
 import com.googlecode.wickedcharts.highcharts.options.SeriesType;
 import com.googlecode.wickedcharts.highcharts.options.series.Point;
@@ -42,6 +43,12 @@ public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
         map.forEach(this::addPoint);
         return this.self();
     }
+
+    public PieChartBuilder addPoints(Iterable<? extends NumberDisplay> numberDisplays) {
+        numberDisplays.forEach(numberDisplay -> this.addPoint(numberDisplay.getDisplayValue(), numberDisplay.getNumberDisplayValue()));
+        return this.self();
+    }
+
 
     public <X, Y> PieChartBuilder addPoints(Map<X, Y> map, SerializableFunction<X, String> nameFunction, SerializableFunction<Y, Number> numberFunction) {
         map.forEach((s, number) -> this.addPoint(nameFunction.apply(s), numberFunction.apply(number)));

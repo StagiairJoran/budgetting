@@ -5,12 +5,15 @@ import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.CategoryGroup;
 import be.ghostwritertje.domain.budgetting.CategoryType;
 import be.ghostwritertje.services.budgetting.CategoryGroupService;
+import be.ghostwritertje.services.budgetting.CategoryGroupViewService;
 import be.ghostwritertje.services.budgetting.CategoryService;
+import be.ghostwritertje.views.budgetting.CategoryGroupView;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
 import be.ghostwritertje.webapp.datatable.ColumnBuilderFactory;
 import be.ghostwritertje.webapp.datatable.DataTableBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.model.DomainObjectListModel;
+import be.ghostwritertje.webapp.model.LoadableListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -35,6 +38,7 @@ public class CategoryListPanel extends GenericPanel<Person> {
     private CategoryService categoryService;
 
     private final IModel<List<CategoryGroup>> categoryGroupListModel;
+    private final IModel<List<CategoryGroupView>> categoryGroupViewListModel;
 
     public CategoryListPanel(String id, IModel<Person> model) {
         super(id, model);
@@ -42,6 +46,8 @@ public class CategoryListPanel extends GenericPanel<Person> {
                 this.categoryGroupService,
                 categoryGroupCategoryGroupService -> categoryGroupCategoryGroupService.findByAdministrator(this.getModelObject())
         );
+        this.categoryGroupViewListModel = new CategoryGroupViewListModel(model);
+
     }
 
     @Override
@@ -59,13 +65,11 @@ public class CategoryListPanel extends GenericPanel<Person> {
                 .attach(this, "dataTable", this.categoryGroupListModel);
 
 
-
-
         ChartBuilderFactory.pieChart()
                 .title("Expenses")
                 .name("Statements")
                 .subTitle("2016")
-                .addPoints(this.categoryService.findSumByAdministrator(this.getModelObject(), CategoryType.EXPENSE), Category::getName, aLong -> aLong)
+                .addPoints(this.categoryGroupViewListModel.getObject())
                 .attach(this, "expenses");
 
         ChartBuilderFactory.pieChart()
@@ -106,4 +110,23 @@ public class CategoryListPanel extends GenericPanel<Person> {
             ajaxRequestTarget.add(parent);
         };
     }
+
+    private static final class CategoryGroupViewListModel extends LoadableListModel<CategoryGroupView> {
+        private static final long serialVersionUID = 534003398295017305L;
+
+        @SpringBean
+        private CategoryGroupViewService categoryGroupViewService;
+
+        private final IModel<Person> administratorModel;
+
+        private CategoryGroupViewListModel(IModel<Person> administratorModel) {
+            this.administratorModel = administratorModel;
+        }
+
+        @Override
+        protected List<CategoryGroupView> load() {
+            return this.categoryGroupViewService.findByAdministratorOrderByName(this.administratorModel.getObject(), CategoryType.EXPENSE);
+        }
+    }
+
 }
