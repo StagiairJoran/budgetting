@@ -69,7 +69,7 @@ public class CategoryListPanel extends GenericPanel<Person> {
                 .title("Expenses")
                 .name("Statements")
                 .subTitle("2016")
-                .addPoints(this.categoryGroupViewListModel.getObject())
+                .addPoints(this.categoryGroupViewListModel)
                 .attach(this, "expenses");
 
         ChartBuilderFactory.pieChart()

@@ -1,13 +1,17 @@
 package be.ghostwritertje.webapp.charts;
 
-import be.ghostwritertje.services.NumberDisplay;
+import be.ghostwritertje.views.budgetting.CategoryGroupView;
 import com.googlecode.wickedcharts.highcharts.options.ChartOptions;
 import com.googlecode.wickedcharts.highcharts.options.SeriesType;
 import com.googlecode.wickedcharts.highcharts.options.series.Point;
 import com.googlecode.wickedcharts.highcharts.options.series.PointSeries;
+import com.googlecode.wickedcharts.highcharts.options.series.Series;
 import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
+import org.apache.wicket.model.IModel;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +21,8 @@ import java.util.Map;
 public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
 
     private final PointSeries pointSeries;
+
+    private SerializableFunction<List<Series<?>>, List<Series<?>>> seriesListConsumer = pointSeries1 -> pointSeries1;
 
     public PieChartBuilder() {
         this.getOptions().setChartOptions(
@@ -32,23 +38,24 @@ public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
         return this.self();
     }
 
-
     public PieChartBuilder addPoint(String name, Number number) {
         this.pointSeries
                 .addPoint(new Point(name, number));
         return this.self();
     }
 
-    public PieChartBuilder addPoints(Map<String, Number> map) {
-        map.forEach(this::addPoint);
+
+    public PieChartBuilder addPoints(IModel<List<CategoryGroupView>> numberDisplays) {
+        this.seriesListConsumer = seriesList -> {
+            PointSeries pointSeries2 = new PointSeries();
+            pointSeries2.setType(SeriesType.PIE);
+            numberDisplays.getObject().forEach(o -> pointSeries2.addPoint(new Point(o.getDisplayValue(), (Number) o.getNumberDisplayValue())));
+            seriesList.add(pointSeries2);
+            return seriesList;
+        };
+
         return this.self();
     }
-
-    public PieChartBuilder addPoints(Iterable<? extends NumberDisplay> numberDisplays) {
-        numberDisplays.forEach(numberDisplay -> this.addPoint(numberDisplay.getDisplayValue(), numberDisplay.getNumberDisplayValue()));
-        return this.self();
-    }
-
 
     public <X, Y> PieChartBuilder addPoints(Map<X, Y> map, SerializableFunction<X, String> nameFunction, SerializableFunction<Y, Number> numberFunction) {
         map.forEach((s, number) -> this.addPoint(nameFunction.apply(s), numberFunction.apply(number)));
@@ -57,7 +64,10 @@ public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
 
     @Override
     protected Chart build(String id) {
-        this.getOptions().addSeries(this.pointSeries);
+//        this.getOptions().addSeries(this.pointSeries);
+        this.consume(options -> {
+            options.setSeries(this.seriesListConsumer.apply(new ArrayList<>()));
+        });
         return super.build(id);
     }
 }
