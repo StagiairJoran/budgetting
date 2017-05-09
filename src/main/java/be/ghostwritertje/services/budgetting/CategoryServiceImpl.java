@@ -8,6 +8,7 @@ import be.ghostwritertje.domain.budgetting.CategoryGroup;
 import be.ghostwritertje.domain.budgetting.CategoryType;
 import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.repository.CategoryDao;
+import be.ghostwritertje.repository.CategoryViewDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
     private final BankAccountService bankAccountService;
     private final StatementService statementService;
     private final CategoryGroupService categoryGroupService;
+    @Autowired
+    private CategoryViewDao categoryViewDao;
 
     @Autowired
     public CategoryServiceImpl(
@@ -162,18 +165,16 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
     public Map<Category, BigDecimal> findSumByAdministrator(Person administrator, CategoryType categoryType) {
         LocalDate beginDate = LocalDate.of(LocalDate.now().getYear() - 1, 1, 1);
         LocalDate endDate = beginDate.plusYears(1);
-
         Map<Category, BigDecimal> result = this.findByAdministrator(administrator).stream()
                 .filter(category -> category.getCategoryGroup().getCategoryType() == categoryType)
                 .sorted(Comparator.comparing(category -> category.getCategoryGroup().getName()))
                 .collect(Collectors.toMap(
                         category -> category,
-                        category -> this.statementService.findSumOfStatementsByCategoryBetweenDates(category, administrator, beginDate, endDate).abs()
+                        category -> Optional.ofNullable(this.categoryViewDao.findOne(category.getUuid()).getAmount()).orElseGet(() -> BigDecimal.ZERO).abs()
                 ));
-
 //        result.put(new Category("None"), this.statementService.findNumberOfStatementsWithoutCategory(administrator));
 
-        return Maps.filterValues(result, count -> count != null && count.compareTo(BigDecimal.ZERO) != 0);
+        return Maps.filterValues(result, sum -> sum != null && sum.compareTo(BigDecimal.ZERO) != 0);
 
     }
 
