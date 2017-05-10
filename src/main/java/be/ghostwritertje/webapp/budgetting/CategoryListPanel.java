@@ -3,6 +3,7 @@ package be.ghostwritertje.webapp.budgetting;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.CategoryGroup;
 import be.ghostwritertje.domain.budgetting.CategoryType;
+import be.ghostwritertje.services.NumberDisplay;
 import be.ghostwritertje.services.budgetting.CategoryGroupService;
 import be.ghostwritertje.services.budgetting.CategoryGroupViewService;
 import be.ghostwritertje.services.budgetting.CategoryService;
@@ -45,7 +46,7 @@ public class CategoryListPanel extends GenericPanel<Person> {
                 this.categoryGroupService,
                 categoryGroupCategoryGroupService -> categoryGroupCategoryGroupService.findByAdministrator(this.getModelObject())
         );
-        this.categoryGroupViewListModel = new CategoryGroupViewListModel(model);
+        this.categoryGroupViewListModel = new ExpensesCategoryGroupViewListModel(model);
 
     }
 
@@ -68,15 +69,15 @@ public class CategoryListPanel extends GenericPanel<Person> {
                 .title("Expenses")
 //                .name("Statements")
                 .subTitle("2016")
-                .addPoints(this.categoryGroupViewListModel)
+                .setCategoryGroups(this.categoryGroupViewListModel)
                 .attach(this, "expenses");
 
-//        ChartBuilderFactory.pieChart()
-//                .title("Income")
-//                .subTitle("2016")
-////                .name("Statements")
-//                .addPoints(this.categoryService.findSumByAdministrator(this.getModelObject(), CategoryType.INCOME), Category::getName, aLong -> aLong)
-//                .attach(this, "income");
+        ChartBuilderFactory.pieChart()
+                .title("Income")
+                .subTitle("2016")
+//                .name("Statements")
+                .addPoints(new CountCategoryStatementsListModel(this.getModel()))
+                .attach(this, "income");
     }
 
     private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> newCategoryGroup() {
@@ -110,7 +111,24 @@ public class CategoryListPanel extends GenericPanel<Person> {
         };
     }
 
-    private static final class CategoryGroupViewListModel extends LoadableListModel<CategoryGroupView> {
+    private static final class CountCategoryStatementsListModel extends LoadableListModel<NumberDisplay> {
+
+        @SpringBean
+        private CategoryService categoryService;
+
+        private final IModel<Person> administratorModel;
+
+        private CountCategoryStatementsListModel(IModel<Person> administratorModel) {
+            this.administratorModel = administratorModel;
+        }
+
+        @Override
+        protected List<NumberDisplay> load() {
+            return this.categoryService.findSumByAdministrator(this.administratorModel.getObject(), CategoryType.INCOME);
+        }
+    }
+
+    private static final class ExpensesCategoryGroupViewListModel extends LoadableListModel<CategoryGroupView> {
         private static final long serialVersionUID = 534003398295017305L;
 
         @SpringBean
@@ -118,7 +136,7 @@ public class CategoryListPanel extends GenericPanel<Person> {
 
         private final IModel<Person> administratorModel;
 
-        private CategoryGroupViewListModel(IModel<Person> administratorModel) {
+        private ExpensesCategoryGroupViewListModel(IModel<Person> administratorModel) {
             this.administratorModel = administratorModel;
         }
 

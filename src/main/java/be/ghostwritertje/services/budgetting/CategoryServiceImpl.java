@@ -10,6 +10,7 @@ import be.ghostwritertje.domain.budgetting.Statement;
 import be.ghostwritertje.repository.CategoryDao;
 import be.ghostwritertje.repository.CategoryViewDao;
 import be.ghostwritertje.services.DomainObjectCrudServiceSupport;
+import be.ghostwritertje.services.NumberDisplay;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
@@ -162,20 +163,26 @@ public class CategoryServiceImpl extends DomainObjectCrudServiceSupport<Category
     }
 
     @Override
-    public Map<Category, BigDecimal> findSumByAdministrator(Person administrator, CategoryType categoryType) {
+    public List<NumberDisplay> findSumByAdministrator(Person administrator, CategoryType categoryType) {
         LocalDate beginDate = LocalDate.of(LocalDate.now().getYear() - 1, 1, 1);
         LocalDate endDate = beginDate.plusYears(1);
-        Map<Category, BigDecimal> result = this.findByAdministrator(administrator).stream()
+        List<NumberDisplay> result = this.findByAdministrator(administrator).stream()
                 .filter(category -> category.getCategoryGroup().getCategoryType() == categoryType)
                 .sorted(Comparator.comparing(category -> category.getCategoryGroup().getName()))
-                .collect(Collectors.toMap(
-                        category -> category,
-                        category -> Optional.ofNullable(this.categoryViewDao.findOne(category.getUuid()).getAmount()).orElseGet(() -> BigDecimal.ZERO).abs()
-                ));
+                .map(category -> new NumberDisplayImpl(
+                        category.getName(),
+                        Optional.ofNullable(this.categoryViewDao.findOne(category.getUuid()).getAmount()).orElseGet(() -> BigDecimal.ZERO).abs()
+                ))
+                .filter(numberDisplay -> numberDisplay.getNumberDisplayValue() != null && numberDisplay.getNumberDisplayValue().compareTo(BigDecimal.ZERO) != 0)
+                .collect(Collectors.toList());
+//                .collect(Collectors.toMap(
+//                        category -> category,
+//                        category -> Optional.ofNullable(this.categoryViewDao.findOne(category.getUuid()).getAmount()).orElseGet(() -> BigDecimal.ZERO).abs()
+//                ));
 //        result.put(new Category("None"), this.statementService.findNumberOfStatementsWithoutCategory(administrator));
 
-        return Maps.filterValues(result, sum -> sum != null && sum.compareTo(BigDecimal.ZERO) != 0);
-
+//        return Maps.filterValues(result, sum -> sum != null && sum.compareTo(BigDecimal.ZERO) != 0);
+        return result;
     }
 
     @Override

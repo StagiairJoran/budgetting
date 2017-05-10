@@ -5,8 +5,8 @@ import be.ghostwritertje.domain.budgetting.Category;
 import be.ghostwritertje.domain.budgetting.CategoryGroup;
 import be.ghostwritertje.domain.budgetting.CategoryType;
 import be.ghostwritertje.services.DomainObjectCrudService;
+import be.ghostwritertje.services.NumberDisplay;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +21,7 @@ public interface CategoryService extends DomainObjectCrudService<Category> {
 
     Map<Category, Long> findCountByAdministrator(Person administrator);
 
-    Map<Category, BigDecimal> findSumByAdministrator(Person administrator, CategoryType categoryType);
+    List<NumberDisplay> findSumByAdministrator(Person administrator, CategoryType categoryType);
 
     Iterable<Category> save(Iterable<Category> categories);
 

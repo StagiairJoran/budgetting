@@ -1,5 +1,6 @@
 package be.ghostwritertje.webapp.charts;
 
+import be.ghostwritertje.services.NumberDisplay;
 import be.ghostwritertje.views.budgetting.CategoryGroupView;
 import be.ghostwritertje.views.budgetting.CategoryView;
 import com.googlecode.wickedcharts.highcharts.options.ChartOptions;
@@ -23,14 +24,13 @@ import java.util.List;
 public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
 
     PieChartBuilder() {
-
         ChartOptions chartOptions = new ChartOptions();
         chartOptions
                 .setType(SeriesType.PIE);
         this.getOptions().setChartOptions(chartOptions);
     }
 
-    public PieChartBuilder addPoints(IModel<List<CategoryGroupView>> categoryGroups) {
+    public PieChartBuilder setCategoryGroups(IModel<List<CategoryGroupView>> categoryGroups) {
         this.consume(options -> {
             List<Series<?>> seriesList = new ArrayList<>();
             DataLabels dataLabels1 = new DataLabels();
@@ -58,6 +58,25 @@ public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
             }
             seriesList.add(pointSeries1);
             seriesList.add(pointSeries2);
+
+            options.setSeries(seriesList);
+        });
+
+        return this.self();
+    }
+
+    public PieChartBuilder addPoints(IModel<List<NumberDisplay>> numberDisplaysModel) {
+        this.consume(options -> {
+            List<Series<?>> seriesList = new ArrayList<>();
+            DataLabels dataLabels1 = new DataLabels();
+            dataLabels1.setColor(new HexColor("#ffffff"));
+
+            PointSeries pointSeries1 = new PointSeries();
+            pointSeries1.setType(SeriesType.PIE);
+            pointSeries1.setDataLabels(dataLabels1);
+
+            numberDisplaysModel.getObject().forEach(numberDisplay -> pointSeries1.addPoint(new Point(numberDisplay.getDisplayValue(), numberDisplay.getNumberDisplayValue())));
+            seriesList.add(pointSeries1);
 
             options.setSeries(seriesList);
         });
