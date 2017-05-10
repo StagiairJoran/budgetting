@@ -14,8 +14,12 @@ import com.googlecode.wickedcharts.highcharts.options.series.PointSeries;
 import com.googlecode.wickedcharts.highcharts.options.series.Series;
 import org.apache.wicket.model.IModel;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jorandeboever
@@ -47,15 +51,31 @@ public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
             pointSeries2.setInnerSize(new PixelOrPercent(60, PixelOrPercent.Unit.PERCENT));
             pointSeries2.setDataLabels(new DataLabels());
 
-            int i = 1;
-            for (CategoryGroupView categoryGroup : categoryGroups.getObject()) {
-                pointSeries1.addPoint(new Point(categoryGroup.getDisplayValue(), categoryGroup.getNumberDisplayValue(), new HighchartsColor(++i)));
-                Float brightness = 0.01F;
-                for (CategoryView category : categoryGroup.getCategoryList()) {
-                    pointSeries2.addPoint(new Point(category.getDisplayValue(), category.getNumberDisplayValue(), new HighchartsColor(i).brighten(brightness)));
-                    brightness += 0.05F;
+            List<CategoryGroupView> list = categoryGroups.getObject()
+                    .stream()
+                    .sorted(Comparator.comparing(CategoryGroupView::getNumberDisplayValue).reversed())
+                    .collect(Collectors.toList());
+            BigDecimal total = list.stream().map(CategoryGroupView::getNumberDisplayValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+            Point rest = new Point("other", 0, new HighchartsColor(0));
+            int i = 2;
+            for (CategoryGroupView categoryGroup : list) {
+                if (i < 10 && categoryGroup.getNumberDisplayValue().compareTo(total.divide(new BigDecimal("10"), RoundingMode.HALF_DOWN)) >= 0) {
+                    HighchartsColor color = new HighchartsColor(i);
+                    pointSeries1.addPoint(new Point(categoryGroup.getDisplayValue(), categoryGroup.getNumberDisplayValue(), color));
+
+                    Float brightness = 0.01F;
+                    for (CategoryView category : categoryGroup.getCategoryList()) {
+                        pointSeries2.addPoint(new Point(category.getDisplayValue(), category.getNumberDisplayValue(), color.brighten(brightness)));
+                        brightness += 0.05F;
+                    }
+                } else {
+                    rest.setY(categoryGroup.getNumberDisplayValue().add(new BigDecimal(rest.getY().toString())));
                 }
+
+                i++;
             }
+            pointSeries1.addPoint(rest);
+            pointSeries2.addPoint(rest);
             seriesList.add(pointSeries1);
             seriesList.add(pointSeries2);
 
