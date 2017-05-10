@@ -85,17 +85,17 @@ public class StatementListPanel extends Panel {
                 .addColumn(new LambdaColumn<>(new ResourceModel("amount"), Statement::getAmount))
                 .addColumn(new LambdaColumn<>(new ResourceModel("description"), Statement::getDescription))
                 .addColumn(new LambdaColumn<>(new ResourceModel("to"), Statement::getDestinationAccount))
-                .addColumn(ColumnBuilderFactory.custom(new ResourceModel("category"), (s, statementIModel) -> new CategoryPanel(s, statementIModel, this.categoryListModel)))
+                .addColumn(ColumnBuilderFactory.custom(new ResourceModel("category"), (s, statementIModel) -> new CategoryPanel(s, statementIModel, this.categoryListModel, resetChart())))
                 .build(DATATABLE_ID, this.statementListContext.getFilteredStatementListModel())
                 .setOutputMarkupId(true));
 
         dataTableForm.add(checkGroup);
-        LinkBuilderFactory.submitLink(submit())
+        LinkBuilderFactory.submitLink(submit().andThen(resetChart()))
                 .usingDefaults()
                 .attach(dataTableForm, "submit");
         this.add(dataTableForm);
 
-        this.add(new StatementCriteriaPanel("criteriaPanel", this.statementListContext.getStatementCriteriaIModel(), this.statementListContext.getPersonModel(), filterStatements()));
+        this.add(new StatementCriteriaPanel("criteriaPanel", this.statementListContext.getStatementCriteriaIModel(), this.statementListContext.getPersonModel(), filterStatements().andThen(resetChart())));
 
 
     }
@@ -129,6 +129,14 @@ public class StatementListPanel extends Panel {
             parent.statementService.save(statements);
             parent.getForm().getFormModeModel().setObject(BaseForm.FormMode.EDIT);
             ajaxRequestTarget.add(parent);
+        };
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> resetChart() {
+        return (ajaxRequestTarget, components) -> {
+            StatementListPage parent = components.findParent(StatementListPage.class);
+            parent.resetChartModels();
+            ajaxRequestTarget.add(parent.getPieChart());
         };
     }
 

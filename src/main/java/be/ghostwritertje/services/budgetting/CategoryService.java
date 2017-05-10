@@ -8,7 +8,6 @@ import be.ghostwritertje.services.DomainObjectCrudService;
 import be.ghostwritertje.services.NumberDisplay;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Jorandeboever
@@ -19,7 +18,7 @@ public interface CategoryService extends DomainObjectCrudService<Category> {
 
     List<Category> findByAdministrator(Person administrator);
 
-    Map<Category, Long> findCountByAdministrator(Person administrator);
+    List<NumberDisplay> findCountByAdministrator(Person administrator);
 
     List<NumberDisplay> findSumByAdministrator(Person administrator, CategoryType categoryType);
 

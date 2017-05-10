@@ -39,12 +39,14 @@ public class CategoryPanel extends GenericPanel<Category> {
     private final IModel<Person> administratorModel;
     private final IModel<Statement> statementModel;
     private final IModel<List<Category>> categoriesByAdministratorModel;
+    private final SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> onSubmitBiConsumer;
 
-    public CategoryPanel(String id, IModel<Statement> model, IModel<List<Category>> categoriesByAdministratorModel) {
+    public CategoryPanel(String id, IModel<Statement> model, IModel<List<Category>> categoriesByAdministratorModel, SerializableBiConsumer<AjaxRequestTarget, AjaxSubmitLink> onSubmitBiConsumer) {
         super(id, LambdaModel.of(model, Statement::getCategory, Statement::setCategory));
         this.statementModel = model;
         this.administratorModel = LambdaModel.of(model, statement -> statement.getOriginatingAccount().getAdministrator());
         this.categoriesByAdministratorModel = categoriesByAdministratorModel;
+        this.onSubmitBiConsumer = onSubmitBiConsumer;
     }
 
     @Override

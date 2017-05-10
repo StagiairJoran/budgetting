@@ -48,7 +48,7 @@ public abstract class ChartBuilderSupport<X extends ChartBuilderSupport<X>> {
         return this.self();
     }
 
-    protected Chart build(String id) {
+    protected CustomChart build(String id) {
         return new CustomChart(id, new OptionsModel(Model.of(this.getOptions()), this.optionsConsumer));
     }
 
@@ -74,7 +74,7 @@ public abstract class ChartBuilderSupport<X extends ChartBuilderSupport<X>> {
         }
     }
 
-    private static final class CustomChart extends Chart implements Serializable {
+    public static final class CustomChart extends Chart implements Serializable {
         private static final long serialVersionUID = -8779295808983399888L;
 
         private final IModel<Options> optionsIModel;
@@ -93,6 +93,10 @@ public abstract class ChartBuilderSupport<X extends ChartBuilderSupport<X>> {
         protected void onConfigure() {
             super.onConfigure();
             super.setOptions(this.optionsIModel.getObject());
+        }
+
+        public IModel<Options> getOptionsIModel() {
+            return this.optionsIModel;
         }
     }
 }

@@ -2,6 +2,8 @@ package be.ghostwritertje.webapp.budgetting;
 
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.budgetting.Statement;
+import be.ghostwritertje.services.NumberDisplay;
+import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.budgetting.StatementService;
 import be.ghostwritertje.webapp.model.LoadableListModel;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +28,7 @@ public class StatementListContext implements Serializable {
     private final IModel<List<Statement>> statementListModel;
     private final IModel<List<Statement>> filteredStatementListModel;
     private final IModel<StatementCriteria> statementCriteriaIModel = new Model<>(new StatementCriteria());
+    private final IModel<List<NumberDisplay>> statementCountListModel;
 
     private final IModel<Person> personModel;
 
@@ -33,6 +36,7 @@ public class StatementListContext implements Serializable {
         this.personModel = personModel;
         this.statementListModel = new StatementListModel(this.personModel);
         this.filteredStatementListModel = new FilteredStatementListModel(this.statementCriteriaIModel, this.statementListModel);
+        this.statementCountListModel = new CountCategoryStatementsListModel(this.personModel);
     }
 
     public IModel<List<Statement>> getStatementListModel() {
@@ -49,6 +53,10 @@ public class StatementListContext implements Serializable {
 
     public IModel<StatementCriteria> getStatementCriteriaIModel() {
         return this.statementCriteriaIModel;
+    }
+
+    public IModel<List<NumberDisplay>> getStatementCountListModel() {
+        return this.statementCountListModel;
     }
 
     private final class FilteredStatementListModel extends LoadableListModel<Statement> {
@@ -89,6 +97,25 @@ public class StatementListContext implements Serializable {
         @Override
         protected List<Statement> load() {
             return this.statementService.findByAdministrator(this.personIModel.getObject());
+        }
+    }
+
+
+    private static final class CountCategoryStatementsListModel extends LoadableListModel<NumberDisplay> {
+
+        private static final long serialVersionUID = -8713117398023318040L;
+        @SpringBean
+        private CategoryService categoryService;
+
+        private final IModel<Person> administratorModel;
+
+        private CountCategoryStatementsListModel(IModel<Person> administratorModel) {
+            this.administratorModel = administratorModel;
+        }
+
+        @Override
+        protected List<NumberDisplay> load() {
+            return this.categoryService.findCountByAdministrator(this.administratorModel.getObject());
         }
     }
 }
