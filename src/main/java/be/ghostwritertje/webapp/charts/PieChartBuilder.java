@@ -11,9 +11,7 @@ import com.googlecode.wickedcharts.highcharts.options.color.HighchartsColor;
 import com.googlecode.wickedcharts.highcharts.options.series.Point;
 import com.googlecode.wickedcharts.highcharts.options.series.PointSeries;
 import com.googlecode.wickedcharts.highcharts.options.series.Series;
-import com.googlecode.wickedcharts.wicket7.highcharts.Chart;
 import org.apache.wicket.model.IModel;
-import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,23 +22,17 @@ import java.util.List;
  */
 public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
 
+    PieChartBuilder() {
 
-    private SerializableFunction<List<Series<?>>, List<Series<?>>> seriesListConsumer = pointSeries1 -> pointSeries1;
-
-
-    public PieChartBuilder() {
-        this.consume(options -> {
-
-            ChartOptions chartOptions = new ChartOptions();
-            chartOptions
-                    .setType(SeriesType.PIE);
-            options.setChartOptions(chartOptions);
-        });
+        ChartOptions chartOptions = new ChartOptions();
+        chartOptions
+                .setType(SeriesType.PIE);
+        this.getOptions().setChartOptions(chartOptions);
     }
 
     public PieChartBuilder addPoints(IModel<List<CategoryGroupView>> categoryGroups) {
-        this.seriesListConsumer = seriesList -> {
-
+        this.consume(options -> {
+            List<Series<?>> seriesList = new ArrayList<>();
             DataLabels dataLabels1 = new DataLabels();
             dataLabels1.setColor(new HexColor("#ffffff"));
             dataLabels1.setDistance(-30);
@@ -67,19 +59,10 @@ public class PieChartBuilder extends ChartBuilderSupport<PieChartBuilder> {
             seriesList.add(pointSeries1);
             seriesList.add(pointSeries2);
 
-            return seriesList;
-        };
+            options.setSeries(seriesList);
+        });
 
         return this.self();
     }
 
-
-    @Override
-    protected Chart build(String id) {
-//        this.getOptions().addSeries(this.pointSeries);
-        this.consume(options -> {
-            options.setSeries(this.seriesListConsumer.apply(new ArrayList<>()));
-        });
-        return super.build(id);
-    }
 }
