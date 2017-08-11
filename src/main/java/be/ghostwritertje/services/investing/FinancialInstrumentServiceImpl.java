@@ -67,6 +67,7 @@ public class FinancialInstrumentServiceImpl extends DomainObjectCrudServiceSuppo
         this.historicPriceService.createHistoricPrices(financialInstrument);
     }
 
+    @Override
     @Scheduled(cron = "0 0 5 ? * TUE-SAT")
     public void updateHistoricPrices() {
         this.findAll().forEach(this.historicPriceService::updateHistoricPrices);

@@ -3,6 +3,7 @@ package be.ghostwritertje.webapp.investing;
 import be.ghostwritertje.domain.Person;
 import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.services.investing.FinancialInstrumentService;
+import be.ghostwritertje.services.investing.HistoricPriceService;
 import be.ghostwritertje.utilities.Pair;
 import be.ghostwritertje.webapp.BasePage;
 import be.ghostwritertje.webapp.charts.ChartBuilderFactory;
@@ -12,6 +13,7 @@ import be.ghostwritertje.webapp.form.FormComponentBuilderFactory;
 import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.model.DomainObjectListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.form.TextField;
@@ -35,6 +37,10 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
 
     @SpringBean
     private FinancialInstrumentService financialInstrumentService;
+
+    @SpringBean
+    private HistoricPriceService historicPriceService;
+
     private final IModel<List<FinancialInstrument>> financialInstrumentListModel;
 
     public FinancialInstrumentListPage() {
@@ -44,6 +50,11 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        LinkBuilderFactory.ajaxLink(updatePrices())
+                .usingDefaults()
+                .body(new ResourceModel("update.prices"))
+                .attach(this, "updatePrices");
 
         BaseForm<FinancialInstrument> form = new BaseForm<FinancialInstrument>("form", new Model<>(new FinancialInstrument()));
         FormComponentBuilderFactory.textField()
@@ -113,6 +124,13 @@ public class FinancialInstrumentListPage extends BasePage<Person> {
                 .addLines(coordinatesMap10, Pair::getK, Pair::getV, 2)
                 .attach(this, "chart10");
 
+    }
+
+    private static SerializableBiConsumer<AjaxRequestTarget, AjaxLink<Object>> updatePrices() {
+        return (ajaxRequestTarget, components) -> {
+            FinancialInstrumentListPage parent = components.findParent(FinancialInstrumentListPage.class);
+            parent.financialInstrumentService.updateHistoricPrices();
+        };
     }
 
     @SuppressWarnings("unchecked")

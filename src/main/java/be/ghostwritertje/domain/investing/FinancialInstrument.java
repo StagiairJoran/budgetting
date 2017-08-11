@@ -116,12 +116,14 @@ public class FinancialInstrument extends DomainObject {
         sw.start();
         List<Pair<LocalDate, Double>> result = this.historicPriceList.stream()
                 .filter(historicPrice -> historicPrice.getDate().isAfter(date) && historicPrice.getDate().isBefore(date.plusDays(7)))
+                .filter(historicPrice -> !historicPrice.getPrice().equals(BigDecimal.ZERO))
                 .sorted(Comparator.comparing(HistoricPrice::getDate))
                 .findFirst()
                 .map(historicPrice -> {
                     BigDecimal value = new BigDecimal("10000").divide(historicPrice.getPrice(),100, RoundingMode.HALF_EVEN);
                     return this.historicPriceList.stream()
                             .filter(h -> h.getDate().isAfter(date))
+                            .filter(h -> !h.getPrice().equals(BigDecimal.ZERO))
                             .sorted(Comparator.comparing(HistoricPrice::getDate))
                             .map(historicPrice1 -> new Pair<>(historicPrice1.getDate(), historicPrice1.getPrice().multiply(value).doubleValue()))
                             .collect(Collectors.toList());

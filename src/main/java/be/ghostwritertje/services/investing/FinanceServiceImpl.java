@@ -16,7 +16,11 @@ import yahoofinance.histquotes.Interval;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -108,7 +112,10 @@ public class FinanceServiceImpl implements FinanceService {
 
         try {
             Stock stock = YahooFinance.get(financialInstrument.getQuote(), from, to, Interval.DAILY);
-            return stock.getHistory().stream().map(historicalQuote -> convertToHistoricPrice(historicalQuote, financialInstrument, stock.getCurrency())).collect(Collectors.toList());
+            return stock.getHistory().stream()
+                    .map(historicalQuote -> convertToHistoricPrice(historicalQuote, financialInstrument, stock.getCurrency()))
+                    .filter(historicPrice -> !historicPrice.getPrice().equals(BigDecimal.ZERO))
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
         }

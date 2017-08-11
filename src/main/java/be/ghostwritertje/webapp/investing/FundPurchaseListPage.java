@@ -81,7 +81,7 @@ public class FundPurchaseListPage extends BasePage<Person> {
 
 
         this.add(new AllocationPanel("currentAllocation", this.investmentSummaryModel));
-       this.add(DataTableBuilderFactory.<FundPurchase, String>simple()
+        this.add(DataTableBuilderFactory.<FundPurchase, String>simple()
                 .addColumn(ColumnBuilderFactory.<FundPurchase, String>simple(FundPurchase::getDate).build(new ResourceModel("date")))
                 .addColumn(ColumnBuilderFactory.<FundPurchase, String>simple(o -> o.getFinancialInstrument().getName()).build(new ResourceModel("name")))
                 .addColumn(ColumnBuilderFactory.<FundPurchase, String>simple(FundPurchase::getNumberOfShares).build(new ResourceModel("count")))
@@ -104,6 +104,8 @@ public class FundPurchaseListPage extends BasePage<Person> {
                 this.setResponsePage(new FundPurchasePage(new Model<FundPurchase>(fundPurchase)));
             }
         });
+
+
     }
 
 

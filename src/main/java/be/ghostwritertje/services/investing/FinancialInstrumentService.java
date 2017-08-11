@@ -17,4 +17,6 @@ public interface FinancialInstrumentService extends DomainObjectCrudService<Fina
 
     List<FinancialInstrument> findFinancialInstrumentsByPerson(Person person);
 
+    void updateHistoricPrices();
+
 }

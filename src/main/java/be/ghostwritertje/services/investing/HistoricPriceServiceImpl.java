@@ -11,6 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 
 /**
  * Created by Jorandeboever
@@ -37,11 +38,15 @@ public class HistoricPriceServiceImpl extends DomainObjectCrudServiceSupport<His
     @Override
     public void updateHistoricPrices(FinancialInstrument financialInstrument) {
         logger.debug("Updating historic prices for " + financialInstrument.getQuote());
-        this.save(this.financeService.createHistoricPrices(financialInstrument, LocalDate.now().minusDays(1)));
+        this.save(this.financeService.createHistoricPrices(financialInstrument, financialInstrument.getHistoricPriceList().stream().
+                sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
+                .findFirst()
+                .map(HistoricPrice::getDate)
+                .orElse(LocalDate.of(1970, 1, 1)).plusDays(1)));
     }
 
     @Override
-    public void createHistoricPrices(FinancialInstrument financialInstrument){
+    public void createHistoricPrices(FinancialInstrument financialInstrument) {
         logger.debug("Creating historic prices for " + financialInstrument.getQuote());
         this.save(this.financeService.createHistoricPrices(financialInstrument));
     }
