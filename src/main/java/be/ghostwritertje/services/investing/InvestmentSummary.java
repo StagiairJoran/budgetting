@@ -1,5 +1,6 @@
 package be.ghostwritertje.services.investing;
 
+import be.ghostwritertje.domain.investing.FinancialInstrument;
 import be.ghostwritertje.domain.investing.FundPurchase;
 import org.nevec.rjm.BigDecimalMath;
 
@@ -8,18 +9,28 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jorandeboever
  * Date: 08-Oct-16.
  */
 public class InvestmentSummary implements Serializable {
+    private static final long serialVersionUID = -1679373409514815423L;
     private BigDecimal currentValue;
     private List<FundPurchase> fundPurchaseList;
 
+    private Map<FinancialInstrument, Integer> sharesPerFinancialInstrument;
+
     public List<FundPurchase> getFundPurchaseList() {
         return this.fundPurchaseList;
+    }
+
+    public Map<FinancialInstrument, Integer> getSharesPerFinancialInstrument() {
+        return this.fundPurchaseList.stream()
+                .collect(Collectors.groupingBy(FundPurchase::getFinancialInstrument, Collectors.summingInt(FundPurchase::getNumberOfShares)));
     }
 
     public BigDecimal getAddedValue() {

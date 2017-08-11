@@ -36,10 +36,10 @@ public class FundPurchaseListPage extends BasePage<Person> {
     @SpringBean
     private FinanceService financeService;
 
-    private IModel<List<FundPurchase>> fundPurchaseListModel;
+    private final IModel<List<FundPurchase>> fundPurchaseListModel;
 
-    private IModel<InvestmentSummary> investmentSummaryModel;
-    private IModel<Double> totalSumModel = new Model<>();
+    private final IModel<InvestmentSummary> investmentSummaryModel;
+    private final IModel<Double> totalSumModel = new Model<>();
 
     public FundPurchaseListPage() {
         this(new Model<>(CustomSession.get().getLoggedInPerson()));
@@ -79,6 +79,8 @@ public class FundPurchaseListPage extends BasePage<Person> {
                 .add(new IModelBasedVisibilityBehavior<>(this.investmentSummaryModel, investmentSummary -> investmentSummary.getAnnualPerfomanceInPercentage() == null))
                 .setOutputMarkupPlaceholderTag(true));
 
+
+        this.add(new AllocationPanel("currentAllocation", this.investmentSummaryModel));
        this.add(DataTableBuilderFactory.<FundPurchase, String>simple()
                 .addColumn(ColumnBuilderFactory.<FundPurchase, String>simple(FundPurchase::getDate).build(new ResourceModel("date")))
                 .addColumn(ColumnBuilderFactory.<FundPurchase, String>simple(o -> o.getFinancialInstrument().getName()).build(new ResourceModel("name")))

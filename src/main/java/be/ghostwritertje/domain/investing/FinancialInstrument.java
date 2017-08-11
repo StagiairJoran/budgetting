@@ -6,9 +6,12 @@ import be.ghostwritertje.utilities.Pair;
 import org.apache.log4j.Logger;
 import org.springframework.util.StopWatch;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
-
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,7 +47,7 @@ public class FinancialInstrument extends DomainObject {
                 .sorted(Comparator.comparing(HistoricPrice::getDate).reversed())
                 .findFirst()
                 .map(HistoricPrice::getPrice)
-                .orElse(null);
+                .orElse(BigDecimal.ZERO);
     }
 
     public String getYearToDateReturn() {
@@ -127,6 +130,14 @@ public class FinancialInstrument extends DomainObject {
         sw.stop();
         LOG.debug(String.format("Calculating values from %s took %.2f seconds (historicpricelist size = %d) ", date.toString(), sw.getTotalTimeSeconds(), this.historicPriceList.size()));
         return result;
+    }
+
+    public BigDecimal getLatestPrice() {
+        return this.getHistoricPriceList().stream()
+                .sorted(Comparator.comparing(HistoricPrice::getDate))
+                .findFirst()
+                .map(HistoricPrice::getPrice)
+                .orElse(BigDecimal.ZERO);
     }
 
     @Override
