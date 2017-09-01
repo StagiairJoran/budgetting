@@ -35,7 +35,7 @@ public class FundPurchase extends DomainObject {
     @JoinColumn(name = "person_UUID")
     private Person owner;
 
-    public String getQuote() {
+    public Stridng getQuote() {
         return this.getFinancialInstrument().getQuote();
     }
 
