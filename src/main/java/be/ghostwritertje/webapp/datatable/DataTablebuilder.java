@@ -33,6 +33,7 @@ public class DataTablebuilder<T extends Serializable, S> {
         return components;
     }
 
+
     public void attach(WebMarkupContainer parent, String id, IModel<List<T>> data) {
         parent.add(this.build(id, data));
     }
