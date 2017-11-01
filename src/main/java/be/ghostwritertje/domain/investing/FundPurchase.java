@@ -70,6 +70,8 @@ public class FundPurchase extends DomainObject {
 
     public Double getTransactionCost() {
         if (this.transactionCost == null) {
+
+
             this.transactionCost = 0.00;
         }
         return this.transactionCost;
