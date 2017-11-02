@@ -1,5 +1,7 @@
 package be.ghostwritertje.repository.configuration.datasource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +18,7 @@ import java.util.Properties;
 @Profile("openshift-postgres")
 @Configuration
 public class OpenshiftDataSource {
-
+    private static final Logger LOG = LogManager.getLogger();
     @Bean
     public DataSource dataSource(
             @Value("${OPENSHIFT_POSTGRESQL_DB_HOST}") String host,
@@ -30,7 +32,7 @@ public class OpenshiftDataSource {
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
-        System.out.println("Using openshift DataSource");
+        LOG.info(() -> "Using openshift DataSource");
         return dataSource;
     }
 

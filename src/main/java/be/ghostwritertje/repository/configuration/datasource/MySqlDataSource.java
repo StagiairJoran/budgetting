@@ -1,6 +1,7 @@
 package be.ghostwritertje.repository.configuration.datasource;
 
 import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.hibernate.dialect.MySQLDialect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +20,7 @@ import java.util.Properties;
 
 @Configuration
 public class MySqlDataSource {
-    private static final Logger logger = Logger.getLogger(H2DataSource.class);
-
+    private static final org.apache.logging.log4j.Logger LOG = LogManager.getLogger();
     @Bean
     @Profile("local")
     public DataSource localDataSource() {
@@ -30,7 +30,7 @@ public class MySqlDataSource {
         dataSource.setUsername("root");
         dataSource.setPassword("iiii");
 
-        logger.info("Using mysql local DataSource");
+        LOG.info("Using mysql local DataSource");
         return dataSource;
     }
 
@@ -50,7 +50,7 @@ public class MySqlDataSource {
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
-        logger.info("Using mysql-openshift DataSource");
+        LOG.info("Using mysql-openshift-old DataSource");
         return dataSource;
     }
 
@@ -64,14 +64,16 @@ public class MySqlDataSource {
             @Value("${MYSQL_DATABASE}") String appname
 
     ) {
-        logger.info("MYSQL_PASSWORD" + password);
+        LOG.info("MYSQL_PASSWORD" + password);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + appname + "?user=" + username + "&password=" + password);
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + appname + "?user=" + username + "&password=" + password;
+        LOG.info(() -> String.format("Url= %s", url));
+        dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
-        logger.info("Using mysql-openshift DataSource");
+        LOG.info("Using mysql-openshift DataSource");
         return dataSource;
     }
 
@@ -87,7 +89,7 @@ public class MySqlDataSource {
 //        properties.setProperty("hibernate.generate_statistics", "true");
 //        properties.setProperty("hibernate.hbm2ddl.auto", "update");
 
-        logger.info("DataSource location : " + properties.getProperty("hibernate.connection.url"));
+        LOG.info("DataSource location : " + properties.getProperty("hibernate.connection.url"));
         return properties;
     }
 }
