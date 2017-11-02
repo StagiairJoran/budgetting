@@ -93,6 +93,7 @@ public class RefuelingListPage extends BasePage<Car> {
                         this.getModelObject().getAverageConsumption()
                 )
                 .setYAxis("liter/100km")
+
                 .attach(this, "chart2");
 
 
