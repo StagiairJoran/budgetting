@@ -1,11 +1,13 @@
 package be.ghostwritertje.webapp;
 
 import be.ghostwritertje.webapp.person.pages.LoginPage;
+import com.googlecode.wickedcharts.wicket7.JavaScriptResourceRegistry;
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
+import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
@@ -53,6 +55,17 @@ public class MyApplication extends WebApplication {
                 return true;
             }
         });
+
+
+        JavaScriptResourceRegistry.getInstance().setHighchartsReference(new WebjarsJavaScriptResourceReference("highcharts/current/highcharts.js"));
+
+        JavaScriptResourceRegistry.getInstance().setFunnelReference(new WebjarsJavaScriptResourceReference("highcharts/current/modules/funnel.js"));
+
+        JavaScriptResourceRegistry.getInstance().setHeatmapReference(new WebjarsJavaScriptResourceReference("highcharts/current/modules/heatmap.js"));
+
+        JavaScriptResourceRegistry.getInstance().setHighchartsMoreReference(new WebjarsJavaScriptResourceReference("highcharts/current/highcharts-more.js"));
+
+        JavaScriptResourceRegistry.getInstance().setHighchartsExportingReference(new WebjarsJavaScriptResourceReference("highcharts/current/modules/exporting.js"));
     }
 
     private void configureBootstrap() {
