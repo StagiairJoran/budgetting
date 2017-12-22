@@ -5,16 +5,12 @@ import be.ghostwritertje.domain.car.Car;
 import be.ghostwritertje.services.budgetting.CategoryService;
 import be.ghostwritertje.services.car.CarService;
 import be.ghostwritertje.webapp.car.panel.CarInfoPanel;
-import be.ghostwritertje.webapp.link.LinkBuilderFactory;
 import be.ghostwritertje.webapp.model.BankAccountListInfoPanel;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 import java.util.List;
 

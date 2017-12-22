@@ -1,12 +1,21 @@
 package be.ghostwritertje.webapp.charts;
 
-import com.googlecode.wickedcharts.highcharts.options.*;
+import com.googlecode.wickedcharts.highcharts.options.Axis;
+import com.googlecode.wickedcharts.highcharts.options.AxisType;
+import com.googlecode.wickedcharts.highcharts.options.ChartOptions;
+import com.googlecode.wickedcharts.highcharts.options.DateTimeLabelFormat;
+import com.googlecode.wickedcharts.highcharts.options.SeriesType;
+import com.googlecode.wickedcharts.highcharts.options.Title;
 import com.googlecode.wickedcharts.highcharts.options.series.Coordinate;
 import com.googlecode.wickedcharts.highcharts.options.series.CustomCoordinatesSeries;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -15,8 +24,11 @@ import java.util.stream.Collectors;
  */
 public class HistoricChartBuilder extends ChartBuilderSupport<HistoricChartBuilder> {
 
+
     HistoricChartBuilder() {
-        this.getOptions().setChartOptions(new ChartOptions().setType(SeriesType.SPLINE));
+        ChartOptions chartOptions = new ChartOptions();
+        chartOptions.setType(SeriesType.SPLINE);
+        this.getOptions().setChartOptions(chartOptions);
         this.setXAxis();
     }
 
@@ -65,8 +77,8 @@ public class HistoricChartBuilder extends ChartBuilderSupport<HistoricChartBuild
         this.addLine(name, coordinates, dateFunction, numberFunction, rounding);
 
         this.addLine("average", Arrays.asList(
-                coordinates.stream().sorted(Comparator.comparing(dateFunction)).findFirst().orElse(null ),
-                coordinates.stream().sorted(Comparator.comparing(dateFunction).reversed()).findFirst().orElse(null )
+                coordinates.stream().min(Comparator.comparing(dateFunction)).orElse(null),
+                coordinates.stream().max(Comparator.comparing(dateFunction)).orElse(null)
         ), dateFunction, x -> average, rounding);
         return this.self();
 
@@ -97,7 +109,6 @@ public class HistoricChartBuilder extends ChartBuilderSupport<HistoricChartBuild
         coordinatesMap.forEach((s, xes) -> this.addLine(s, xes, dateFunction, numberFunction, rounding));
         return this.self();
     }
-
 
 
 }
