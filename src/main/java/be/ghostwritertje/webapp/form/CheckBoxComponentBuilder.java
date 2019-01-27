@@ -1,9 +1,7 @@
 package be.ghostwritertje.webapp.form;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstrapcheckbox.BootstrapCheckBoxPicker;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 
 /**
